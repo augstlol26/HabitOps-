@@ -1,8 +1,9 @@
 
 /* Type Hierarchy Enforcement (Operate Mode: >=1.25x steps) */
-h1 { font-size: 1.75rem !important; line-height: 1.2 !important; font-weight: 700; }
-h2 { font-size: 1.375rem !important; line-height: 1.25 !important; font-weight: 700; }
-h3 { font-size: 1.0625rem !important; line-height: 1.3 !important; font-weight: 600; }
+h1 { font-family: 'Rajdhani', sans-serif !important; font-size: 1.75rem !important; line-height: 1.3 !important; font-weight: 700; letter-spacing: 0.02em; }
+h2 { font-family: 'Rajdhani', sans-serif !important; font-size: 1.375rem !important; line-height: 1.3 !important; font-weight: 700; letter-spacing: 0.02em; }
+h3 { font-family: 'Rajdhani', sans-serif !important; font-size: 1.0625rem !important; line-height: 1.35 !important; font-weight: 600; }
+h4 { font-family: 'Rajdhani', sans-serif !important; font-size: 0.95rem !important; line-height: 1.35 !important; font-weight: 600; }
 
 /* HabitOps - Tactical Brutalist Theme & Animation Engine */
 @layer base {
@@ -14,17 +15,50 @@ h3 { font-size: 1.0625rem !important; line-height: 1.3 !important; font-weight: 
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-color: #faf8ff;
+    background-color: #f1f5f9;
   }
   body {
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
-    font-family: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
   }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
   main > :first-child { margin-top: 0 !important; }
   main > :last-child { margin-bottom: 0 !important; }
+}
+
+/* Neutralize Netlify Injected Drawer & Floating Badges */
+#netlify-badge,
+div[class*="netlify-drawer"],
+div[class*="netlify-badge"],
+iframe[src*="netlify"],
+iframe[id*="netlify"],
+[data-netlify-deploy-id] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  opacity: 0 !important;
+}
+
+/* Rich Tactical Light Mode Contrast Boost */
+body:not(.dark-ops) {
+  background-color: #f1f5f9 !important;
+}
+body:not(.dark-ops) .bg-surface {
+  background-color: #f1f5f9 !important;
+}
+body:not(.dark-ops) .bg-surface-container-low {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+body:not(.dark-ops) .bg-surface-container-lowest {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
 }
 
 ::-webkit-scrollbar { display: none; }
@@ -850,5 +884,87 @@ body.dark-ops .protocol-context-menu {
   will-change: transform, opacity;
   transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease-out;
 }
+
+/* ============================================================
+   TACTICAL IDLE ANIMATIONS ENGINE (HUD, BOSS, XP, STREAK)
+   ============================================================ */
+
+/* 1. Boss Idle Breathing Pulse */
+@keyframes bossBreathing {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+  50% {
+    transform: scale(1.008);
+    box-shadow: 0 4px 16px rgba(220, 44, 79, 0.16), 0 0 1px rgba(220, 44, 79, 0.4);
+  }
+}
+.idle-boss-pulse {
+  animation: bossBreathing 3.6s ease-in-out infinite;
+}
+
+/* 2. Tactical Radar Scanline */
+@keyframes hudScanline {
+  0% { transform: translateY(-100%); opacity: 0; }
+  15% { opacity: 0.65; }
+  85% { opacity: 0.65; }
+  100% { transform: translateY(1200%); opacity: 0; }
+}
+.idle-scanline {
+  position: relative;
+  overflow: hidden;
+}
+.idle-scanline::after {
+  content: '';
+  position: absolute;
+  inset-x: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.65), transparent);
+  pointer-events: none;
+  animation: hudScanline 6s ease-in-out infinite;
+}
+
+/* 3. Streak Flame Flicker */
+@keyframes flameFlicker {
+  0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.5)); }
+  25% { transform: scale(1.12) rotate(-3deg); filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.85)); }
+  50% { transform: scale(0.96) rotate(2deg); filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.6)); }
+  75% { transform: scale(1.08) rotate(-1deg); filter: drop-shadow(0 0 7px rgba(245, 158, 11, 0.9)); }
+}
+.animate-flame, .flame-anim {
+  animation: flameFlicker 1.8s ease-in-out infinite !important;
+  display: inline-block;
+  transform-origin: 50% 80%;
+}
+
+/* 4. Tactical XP Sheen */
+@keyframes xpSheen {
+  0% { transform: translateX(-150%); }
+  45%, 100% { transform: translateX(250%); }
+}
+.xp-bar-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.xp-bar-sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-20deg);
+  animation: xpSheen 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* 5. Smart App Banner Mobile Optimization */
+#smart-app-banner {
+  border-left: 4px solid var(--theme-primary, #00839a);
+}
+
 
 

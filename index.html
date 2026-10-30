@@ -7,6 +7,9 @@
   <title>HabitOps — Tactical Habit Engine</title>
 
   <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
   <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -87,17 +90,18 @@
             "gutter-sm": "0.75rem"
           },
           fontFamily: {
-            "display-mobile": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "headline-lg": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "display": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "body-md": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "label-md": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "label-sm": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "body-sm": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "headline-md": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "headline-sm": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "label-lg": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
-            "body-lg": ["General Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"]
+            "display-mobile": ["Rajdhani", "General Sans", sans-serif],
+            "headline-lg": ["Rajdhani", "General Sans", sans-serif],
+            "display": ["Rajdhani", "General Sans", sans-serif],
+            "body-md": ["Plus Jakarta Sans", "General Sans", sans-serif],
+            "label-md": ["Rajdhani", "General Sans", sans-serif],
+            "label-sm": ["Rajdhani", "General Sans", sans-serif],
+            "body-sm": ["Plus Jakarta Sans", "General Sans", sans-serif],
+            "headline-md": ["Rajdhani", "General Sans", sans-serif],
+            "headline-sm": ["Rajdhani", "General Sans", sans-serif],
+            "label-lg": ["Rajdhani", "General Sans", sans-serif],
+            "body-lg": ["Plus Jakarta Sans", "General Sans", sans-serif],
+            "mono": ["JetBrains Mono", "Courier New", monospace]
           },
           fontSize: {
             "display-mobile": ["30px", { lineHeight: "34px", letterSpacing: "-0.03em", fontWeight: "700" }],
@@ -297,7 +301,7 @@
           </div>
           <div class="flex flex-col items-end gap-0.5">
             <span class="font-mono text-[9px] font-bold text-outline leading-none" id="header-xp-counter">0 / 120 XP</span>
-            <div class="w-14 sm:w-20 h-1.5 bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+            <div class="w-14 sm:w-20 h-1.5 bg-surface-container-highest overflow-hidden border border-outline-variant/30 xp-bar-sheen">
               <div class="h-full bg-gradient-to-r from-primary to-[#00F0FF] transition-all duration-500 ease-out shadow-[0_0_8px_rgba(0,240,255,0.4)]" id="header-xp-bar" style="width: 0%;"></div>
             </div>
           </div>
@@ -313,7 +317,34 @@
   </header>
 
   <!-- MAIN SCROLLABLE VIEW CONTAINER (RESPONSIVE VIEWPORT) -->
-  <main id="app-container" class="flex-1 w-full max-w-xl mx-auto pt-16 pb-24 min-h-screen bg-surface">
+  <main id="app-container" class="flex-1 w-full max-w-xl mx-auto pt-16 pb-36 sm:pb-32 pb-[max(9rem,calc(env(safe-area-inset-bottom)+7rem))] min-h-screen bg-surface">
+
+    <!-- MOBILE WEB SMART APP BANNER (SWITCH TO APP / INSTALL PWA) -->
+    <div id="smart-app-banner" class="hidden mx-margin mt-3 mb-2 p-3 bg-surface-container-lowest border border-primary/30 shadow-md relative flex items-center justify-between gap-3 transition-all duration-300">
+      <button onclick="dismissAppBanner()" aria-label="Dismiss banner" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-surface-container-highest text-on-surface border border-outline-variant/40 flex items-center justify-center text-xs hover:bg-secondary hover:text-white transition-colors cursor-pointer">
+        <span class="material-symbols-outlined text-[14px]">close</span>
+      </button>
+      <div class="flex items-center gap-2.5 min-w-0">
+        <img src="assets/icon-192.png" alt="HabitOps Icon" class="w-10 h-10 rounded-lg shadow-sm border border-outline-variant/40 shrink-0 object-cover" />
+        <div class="flex flex-col min-w-0">
+          <div class="flex items-center gap-1.5">
+            <span class="font-headline-sm text-xs font-bold text-on-surface uppercase tracking-wide">HabitOps Mobile</span>
+            <span class="px-1 py-0.2 bg-primary/10 text-primary text-[9px] font-mono font-bold uppercase border border-primary/20">PRO</span>
+          </div>
+          <span class="font-body-sm text-[11px] text-on-surface-variant truncate">Full-screen offline with zero browser bars</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button id="pwa-install-btn" onclick="triggerPWAInstall()" class="px-2.5 py-1.5 bg-primary hover:bg-primary-container text-white text-on-primary font-mono text-[11px] font-bold uppercase tracking-tight flex items-center gap-1 tactile-btn shadow-sm">
+          <span class="material-symbols-outlined text-[14px]">download</span>
+          <span>GET APP</span>
+        </button>
+        <a href="habitops.apk" download="habitops.apk" class="apk-download-only px-2 py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-primary border border-primary/30 font-mono text-[11px] font-bold uppercase tracking-tight flex items-center gap-1 tactile-btn" title="Direct Android APK download">
+          <span class="material-symbols-outlined text-[14px]">android</span>
+          <span class="hidden xs:inline">APK</span>
+        </a>
+      </div>
+    </div>
 
     <!-- ======================================================== -->
     <!-- VIEW 1: TODAY'S DAILY QUESTS & BOSS ENCOUNTER            -->
@@ -336,7 +367,7 @@
         </div>
 
         <!-- Daily Boss Alert: Dynamic Slash & Shake + Next Boss Respawn -->
-        <div class="bg-surface-container-low p-3.5 flex flex-col space-y-2 relative overflow-hidden transition-all duration-300 border border-[#e2e8f0] shadow-sm cursor-pointer hover:border-secondary hover:shadow-md tactile-btn" id="boss-card" onclick="openBossDossierModal()" title="Tap to inspect Boss Health & Damage Dossier">
+        <div class="bg-surface-container-low p-3.5 flex flex-col space-y-2 relative overflow-hidden transition-all duration-300 border border-[#e2e8f0] shadow-sm cursor-pointer hover:border-secondary hover:shadow-md tactile-btn idle-boss-pulse idle-scanline" id="boss-card" onclick="openBossDossierModal()" title="Tap to inspect Boss Health & Damage Dossier">
           <div id="boss-slash-layer"></div>
           <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-secondary via-primary-container to-secondary opacity-0 transition-opacity duration-300 pointer-events-none" id="boss-sound-ripple"></div>
           
@@ -346,15 +377,16 @@
                 <span class="material-symbols-outlined text-on-secondary text-[18px]">skull</span>
               </div>
               <div class="flex flex-col min-w-0">
-                <div class="flex items-center gap-2">
-                  <span class="font-headline-sm text-headline-sm text-on-surface uppercase truncate font-bold" id="today-boss-name">The Procrastination Titan</span>
-                  <span class="opacity-0 transition-opacity duration-200 bg-secondary text-white px-1.5 py-0.5 font-label-sm text-xs uppercase  font-bold" id="boss-impact-tag">CRIT IMPACT</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="px-1.5 py-0.2 bg-secondary/15 text-secondary border border-secondary/30 font-mono text-[10px] font-black uppercase tracking-wider shrink-0">BOSS</span>
+                  <span class="font-headline-sm text-sm sm:text-base text-on-surface uppercase truncate font-bold" id="today-boss-name">TITAN</span>
+                  <span class="opacity-0 transition-opacity duration-200 bg-secondary text-white px-1.5 py-0.5 font-label-sm text-[10px] uppercase font-bold shrink-0" id="boss-impact-tag">CRIT</span>
                 </div>
-                <span class="font-body-sm text-body-sm text-secondary truncate transition-all duration-300 font-medium" id="boss-subtext">100% HP remaining — Complete habits to deal damage!</span>
+                <span class="font-body-sm text-body-sm text-secondary truncate transition-all duration-300 font-medium" id="boss-subtext">Tap to view full name &amp; dossier ⚔️</span>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0 ml-2 z-10">
-              <button id="spawn-next-boss-btn" class="hidden px-2 py-1 bg-secondary text-white font-label-sm text-xs uppercase font-bold  tactile-btn" onclick="event.stopPropagation(); handleSpawnNextBoss()">Next Boss</button>
+              <button id="spawn-next-boss-btn" class="hidden px-2 py-1 bg-secondary text-white font-label-sm text-xs uppercase font-bold tactile-btn" onclick="event.stopPropagation(); handleSpawnNextBoss()">Next Boss</button>
               <div class="flex flex-col items-end gap-1">
                 <div class="w-20 h-2.5 bg-surface-container-highest overflow-hidden relative border border-[#e2e8f0]">
                   <div class="h-full bg-secondary transition-all duration-500 ease-out" id="boss-hp-bar" style="width: 100%;"></div>
@@ -372,7 +404,7 @@
       <!-- Weekly Sequence Strip + Full Calendar Launcher -->
       <section class="flex flex-col space-y-2">
         <div class="flex justify-between items-center">
-          <span class="font-label-sm text-label-sm text-outline uppercase  font-bold">Weekly Sequence</span>
+          <span class="font-label-sm text-label-sm text-outline uppercase font-bold">Weekly Sequence</span>
           <button class="flex items-center gap-1 font-label-sm text-label-sm text-primary uppercase font-bold hover:underline tactile-btn" onclick="openCalendarModal()">
             <span class="material-symbols-outlined text-[15px]">calendar_month</span>
             <span>Full Calendar &amp; Plan Ahead</span>
@@ -422,8 +454,8 @@
         <!-- Morning Protocol -->
         <section class="flex flex-col space-y-2" id="pillar-section-morning">
           <div class="flex items-center justify-between">
-            <span class="font-label-sm text-label-sm text-outline uppercase  font-bold">Morning Protocol</span>
-            <span class="font-label-sm text-label-sm text-primary font-bold" id="morning-status-text">0/2 Complete</span>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-label-sm text-xs uppercase font-bold"><span class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span> Morning Protocol</span>
+            <span class="font-mono text-xs text-amber-600 dark:text-amber-400 font-bold bg-amber-500/5 px-2 py-0.5 border border-amber-500/20" id="morning-status-text">0/2 Complete</span>
           </div>
           <div class="flex flex-col space-y-2" id="morning-quests-list"></div>
         </section>
@@ -431,8 +463,8 @@
         <!-- Afternoon Focus -->
         <section class="flex flex-col space-y-2" id="pillar-section-afternoon">
           <div class="flex items-center justify-between">
-            <span class="font-label-sm text-label-sm text-outline uppercase  font-bold">Afternoon Focus</span>
-            <span class="font-label-sm text-label-sm text-secondary font-bold" id="afternoon-status-text">Active Encounters</span>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 font-label-sm text-xs uppercase font-bold"><span class="material-symbols-outlined text-[14px] text-cyan-500">target</span> Afternoon Focus</span>
+            <span class="font-mono text-xs text-cyan-600 dark:text-cyan-400 font-bold bg-cyan-500/5 px-2 py-0.5 border border-cyan-500/20" id="afternoon-status-text">Active Encounters</span>
           </div>
           <div class="flex flex-col space-y-2" id="afternoon-quests-list"></div>
         </section>
@@ -440,8 +472,8 @@
         <!-- Evening Wind Down -->
         <section class="flex flex-col space-y-2" id="pillar-section-evening">
           <div class="flex items-center justify-between">
-            <span class="font-label-sm text-label-sm text-outline uppercase  font-bold">Evening Wind Down</span>
-            <span class="font-label-sm text-label-sm text-outline font-semibold" id="evening-status-text">Pending</span>
+            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/30 font-label-sm text-xs uppercase font-bold"><span class="material-symbols-outlined text-[14px] text-purple-500">nights_stay</span> Evening Wind Down</span>
+            <span class="font-mono text-xs text-purple-600 dark:text-purple-400 font-semibold bg-purple-500/5 px-2 py-0.5 border border-purple-500/20" id="evening-status-text">Pending</span>
           </div>
           <div class="flex flex-col space-y-2" id="evening-quests-list"></div>
         </section>
@@ -575,7 +607,7 @@
           <span class="font-label-md text-label-md text-primary font-bold" id="xp-fraction-label">380 / 500 XP</span>
         </div>
         <!-- Progress Bar with Tactical Shimmer -->
-        <div class="w-full h-3 bg-surface-container-high relative overflow-hidden mt-1 shimmer-active">
+        <div class="w-full h-3 bg-surface-container-high relative overflow-hidden mt-1 shimmer-active xp-bar-sheen">
           <div class="h-full bg-primary-container transition-all duration-700 ease-out" id="quest-progress-fill" style="width: 76%;"></div>
         </div>
         <div class="flex items-center justify-between mt-space-xs text-on-surface-variant">
@@ -1440,7 +1472,7 @@
   </main>
 
   <!-- FIXED BOTTOM NAVIGATION BAR -->
-  <nav class="fixed bottom-0 inset-x-0 z-40 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-t border-[#e2e8f0]" data-nav-container>
+  <nav class="fixed bottom-0 inset-x-0 z-[9000] pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-t border-[#e2e8f0]" data-nav-container>
     <div class="max-w-xl mx-auto flex justify-around items-center h-16 px-margin-sm">
       <a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] transition-colors text-primary font-bold" data-path="today" href="#">
         <span class="material-symbols-outlined text-[22px]">task_alt</span>

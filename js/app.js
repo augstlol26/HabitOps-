@@ -575,9 +575,27 @@ function cancelMissionHold(event, questId, playFeedback = true) {
   }
 
   const durationHeld = Date.now() - holdStartTime;
-  if (playFeedback && durationHeld > 80 && durationHeld < 1950) {
-    window.audioEngine.playMechanicalThud();
-    showToast('Hold 2 Seconds to Execute Protocol', 'Long-press to confirm protocol strike');
+  if (playFeedback && qId) {
+    if (durationHeld > 15 && durationHeld < 380) {
+      // Direct quick-tap: execute protocol strike without hold delay
+      window.audioEngine.playTap();
+      const card = document.getElementById(`quest-card-${qId}`);
+      if (card) {
+        spawnStrikeSlashParticles(card);
+      }
+      triggerScreenJolt();
+      activeHoldQuestId = null;
+      handleQuestCardClick(qId);
+      return;
+    } else if (durationHeld >= 380 && durationHeld < 1950) {
+      // Held and released early: display tip at most ONCE
+      const tipSeen = localStorage.getItem('habitops_hold_tip_seen');
+      if (!tipSeen) {
+        localStorage.setItem('habitops_hold_tip_seen', 'true');
+        window.audioEngine.playMechanicalThud();
+        showToast('Tip: Hold to Charge Strike', 'You can quick-tap or hold 2s to execute');
+      }
+    }
   }
   activeHoldQuestId = null;
 }
@@ -697,7 +715,7 @@ function createQuestElement(quest) {
     <div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-[11px] font-mono text-outline">
       <span class="flex items-center gap-1 text-primary font-bold">
         <span class="material-symbols-outlined text-[14px]">touch_app</span>
-        <span>HOLD 2S TO EXECUTE STRIKE</span>
+        <span>TAP OR HOLD TO EXECUTE</span>
       </span>
       <span class="uppercase tracking-wider font-semibold">${tierInfo.label.split(' ')[0]}</span>
     </div>
@@ -2307,28 +2325,28 @@ function toggleDarkOps() {
 let currentTutorialStep = 0;
 const TUTORIAL_STEPS = [
   {
-    badge: 'TAB 1 OF 4 · TODAY (COMMAND DECK)',
-    icon: 'swords',
-    title: 'Hold 2s to Strike & Slay Bosses',
-    desc: 'Hold any protocol for 2 seconds to strike and earn stacked XP without accidental slips. Completed habits vanish to the Cleared tray, deal combat damage to your weekly Boss, and unlock Tomorrow\'s Loadout!'
+    badge: '1 OF 4 · HABITS',
+    icon: 'touch_app',
+    title: 'Your Daily Habits',
+    desc: 'Tap or hold any habit card to execute your daily protocol and earn XP.'
   },
   {
-    badge: 'TAB 2 OF 4 · REVIEW (TACTICAL CADENCE)',
-    icon: 'monitoring',
-    title: 'Analyze Weekly Consistency',
-    desc: 'Inspect your live 7-day consistency bar chart, track peak execution rhythms, rate your Energy and Discipline, and commit weekly field reflections for bonus XP.'
+    badge: '2 OF 4 · BOSS BATTLE',
+    icon: 'skull',
+    title: 'Defeat the Daily Boss',
+    desc: 'Every completed habit drains the boss\'s HP. Drain it to zero to claim victory!'
   },
   {
-    badge: 'TAB 3 OF 4 · HABITS (PROTOCOL LAB)',
-    icon: 'terminal',
-    title: 'Commission & Plan Protocols',
-    desc: 'Commission custom habits with exact duration and scheduled times, browse 1-tap suggested routines from the tactical catalog, or schedule habits in advance on the full Interactive Calendar.'
+    badge: '3 OF 4 · STREAK & LEVEL',
+    icon: 'local_fire_department',
+    title: 'Build Your Streak',
+    desc: 'Stay consistent each day to level up your combat rank and unlock new titles.'
   },
   {
-    badge: 'TAB 4 OF 4 · PROFILE (OPERATIVE DOSSIER)',
-    icon: 'person',
-    title: 'Rank Titles, Guild & Themes',
-    desc: 'Level up indefinitely while unlocking 9 prestigious military titles up to Level 100 Apex Grandmaster. Cheer your squad in the Guild, claim trophy vault rewards, and customize your HUD color theme.'
+    badge: '4 OF 4 · ARMORY',
+    icon: 'tune',
+    title: 'Customize Anytime',
+    desc: 'Use the Habits tab to add custom routines, pick presets, or edit your schedule.'
   }
 ];
 
@@ -2901,7 +2919,10 @@ function syncAllViews(state) {
   const bossHpBar = document.getElementById('boss-hp-bar');
   const bossSubtext = document.getElementById('boss-subtext');
   if (bossNameEl && state.boss.name) {
-    bossNameEl.textContent = `${state.boss.name} (Tier ${state.boss.tier || 1})`;
+    const rawWords = state.boss.name.split(' ');
+    const compactName = rawWords[rawWords.length - 1] || state.boss.name;
+    bossNameEl.textContent = compactName.toUpperCase();
+    bossNameEl.setAttribute('title', `${state.boss.name} (Tier ${state.boss.tier || 1})`);
   }
   const hpPct = state.boss.maxHp
     ? Math.max(0, Math.min(100, Math.round((state.boss.currentHp / state.boss.maxHp) * 100)))
@@ -2932,11 +2953,11 @@ function syncAllViews(state) {
 
   if (bossSubtext) {
     if (isSlain) {
-      bossSubtext.textContent = `0 / ${state.boss.maxHp} HP — BOSS VANQUISHED! Tap for Next Tier.`;
+      bossSubtext.textContent = `0 / ${state.boss.maxHp} HP — BOSS DEFEATED! Tap for Next Tier.`;
     } else if (hpPct > 0 && hpPct <= 25) {
-      bossSubtext.textContent = `CRITICAL HP (${state.boss.currentHp} / ${state.boss.maxHp} HP) — Finish the adversary!`;
+      bossSubtext.textContent = `CRITICAL (${state.boss.currentHp}/${state.boss.maxHp} HP) · Tap for dossier ⚔️`;
     } else {
-      bossSubtext.textContent = `${state.boss.currentHp} / ${state.boss.maxHp} HP — Strike protocols to deal combat damage!`;
+      bossSubtext.textContent = `${hpPct}% HP (${state.boss.currentHp}/${state.boss.maxHp}) · Tap for dossier & lore ⚔️`;
     }
   }
 
@@ -3353,11 +3374,75 @@ function obDeploy() {
         if (nav) nav.style.display = '';
 
         bootMainApp();
-        showToast(`Welcome, ${OB.data.callsign || 'Operative'}!`, 'Starting at Level 1 · All Protocols Online');
+        showToast(`Welcome, ${OB.data.callsign || 'Operative'}!`, 'Curated habits deployed to your roster!');
+        
+        // Ensure interactive tutorial launches for first-time user right after onboarding completes
+        setTimeout(() => {
+          if (!window.store.state.tutorialCompleted) {
+            startInteractiveTutorial();
+          }
+        }, 750);
       }, 360);
     }
   }, 450);
 }
+
+// ==========================================
+// SMART APP BANNER (SWITCH TO APP / PWA)
+// ==========================================
+let deferredPwaPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  checkAndDisplayAppBanner();
+});
+
+function checkAndDisplayAppBanner() {
+  const banner = document.getElementById('smart-app-banner');
+  if (!banner) return;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const dismissed = sessionStorage.getItem('habitops_app_banner_dismissed');
+  if (isStandalone || dismissed === 'true') {
+    banner.classList.add('hidden');
+    banner.classList.remove('flex');
+    return;
+  }
+  if (window.innerWidth <= 768) {
+    banner.classList.remove('hidden');
+    banner.classList.add('flex');
+  }
+}
+
+function dismissAppBanner() {
+  const banner = document.getElementById('smart-app-banner');
+  if (banner) {
+    banner.classList.add('hidden');
+    banner.classList.remove('flex');
+  }
+  sessionStorage.setItem('habitops_app_banner_dismissed', 'true');
+}
+
+async function triggerPWAInstall() {
+  if (deferredPwaPrompt) {
+    deferredPwaPrompt.prompt();
+    const { outcome } = await deferredPwaPrompt.userChoice;
+    if (outcome === 'accepted') {
+      showToast('HabitOps Installed!', 'App added to your device homescreen');
+      dismissAppBanner();
+    }
+    deferredPwaPrompt = null;
+  } else {
+    showToast('Add to Home Screen', 'Tap browser menu and select "Install" or download the APK below');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(checkAndDisplayAppBanner, 1200);
+});
+window.addEventListener('resize', () => {
+  checkAndDisplayAppBanner();
+});
 
 function replayOnboardingFlow() {
   closeDrawer();
