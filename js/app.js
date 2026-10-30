@@ -1602,12 +1602,14 @@ function renderSuggestedRoutinesGrid() {
   const activeTitles = new Set(window.store.state.quests.map(q => q.title.toLowerCase()));
 
   window.ROUTINE_CATALOG.forEach(item => {
+    const routineId = item.id || item.key;
+    const timeVal = item.time || item.execTime || '08:00';
     const alreadyAdded = activeTitles.has(item.title.toLowerCase());
     const tierInfo = window.DIFFICULTY_TIERS?.[item.difficulty] || { xp: 45, label: 'Standard' };
 
     const card = document.createElement('div');
     card.className =
-      'bg-surface-container-lowest p-3 border border-outline-variant/30 flex items-center justify-between gap-2 shadow-xs';
+      'bg-surface-container-lowest p-3 border border-outline-variant/30 flex items-center justify-between gap-2 shadow-xs hover:border-primary transition-colors';
     card.innerHTML = `
       <div class="flex items-start gap-2.5 min-w-0">
         <div class="w-9 h-9 bg-surface-container-high text-primary flex items-center justify-center shrink-0 border border-outline-variant/30">
@@ -1616,14 +1618,14 @@ function renderSuggestedRoutinesGrid() {
         <div class="flex flex-col min-w-0">
           <span class="font-label-md text-label-md font-bold text-on-surface truncate">${item.title}</span>
           <span class="font-body-sm text-[11px] text-on-surface-variant truncate">${item.subtext}</span>
-          <span class="font-mono text-[11px] text-primary font-bold mt-0.5 uppercase">${item.group} · ${item.execTime} · ${item.duration} · +${tierInfo.xp} XP</span>
+          <span class="font-mono text-[11px] text-primary font-bold mt-0.5 uppercase">${item.group} · ⏰ ${timeVal} · ⏱ ${item.duration} · +${tierInfo.xp} XP</span>
         </div>
       </div>
       <button ${alreadyAdded ? 'disabled' : ''} class="px-2.5 py-1.5 ${
       alreadyAdded
         ? 'bg-surface-container-high text-outline cursor-default'
-        : 'bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface tactile-btn'
-    } font-label-sm text-[11px] uppercase font-bold tracking-wider shrink-0" onclick="quickDeploySuggestedRoutine('${item.key}')">
+        : 'bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface tactile-btn cursor-pointer'
+    } font-label-sm text-[11px] uppercase font-bold tracking-wider shrink-0" onclick="quickDeploySuggestedRoutine('${routineId}')">
         ${alreadyAdded ? 'In Stack ✓' : '+ Deploy'}
       </button>
     `;
@@ -1632,22 +1634,24 @@ function renderSuggestedRoutinesGrid() {
 }
 
 function quickDeploySuggestedRoutine(catalogKey) {
-  const preset = (window.ROUTINE_CATALOG || []).find(r => r.key === catalogKey);
+  const preset = (window.ROUTINE_CATALOG || []).find(r => r.id === catalogKey || r.key === catalogKey);
   if (!preset) return;
   window.audioEngine.playChime();
   window.store.addCustomHabit({
     title: preset.title,
     group: preset.group,
     difficulty: preset.difficulty,
-    execTime: preset.execTime,
-    duration: preset.duration,
+    time: preset.time || preset.execTime || '08:00',
+    execTime: preset.time || preset.execTime || '08:00',
+    duration: preset.duration || '15m',
     subtext: preset.subtext,
     icon: preset.icon
   });
   renderHabitsLabGrid();
   renderSuggestedRoutinesGrid();
   renderQuestList();
-  showToast(`Deployed "${preset.title}"`, `+${window.DIFFICULTY_TIERS[preset.difficulty]?.xp || 45} Base XP`);
+  syncAllViews(window.store.state);
+  showToast(`Deployed "${preset.title}" into Protocol Roster`, `+${window.DIFFICULTY_TIERS[preset.difficulty]?.xp || 45} Base XP`);
 }
 
 function deleteCustomHabit(id) {
@@ -1656,6 +1660,7 @@ function deleteCustomHabit(id) {
   renderHabitsLabGrid();
   renderSuggestedRoutinesGrid();
   renderQuestList();
+  syncAllViews(window.store.state);
   showToast('Habit Protocol Decommissioned');
 }
 
