@@ -3,7 +3,7 @@ import { readFileSync, copyFileSync, mkdirSync, writeFileSync, rmSync } from 'no
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const srcIconPath = 'C:/Users/AUGUSTINE/.gemini/antigravity/brain/30467cde-257e-44b7-8b18-67b72357614f/habitops_app_icon_1793393041089.jpg';
+const srcIconPath = 'C:/Users/AUGUSTINE/.gemini/antigravity/brain/30467cde-257e-44b7-8b18-67b72357614f/habitops_xp_app_icon_1793393268529.jpg';
 const base64Data = readFileSync(srcIconPath).toString('base64');
 const dataUri = `data:image/jpeg;base64,${base64Data}`;
 
