@@ -364,15 +364,22 @@ function checkPeriodMissedAlerts() {
 // ==========================================
 // FLOATING XP PARTICLES & COUNTER ROLLUP
 // ==========================================
-function spawnFloatingParticle(targetEl, text) {
+function spawnFloatingParticle(targetEl, text, isCrit = false) {
   if (!targetEl) return;
   const rect = targetEl.getBoundingClientRect();
   const particle = document.createElement('div');
-  particle.className =
-    'xp-float-particle bg-inverse-surface text-primary-fixed border border-primary-container px-2.5 py-1 font-label-sm text-label-sm font-bold shadow-lg z-50';
-  particle.textContent = text;
-  particle.style.left = Math.max(16, rect.right - 130) + 'px';
-  particle.style.top = rect.top + window.scrollY - 10 + 'px';
+  particle.className = `xp-float-particle px-3 py-1 font-mono text-xs font-black uppercase tracking-wider z-50 flex items-center gap-1.5 shadow-xl ${
+    isCrit
+      ? 'bg-[#1E0B14] text-[#FF0055] border-2 border-[#FF0055] shadow-[0_0_15px_rgba(255,0,85,0.6)]'
+      : 'bg-[#0B1522] text-[#00F0FF] border-2 border-[#00F0FF] shadow-[0_0_15px_rgba(0,240,255,0.5)]'
+  }`;
+  particle.innerHTML = `
+    <span class="material-symbols-outlined text-[15px]">${isCrit ? 'local_fire_department' : 'bolt'}</span>
+    <span>${text}</span>
+  `;
+  const targetCenterX = rect.left + rect.width / 2;
+  particle.style.left = Math.max(16, targetCenterX - 65) + 'px';
+  particle.style.top = rect.top + window.scrollY - 15 + 'px';
   document.body.appendChild(particle);
   setTimeout(() => particle.remove(), 1100);
 }
@@ -660,7 +667,7 @@ function createQuestElement(quest) {
       <div class="flex items-start gap-3 min-w-0">
         <div class="checkbox-box w-7 h-7 bg-surface-container-lowest flex items-center justify-center mt-0.5 transition-all border-2 ${
           quest.isPriorityTarget ? 'border-secondary' : 'border-outline-variant'
-        } shrink-0">
+        } shrink-0 cursor-pointer hover:border-primary active:scale-90" onclick="event.stopPropagation(); handleQuestCardClick('${quest.id}');" title="Strike to execute protocol / Hold card to charge">
           <span class="material-symbols-outlined text-[17px] ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'}">${quest.icon || 'bolt'}</span>
         </div>
         <div class="flex flex-col min-w-0">
@@ -702,26 +709,27 @@ function createQuestElement(quest) {
 function createCompletedQuestRow(quest) {
   const row = document.createElement('div');
   row.className =
-    'bg-surface-container-lowest px-3 py-2 border border-outline-variant/30 flex items-center justify-between opacity-85 hover:opacity-100 transition-opacity';
+    'bg-surface-container-lowest px-3 py-2.5 border border-outline-variant/30 flex items-center justify-between opacity-90 hover:opacity-100 transition-opacity';
   const earnedXp = quest.lastEarnedXp || quest.xp;
   row.innerHTML = `
     <div class="flex items-center gap-2.5 min-w-0">
-      <div class="w-5 h-5 bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
-        <span class="material-symbols-outlined text-[14px] font-bold">check</span>
+      <div class="w-6 h-6 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[15px] font-bold">check</span>
       </div>
       <div class="flex flex-col min-w-0">
-        <div class="flex items-center gap-1.5">
-          <span class="font-label-md text-label-md text-on-surface line-through truncate font-semibold">${quest.title}</span>
+        <div class="flex items-center gap-2">
+          <span class="font-label-md text-label-md text-on-surface line-through truncate font-bold opacity-80">${quest.title}</span>
+          <span class="px-1.5 py-0.2 bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 font-mono text-[10px] font-bold uppercase tracking-wider">✓ EXECUTED</span>
           ${
             quest.lastWasCrit
-              ? '<span class="px-1 py-0.2 bg-secondary text-on-secondary font-label-sm text-[11px] uppercase font-bold">CRIT 1.5×</span>'
+              ? '<span class="px-1 py-0.2 bg-secondary text-on-secondary font-label-sm text-[10px] uppercase font-bold">CRIT 1.5×</span>'
               : ''
           }
         </div>
-        <span class="font-body-sm text-[11px] text-outline">${quest.group.toUpperCase()} · Earned +${earnedXp} XP</span>
+        <span class="font-mono text-[11px] text-outline">${quest.group.toUpperCase()} · Earned <span class="text-emerald-400 font-bold">+${earnedXp} XP</span></span>
       </div>
     </div>
-    <button class="px-2 py-1 text-[11px] font-label-sm uppercase font-bold text-on-surface-variant hover:text-secondary border border-outline-variant/30 tactile-btn shrink-0" onclick="handleQuestCardClick('${quest.id}')">Undo</button>
+    <button class="px-2.5 py-1 text-[11px] font-mono uppercase font-bold text-outline hover:text-secondary border border-outline-variant/30 hover:border-secondary tactile-btn shrink-0" onclick="handleQuestCardClick('${quest.id}')" title="Undo protocol strike">Undo</button>
   `;
   return row;
 }
@@ -750,6 +758,9 @@ function handleQuestCardClick(questId) {
       window.audioEngine.playBossHit(result.bossSlainNow);
       triggerBossSlashAnimation(result.bossDamage);
       triggerScreenShake();
+      if (card) {
+        spawnFloatingParticle(card, `+${result.earnedXp} XP (${result.totalMultiplier}×)`, true);
+      }
       spawnFloatingBadges(
         null,
         `+${result.earnedXp} XP (${result.totalMultiplier}×)`,
@@ -759,7 +770,7 @@ function handleQuestCardClick(questId) {
       window.audioEngine.playComboBlip(comboCount);
       window.audioEngine.playQuestVanish();
       if (card) {
-        spawnFloatingParticle(card, `+${result.earnedXp} XP (${result.totalMultiplier}×)`);
+        spawnFloatingParticle(card, `+${result.earnedXp} XP (${result.totalMultiplier}×)`, false);
       }
       if (window.store.state.boss.currentHp > 0) {
         triggerBossSlashAnimation(result.bossDamage);
@@ -1488,6 +1499,33 @@ function initHabitsLabView() {
   });
 }
 
+function toggleProtocolActionMenu(questId, event) {
+  if (event) event.stopPropagation();
+  window.audioEngine.playTap();
+  const currentOpen = document.querySelector('.protocol-context-menu:not(.hidden)');
+  const targetMenu = document.getElementById(`protocol-menu-${questId}`);
+  
+  if (currentOpen && currentOpen !== targetMenu) {
+    currentOpen.classList.add('hidden');
+  }
+  if (targetMenu) {
+    targetMenu.classList.toggle('hidden');
+  }
+}
+
+function confirmDeleteHabit(id, title) {
+  if (confirm(`Decommission Protocol: "${title}"?\nThis removes the protocol from your active combat stack.`)) {
+    deleteCustomHabit(id);
+  }
+}
+
+// Global click-outside listener to dismiss any open protocol action menu
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.protocol-menu-container')) {
+    document.querySelectorAll('.protocol-context-menu').forEach(menu => menu.classList.add('hidden'));
+  }
+});
+
 function renderHabitsLabGrid(filter = 'all') {
   const container = document.getElementById('habits-lab-grid');
   if (!container) return;
@@ -1500,36 +1538,56 @@ function renderHabitsLabGrid(filter = 'all') {
     const tierInfo = window.DIFFICULTY_TIERS?.[quest.difficulty] || { label: 'Standard Protocol' };
     const card = document.createElement('div');
     card.className =
-      'bg-surface-container-lowest p-space-md border border-outline-variant/30 flex flex-col justify-between shadow-sm relative';
+      'bg-surface-container-lowest p-space-md border border-outline-variant/30 flex flex-col justify-between shadow-xs relative transition-all hover:border-primary';
+    
+    // Distinct high-contrast badge for completion state
+    const statusBadge = quest.completed
+      ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 font-mono text-[10px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.25)]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>✓ EXECUTED TODAY</span>`
+      : `<span class="inline-flex items-center gap-1 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>ACTIVE IN STACK</span>`;
+
     card.innerHTML = `
-      <div class="flex items-start justify-between">
-        <div class="flex items-center gap-space-sm">
+      <div class="flex items-start justify-between gap-2">
+        <div class="flex items-center gap-space-sm min-w-0">
           <div class="w-10 h-10 ${
             quest.isPriorityTarget ? 'bg-secondary-fixed text-secondary' : 'bg-primary-fixed text-primary'
-          } flex items-center justify-center font-bold border border-outline-variant/30">
+          } flex items-center justify-center font-bold border border-outline-variant/30 shrink-0">
             <span class="material-symbols-outlined text-[20px]">${quest.icon || 'bolt'}</span>
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="font-label-sm text-label-sm uppercase font-bold text-outline">${quest.group} · ⏰ ${quest.execTime || '08:00'} (${quest.duration || '30 mins'})</span>
+              <span class="font-mono text-[10px] uppercase font-bold text-outline truncate">${quest.group} · ⏰ ${quest.execTime || '08:00'} (${quest.duration || '30 mins'})</span>
             </div>
-            <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">${quest.title}</h4>
+            <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">${quest.title}</h4>
           </div>
         </div>
-        <span class="font-label-sm text-label-sm px-2 py-0.5 ${
-          quest.isPriorityTarget ? 'bg-secondary text-on-secondary' : 'bg-surface-container-high text-primary'
-        } font-bold uppercase tracking-wider shrink-0">
-          +${quest.xp} XP
-        </span>
-      </div>
-      <p class="font-body-sm text-body-sm text-on-surface-variant mt-2">${quest.subtext}</p>
-      <div class="flex items-center justify-between mt-3 pt-2 border-t border-surface-container text-xs">
-        <span class="font-label-sm text-label-sm text-outline">${tierInfo.label} · ${
-      quest.completed ? 'Completed Today ✓' : 'Active in Stack'
-    }</span>
-        <div class="flex items-center gap-3">
-          <button class="text-secondary font-bold uppercase hover:underline" onclick="deleteCustomHabit('${quest.id}')">Remove</button>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="font-mono text-[11px] px-2 py-0.5 ${
+            quest.isPriorityTarget ? 'bg-secondary text-on-secondary font-black' : 'bg-surface-container-high text-primary font-bold'
+          } uppercase tracking-wider">
+            +${quest.xp} XP
+          </span>
+          <!-- Three-Dot Overflow Action Menu -->
+          <div class="relative protocol-menu-container">
+            <button class="w-7 h-7 flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container-high border border-outline-variant/30 transition-colors" onclick="toggleProtocolActionMenu('${quest.id}', event)" title="Protocol Actions">
+              <span class="material-symbols-outlined text-[18px]">more_vert</span>
+            </button>
+            <div id="protocol-menu-${quest.id}" class="protocol-context-menu hidden absolute right-0 top-8 w-44 bg-surface-container-lowest border border-outline-variant shadow-xl z-30 py-1 flex flex-col">
+              <button class="px-3 py-2 text-left text-xs font-semibold text-on-surface hover:bg-surface-container-high flex items-center gap-2 transition-colors" onclick="event.stopPropagation(); document.getElementById('protocol-menu-${quest.id}').classList.add('hidden'); openHabitDetails('${quest.id}');">
+                <span class="material-symbols-outlined text-[15px] text-primary">visibility</span>
+                <span>Inspect Protocol</span>
+              </button>
+              <button class="px-3 py-2 text-left text-xs font-semibold text-secondary hover:bg-secondary/10 flex items-center gap-2 border-t border-outline-variant/30 transition-colors" onclick="event.stopPropagation(); document.getElementById('protocol-menu-${quest.id}').classList.add('hidden'); confirmDeleteHabit('${quest.id}', '${quest.title.replace(/'/g, "\\'")}');">
+                <span class="material-symbols-outlined text-[15px] text-secondary">delete</span>
+                <span>Decommission</span>
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">${quest.subtext}</p>
+      <div class="flex items-center justify-between mt-3 pt-2.5 border-t border-surface-container text-xs">
+        <span class="font-mono text-[10px] text-outline uppercase font-semibold">${tierInfo.label}</span>
+        ${statusBadge}
       </div>
     `;
     container.appendChild(card);
@@ -2227,6 +2285,15 @@ function updateThemeSelectorUI(themeName, darkOps) {
   const icon = document.getElementById('dark-mode-icon');
   if (label) label.textContent = darkOps ? 'Day Ops' : 'Night Ops';
   if (icon) icon.textContent = darkOps ? 'light_mode' : 'dark_mode';
+
+  const headerIcon = document.getElementById('header-darkops-icon');
+  const headerLabel = document.getElementById('header-darkops-label');
+  if (headerIcon) headerIcon.textContent = darkOps ? 'light_mode' : 'dark_mode';
+  if (headerLabel) headerLabel.textContent = darkOps ? 'DAY' : 'NIGHT';
+}
+
+function toggleDarkOps() {
+  toggleDarkMode();
 }
 
 // ==========================================
@@ -2777,6 +2844,12 @@ function syncAllViews(state) {
 
   // 3. XP Bars & Next Title Milestone
   const pct = Math.min(100, Math.round((state.user.currentXp / state.user.maxXp) * 100));
+
+  // Tactical Header Level & XP Progress HUD Widget
+  const headerXpCounter = document.getElementById('header-xp-counter');
+  const headerXpBar = document.getElementById('header-xp-bar');
+  if (headerXpCounter) headerXpCounter.textContent = `${state.user.currentXp} / ${state.user.maxXp} XP`;
+  if (headerXpBar) headerXpBar.style.width = `${pct}%`;
   const todayLvlTitle = document.getElementById('today-level-progress-title');
   if (todayLvlTitle) todayLvlTitle.textContent = `LVL ${state.user.level} PROGRESS`;
   const heroXpLabel = document.getElementById('hero-xp-label');
@@ -2881,6 +2954,50 @@ function syncAllViews(state) {
       el.textContent = done === total && total > 0 ? `${done}/${total} Secured ✓` : `${done}/${total} Complete`;
     }
   });
+
+  // 6b. Daily Momentum & Completion Summary Widget
+  const totalProtocols = state.quests.length;
+  const doneProtocols = completedCount;
+  const momentumPctVal = totalProtocols > 0 ? Math.round((doneProtocols / totalProtocols) * 100) : 0;
+
+  const momentumRing = document.getElementById('momentum-progress-ring');
+  const momentumPctText = document.getElementById('momentum-pct-text');
+  const momentumCountText = document.getElementById('momentum-count-text');
+  const momentumSubtext = document.getElementById('momentum-subtext');
+  const momentumXpText = document.getElementById('momentum-xp-text');
+  const momentumMultPill = document.getElementById('momentum-mult-pill');
+
+  if (momentumPctText) momentumPctText.textContent = `${momentumPctVal}%`;
+  if (momentumCountText) {
+    momentumCountText.textContent = `${doneProtocols} of ${totalProtocols} Protocols Secured (${momentumPctVal}%)`;
+  }
+  if (momentumSubtext) {
+    if (totalProtocols === 0) {
+      momentumSubtext.textContent = 'Active combat stack offline · Commission protocols in Protocols Lab';
+    } else if (doneProtocols === totalProtocols) {
+      momentumSubtext.textContent = '100% Sector Clearance achieved · Daily operational objectives neutralized!';
+    } else {
+      const remaining = totalProtocols - doneProtocols;
+      momentumSubtext.textContent = `${remaining} protocol${remaining > 1 ? 's' : ''} remaining · Strike targets to advance sector`;
+    }
+  }
+  if (momentumXpText) momentumXpText.textContent = `+${completedXp} XP`;
+  if (momentumRing) {
+    const circumference = 106.8;
+    const strokeOffset = Math.max(0, circumference - (momentumPctVal / 100) * circumference);
+    momentumRing.style.strokeDashoffset = `${strokeOffset}`;
+    if (momentumPctVal === 100) {
+      momentumRing.classList.remove('stroke-primary');
+      momentumRing.classList.add('stroke-emerald-400');
+    } else {
+      momentumRing.classList.remove('stroke-emerald-400');
+      momentumRing.classList.add('stroke-primary');
+    }
+  }
+  if (momentumMultPill && window.store.getMultiplierBreakdown) {
+    const bd = window.store.getMultiplierBreakdown();
+    momentumMultPill.textContent = `${(bd.totalMultiplier || bd.totalBeforeCrit || 1.2).toFixed(2)}× MULT`;
+  }
 
   // 7. Profile Stat Counters
   const streakEl = document.getElementById('stat-streak');

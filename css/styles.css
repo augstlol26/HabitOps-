@@ -102,30 +102,32 @@ body {
   animation: shake-screen 0.38s ease-out;
 }
 
-/* Floating XP particle */
+/* Floating XP Tactical HUD Particle */
 @keyframes float-xp {
   0% {
     opacity: 0;
-    transform: translate3d(0, 10px, 0) scale(0.8);
+    transform: translate3d(0, 14px, 0) scale(0.85);
   }
-  20% {
+  18% {
     opacity: 1;
-    transform: translate3d(0, -8px, 0) scale(1.08);
+    transform: translate3d(0, -6px, 0) scale(1.08);
   }
-  80% {
+  75% {
     opacity: 1;
-    transform: translate3d(0, -32px, 0) scale(1);
+    transform: translate3d(0, -38px, 0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate3d(0, -48px, 0) scale(0.9);
+    transform: translate3d(0, -62px, 0) scale(0.92);
   }
 }
 .xp-float-particle {
   position: absolute;
-  animation: float-xp 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: float-xp 1.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   pointer-events: none;
-  z-index: 50;
+  z-index: 9999;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(8px);
 }
 
 @keyframes float-xp-large {
@@ -717,46 +719,96 @@ nav button.active-nav .active-indicator {
   animation: victoryPop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Night Ops Dark Mode */
+/* High-Contrast Tactical Dark Ops Theme (Command Slate #0F172A / #1E293B) */
 body.dark-ops,
 body.dark-ops main,
 body.dark-ops #view-onboarding {
-  background-color: #0b111e !important;
-  color: #e2e8f0 !important;
+  background-color: #070b12 !important;
+  color: #f1f5f9 !important;
 }
 body.dark-ops header,
 body.dark-ops nav.fixed,
-body.dark-ops aside#side-drawer,
+body.dark-ops aside#side-drawer {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
 body.dark-ops .bg-surface-container-lowest,
 body.dark-ops .bg-surface {
-  background-color: #111927 !important;
-  color: #f1f5f9 !important;
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
   border-color: #1e293b !important;
 }
 body.dark-ops .bg-surface-container-low,
 body.dark-ops .bg-surface-container {
-  background-color: #172133 !important;
+  background-color: #162032 !important;
   color: #e2e8f0 !important;
-  border-color: #26334d !important;
+  border-color: #1e293b !important;
 }
 body.dark-ops .bg-surface-container-high,
 body.dark-ops .bg-surface-container-highest {
   background-color: #1e293b !important;
   color: #cbd5e1 !important;
+  border-color: #334155 !important;
 }
 body.dark-ops .text-on-surface {
   color: #f8fafc !important;
 }
-body.dark-ops .text-on-surface-variant,
-body.dark-ops .text-outline {
+body.dark-ops .text-on-surface-variant {
   color: #94a3b8 !important;
+}
+body.dark-ops .text-outline {
+  color: #64748b !important;
+}
+body.dark-ops .border-outline-variant,
+body.dark-ops .border-outline-variant\/30,
+body.dark-ops .border-outline-variant\/40 {
+  border-color: #1e293b !important;
+}
+body.dark-ops .text-primary {
+  color: #00f0ff !important;
+}
+body.dark-ops .bg-primary {
+  background-color: #00839a !important;
+}
+body.dark-ops .border-primary {
+  border-color: #00f0ff !important;
 }
 body.dark-ops input,
 body.dark-ops select,
 body.dark-ops textarea {
-  background-color: #0f172a !important;
+  background-color: #0b0f19 !important;
   color: #f8fafc !important;
   border-color: #334155 !important;
+}
+
+/* Daily Momentum & Completion Summary Widget */
+#daily-momentum-widget {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.02) 0%, rgba(0, 104, 122, 0.04) 100%);
+  position: relative;
+}
+body.dark-ops #daily-momentum-widget {
+  background: linear-gradient(135deg, #0f172a 0%, #162032 100%) !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 240, 255, 0.15) !important;
+}
+#momentum-progress-ring {
+  filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.4));
+}
+
+/* Protocol Context Action Menu */
+.protocol-context-menu {
+  backdrop-filter: blur(12px);
+  animation: contextMenuSlide 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes contextMenuSlide {
+  0% { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+body.dark-ops .protocol-context-menu {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75), 0 0 1px rgba(0, 240, 255, 0.4) !important;
 }
 
 /* Tactical Screen Jolt on 2-Second Strike Release */
