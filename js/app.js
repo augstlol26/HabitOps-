@@ -541,6 +541,7 @@ function startMissionHold(event, questId) {
     card.classList.add('charging-hold');
   }
 
+  window.audioEngine.playWaterDrop();
   window.audioEngine.startChargeHum();
   if ('vibrate' in navigator) {
     try { navigator.vibrate(30); } catch (e) {}
@@ -617,6 +618,7 @@ function completeMissionHold(questId) {
     missionHoldTimer = null;
   }
   window.audioEngine.stopChargeHum();
+  window.audioEngine.playPop();
 
   const card = document.getElementById(`quest-card-${questId}`);
   if (card) {
@@ -899,6 +901,100 @@ function handleSpawnNextBoss() {
   window.audioEngine.playBossHorn();
   window.store.spawnNextBoss();
   showToast('New Adversary Engaged!', `${window.store.state.boss.name} (${window.store.state.boss.maxHp} HP)`);
+  renderHeaderStats();
+}
+
+// Boss Tactical Dossier & Combat Telemetry Modal
+function openBossDossierModal() {
+  if (window.audioEngine && typeof window.audioEngine.playTap === 'function') {
+    window.audioEngine.playTap();
+  }
+
+  const modal = document.getElementById('boss-dossier-modal');
+  if (!modal) return;
+
+  const state = window.store.state;
+  const boss = state.boss || {};
+  const maxHp = boss.maxHp || 100;
+  const currentHp = Math.max(0, Math.min(maxHp, boss.currentHp !== undefined ? boss.currentHp : maxHp));
+  const damageTaken = Math.max(0, maxHp - currentHp);
+  const hpPct = Math.round((currentHp / maxHp) * 100);
+  const damagePct = Math.round((damageTaken / maxHp) * 100);
+  const tier = boss.tier || 1;
+
+  // Elements
+  const nameEl = document.getElementById('dossier-boss-name');
+  const tierBadgeEl = document.getElementById('dossier-boss-tier-badge');
+  const statusBadgeEl = document.getElementById('dossier-boss-status-badge');
+  const descEl = document.getElementById('dossier-boss-desc');
+  const hpTextEl = document.getElementById('dossier-boss-hp-text');
+  const hpBarEl = document.getElementById('dossier-boss-hp-bar');
+  const damageTakenEl = document.getElementById('dossier-damage-taken');
+  const damagePctEl = document.getElementById('dossier-damage-pct');
+  const hpRemainingEl = document.getElementById('dossier-hp-remaining');
+  const bountyXpEl = document.getElementById('dossier-bounty-xp');
+  const spawnNextBtn = document.getElementById('dossier-spawn-next-btn');
+
+  if (nameEl) nameEl.textContent = `${boss.name || 'The Adversary'} (Tier ${tier})`;
+  if (tierBadgeEl) tierBadgeEl.textContent = `Tier ${tier} Adversary`;
+  if (descEl) descEl.textContent = boss.desc || 'Thrives in the gap between intention and execution. Defeated by persistent daily discipline.';
+  if (hpTextEl) hpTextEl.textContent = `${currentHp} / ${maxHp} HP (${hpPct}%)`;
+
+  if (hpBarEl) {
+    hpBarEl.style.width = `${hpPct}%`;
+    if (currentHp === 0) {
+      hpBarEl.className = 'h-full bg-outline transition-all duration-500 ease-out';
+    } else if (hpPct <= 25) {
+      hpBarEl.className = 'h-full bg-secondary animate-pulse transition-all duration-500 ease-out';
+    } else {
+      hpBarEl.className = 'h-full bg-secondary transition-all duration-500 ease-out';
+    }
+  }
+
+  if (statusBadgeEl) {
+    if (boss.isSlain || currentHp === 0) {
+      statusBadgeEl.textContent = 'Vanquished';
+      statusBadgeEl.className = 'px-1.5 py-0.5 bg-outline text-white font-label-sm text-[10px] uppercase font-bold';
+    } else if (hpPct <= 25) {
+      statusBadgeEl.textContent = 'Critical Weakness';
+      statusBadgeEl.className = 'px-1.5 py-0.5 bg-secondary text-white font-label-sm text-[10px] uppercase font-bold animate-pulse';
+    } else if (hpPct < 100) {
+      statusBadgeEl.textContent = 'Active Engagement';
+      statusBadgeEl.className = 'px-1.5 py-0.5 bg-secondary-container text-on-secondary font-label-sm text-[10px] uppercase font-bold';
+    } else {
+      statusBadgeEl.textContent = 'Full Combat Readiness';
+      statusBadgeEl.className = 'px-1.5 py-0.5 bg-surface-container-high text-primary font-label-sm text-[10px] uppercase font-bold';
+    }
+  }
+
+  if (damageTakenEl) damageTakenEl.textContent = `${damageTaken} HP`;
+  if (damagePctEl) damagePctEl.textContent = `${damagePct}% Defeated`;
+  if (hpRemainingEl) hpRemainingEl.textContent = `${currentHp} HP`;
+  if (bountyXpEl) bountyXpEl.textContent = `+${boss.bonusXp || 200} XP`;
+
+  if (spawnNextBtn) {
+    if (boss.isSlain || currentHp === 0) {
+      spawnNextBtn.classList.remove('hidden');
+      spawnNextBtn.classList.add('flex');
+    } else {
+      spawnNextBtn.classList.add('hidden');
+      spawnNextBtn.classList.remove('flex');
+    }
+  }
+
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+}
+
+function closeBossDossierModal() {
+  if (window.audioEngine && typeof window.audioEngine.playTap === 'function') {
+    window.audioEngine.playTap();
+  }
+  const modal = document.getElementById('boss-dossier-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+  }
 }
 
 // ==========================================
@@ -2744,10 +2840,26 @@ function syncAllViews(state) {
       }
     }
   }
+  const isSlain = state.boss.isSlain || state.boss.currentHp <= 0;
+  const spawnBtn = document.getElementById('spawn-next-boss-btn');
+  if (spawnBtn) {
+    if (isSlain) {
+      spawnBtn.classList.remove('hidden');
+      spawnBtn.classList.add('inline-flex');
+    } else {
+      spawnBtn.classList.add('hidden');
+      spawnBtn.classList.remove('inline-flex');
+    }
+  }
+
   if (bossSubtext) {
-    bossSubtext.textContent = hpPct > 0 && hpPct <= 25
-      ? `CRITICAL HP (${state.boss.currentHp} / ${state.boss.maxHp} HP) — Finish the adversary!`
-      : `${state.boss.currentHp} / ${state.boss.maxHp} HP — Strike protocols to deal combat damage!`;
+    if (isSlain) {
+      bossSubtext.textContent = `0 / ${state.boss.maxHp} HP — BOSS VANQUISHED! Tap for Next Tier.`;
+    } else if (hpPct > 0 && hpPct <= 25) {
+      bossSubtext.textContent = `CRITICAL HP (${state.boss.currentHp} / ${state.boss.maxHp} HP) — Finish the adversary!`;
+    } else {
+      bossSubtext.textContent = `${state.boss.currentHp} / ${state.boss.maxHp} HP — Strike protocols to deal combat damage!`;
+    }
   }
 
   // 6. Quick Stat Summary in Today
@@ -3129,3 +3241,30 @@ function replayOnboardingFlow() {
   closeDrawer();
   initOnboarding();
 }
+
+// Global Snappy Keyboard Dismissal (Escape Key)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    const modals = [
+      { id: 'boss-dossier-modal', close: closeBossDossierModal },
+      { id: 'add-habit-modal', close: () => toggleAddHabitModal(false) },
+      { id: 'protocol-modal', close: () => toggleProtocolModal(false) },
+      { id: 'note-modal', close: () => toggleLogNoteModal(false) },
+      { id: 'calendar-modal', close: closeCalendarModal },
+      { id: 'rank-roadmap-modal', close: closeRankRoadmapModal },
+      { id: 'trophy-modal', close: closeTrophyModal },
+      { id: 'feedback-modal', close: closeFeedbackModal },
+      { id: 'guild-friend-modal', close: closeGuildFriendModal },
+      { id: 'legal-modal', close: closeLegalModal },
+      { id: 'boss-victory-modal', close: closeBossVictoryAndDeployNext }
+    ];
+    for (const m of modals) {
+      const el = document.getElementById(m.id);
+      if (el && !el.classList.contains('hidden') && el.style.display !== 'none') {
+        m.close();
+        break;
+      }
+    }
+    closeDrawer();
+  }
+});

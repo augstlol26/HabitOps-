@@ -175,7 +175,7 @@
           </div>
           <span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">HabitOps</span>
         </div>
-        <button aria-label="Close menu" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface active:bg-surface-container transition-colors" onclick="closeDrawer()">
+        <button aria-label="Close menu" class="modal-close-btn tactile-btn" onclick="closeDrawer()">
           <span class="material-symbols-outlined text-[22px]">close</span>
         </button>
       </div>
@@ -342,13 +342,13 @@
         </div>
 
         <!-- Daily Boss Alert: Dynamic Slash & Shake + Next Boss Respawn -->
-        <div class="bg-surface-container-low p-3.5 flex flex-col space-y-2 relative overflow-hidden transition-colors duration-300 border border-[#e2e8f0] shadow-sm" id="boss-card">
+        <div class="bg-surface-container-low p-3.5 flex flex-col space-y-2 relative overflow-hidden transition-all duration-300 border border-[#e2e8f0] shadow-sm cursor-pointer hover:border-secondary hover:shadow-md tactile-btn" id="boss-card" onclick="openBossDossierModal()" title="Tap to inspect Boss Health & Damage Dossier">
           <div id="boss-slash-layer"></div>
           <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-secondary via-primary-container to-secondary opacity-0 transition-opacity duration-300 pointer-events-none" id="boss-sound-ripple"></div>
           
           <div class="flex items-center justify-between relative z-10">
             <div class="flex items-center gap-2.5 min-w-0">
-              <div class="w-8 h-8 bg-secondary-container flex items-center justify-center shrink-0">
+              <div class="w-8 h-8 bg-secondary-container flex items-center justify-center shrink-0 border border-secondary/30">
                 <span class="material-symbols-outlined text-on-secondary text-[18px]">skull</span>
               </div>
               <div class="flex flex-col min-w-0">
@@ -360,9 +360,15 @@
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0 ml-2 z-10">
-              <button id="spawn-next-boss-btn" class="hidden px-2 py-1 bg-secondary text-white font-label-sm text-xs uppercase font-bold  tactile-btn" onclick="handleSpawnNextBoss()">Next Boss</button>
-              <div class="w-20 h-2.5 bg-surface-container-highest overflow-hidden relative border border-[#e2e8f0]">
-                <div class="h-full bg-secondary transition-all duration-500 ease-out" id="boss-hp-bar" style="width: 100%;"></div>
+              <button id="spawn-next-boss-btn" class="hidden px-2 py-1 bg-secondary text-white font-label-sm text-xs uppercase font-bold  tactile-btn" onclick="event.stopPropagation(); handleSpawnNextBoss()">Next Boss</button>
+              <div class="flex flex-col items-end gap-1">
+                <div class="w-20 h-2.5 bg-surface-container-highest overflow-hidden relative border border-[#e2e8f0]">
+                  <div class="h-full bg-secondary transition-all duration-500 ease-out" id="boss-hp-bar" style="width: 100%;"></div>
+                </div>
+                <span class="text-[10px] font-mono text-outline font-bold uppercase flex items-center gap-0.5 hover:text-secondary">
+                  <span>Dossier</span>
+                  <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+                </span>
               </div>
             </div>
           </div>
@@ -1447,15 +1453,15 @@
   <!-- ======================================================== -->
 
   <!-- 1. Edit Protocol Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="protocol-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="protocol-modal" onclick="if (event.target === this) toggleProtocolModal(false);">
     <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary-container p-5 shadow-md border border-outline-variant/60 flex flex-col space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[20px]">tune</span>
           <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Edit Operational Protocol</h2>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="toggleProtocolModal(false)">
-          <span class="material-symbols-outlined text-[20px]">close</span>
+        <button class="modal-close-btn tactile-btn" onclick="toggleProtocolModal(false)" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
       <div class="space-y-3 font-body-sm text-on-surface">
@@ -1480,15 +1486,15 @@
   </div>
 
   <!-- 2. Log Notes Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="note-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="note-modal" onclick="if (event.target === this) toggleLogNoteModal(false);">
     <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary p-5 shadow-md border border-outline-variant/60 flex flex-col space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[20px]">edit_note</span>
           <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Log Session Telemetry</h2>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="toggleLogNoteModal(false)">
-          <span class="material-symbols-outlined text-[20px]">close</span>
+        <button class="modal-close-btn tactile-btn" onclick="toggleLogNoteModal(false)" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
       <div class="space-y-3 font-body-sm text-on-surface">
@@ -1505,15 +1511,15 @@
   </div>
 
   <!-- 3. Add Custom Habit Modal (Controlled XP Tiers, Separate Time/Duration, Preset Chips & Future Scheduling) -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="add-habit-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="add-habit-modal" onclick="if (event.target === this) toggleAddHabitModal(false);">
     <div class="bg-surface-container-lowest w-full max-w-md border-2 border-primary-container p-5 shadow-md border border-outline-variant/60 flex flex-col space-y-3.5 my-auto">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[20px]">science</span>
           <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Commission Protocol</h2>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="toggleAddHabitModal(false)">
-          <span class="material-symbols-outlined text-[20px]">close</span>
+        <button class="modal-close-btn tactile-btn" onclick="toggleAddHabitModal(false)" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
@@ -1601,7 +1607,7 @@
   </div>
 
   <!-- 4. Trophy Inspection Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden opacity-0 pointer-events-none transition-opacity duration-200 flex items-center justify-center p-margin" id="trophy-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden opacity-0 pointer-events-none transition-opacity duration-200 flex items-center justify-center p-margin" id="trophy-modal" onclick="if (event.target === this) closeTrophyModal();">
     <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-on-surface flex flex-col shadow-md border border-outline-variant/60 p-space-md gap-space-md relative transform scale-95 transition-transform duration-200" id="trophy-modal-box">
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-space-sm">
@@ -1613,8 +1619,8 @@
             <h3 class="font-headline-sm text-headline-sm leading-tight text-on-surface font-bold" id="modal-title">Trophy Name</h3>
           </div>
         </div>
-        <button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container-high transition-colors tactile-btn" onclick="closeTrophyModal()">
-          <span class="material-symbols-outlined text-[20px]">close</span>
+        <button class="modal-close-btn tactile-btn" onclick="closeTrophyModal()" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
       <div class="flex flex-col gap-space-xs bg-surface-container-low p-space-sm border border-outline-variant/30">
@@ -1646,7 +1652,7 @@
   </div>
 
   <!-- 5. Full Interactive Calendar Modal (Plan Habits Ahead & View History) -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-3 overflow-y-auto" id="calendar-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-3 overflow-y-auto" id="calendar-modal" onclick="if (event.target === this) closeCalendarModal();">
     <div class="bg-surface-container-lowest w-full max-w-md border-2 border-on-surface shadow-md border border-outline-variant/60 p-4 flex flex-col gap-3 my-auto">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
@@ -1656,8 +1662,8 @@
             <p class="font-body-sm text-[11px] text-on-surface-variant">Tap any date to inspect logs or schedule protocols ahead</p>
           </div>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="closeCalendarModal()">
-          <span class="material-symbols-outlined text-[20px]">close</span>
+        <button class="modal-close-btn tactile-btn" onclick="closeCalendarModal()" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
@@ -1701,7 +1707,7 @@
   </div>
 
   <!-- 6. Operative Status & Rank Progression Dossier Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-3 overflow-y-auto" id="rank-roadmap-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-3 overflow-y-auto" id="rank-roadmap-modal" onclick="if (event.target === this) closeRankRoadmapModal();">
     <div class="bg-surface-container-lowest w-full max-w-md border-2 border-on-surface shadow-md border border-outline-variant/60 p-4 flex flex-col gap-3 my-auto max-h-[90vh]">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
@@ -1711,8 +1717,8 @@
             <p class="font-body-sm text-[11px] text-on-surface-variant">Unlimited Level Progression · Titles Awarded Through Lvl 100</p>
           </div>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="closeRankRoadmapModal()">
-          <span class="material-symbols-outlined text-[20px]">close</span>
+        <button class="modal-close-btn tactile-btn" onclick="closeRankRoadmapModal()" aria-label="Close modal">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
@@ -1767,9 +1773,125 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- BOSS DOSSIER & COMBAT TELEMETRY MODAL      -->
+  <!-- ========================================== -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="boss-dossier-modal" onclick="if (event.target === this) closeBossDossierModal();">
+    <div class="bg-surface-container-lowest w-full max-w-md border-2 border-secondary shadow-lg p-5 flex flex-col space-y-4 my-auto relative animate-fade-in border border-outline-variant/60">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between pb-3 border-b border-surface-container">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-secondary text-on-secondary flex items-center justify-center border-2 border-on-surface shadow-[3px_3px_0px_#131b2e] shrink-0">
+            <span class="material-symbols-outlined text-[28px]" style="font-variation-settings:'FILL' 1">skull</span>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="px-1.5 py-0.5 bg-secondary text-white text-on-secondary font-label-sm text-[10px] uppercase font-bold tracking-wider" id="dossier-boss-tier-badge">Tier 1 Adversary</span>
+              <span class="px-1.5 py-0.5 bg-surface-container-high text-primary font-label-sm text-[10px] uppercase font-bold" id="dossier-boss-status-badge">Active Combat</span>
+            </div>
+            <h2 class="font-headline-sm text-headline-sm text-on-surface font-black uppercase mt-0.5" id="dossier-boss-name">The Procrastination Titan</h2>
+          </div>
+        </div>
+        <button class="modal-close-btn tactile-btn" onclick="closeBossDossierModal()" title="Close Dossier" aria-label="Close modal">
+          <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+      </div>
+
+      <!-- Threat Profile & Lore -->
+      <div class="bg-surface-container-low p-3 border-l-2 border-secondary flex flex-col gap-1">
+        <span class="font-label-sm text-[11px] uppercase tracking-wider text-secondary font-bold flex items-center gap-1">
+          <span class="material-symbols-outlined text-[15px]">radar</span>
+          <span>Threat Dossier</span>
+        </span>
+        <p class="font-body-sm text-xs text-on-surface-variant leading-relaxed" id="dossier-boss-desc">
+          Thrives in the gap between intention and execution. Defeated by persistent daily discipline.
+        </p>
+      </div>
+
+      <!-- Core Health & Damage Telemetry -->
+      <div class="flex flex-col gap-2.5 bg-surface-container-lowest border border-outline-variant/40 p-3.5">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-xs uppercase font-bold text-on-surface flex items-center gap-1">
+            <span class="material-symbols-outlined text-secondary text-[16px]">favorite</span>
+            <span>Health Telemetry</span>
+          </span>
+          <span class="font-mono text-xs font-bold text-secondary" id="dossier-boss-hp-text">65 / 100 HP (65%)</span>
+        </div>
+
+        <!-- Visual Health Bar -->
+        <div class="w-full h-4 bg-surface-container-highest overflow-hidden relative border border-outline-variant">
+          <div class="h-full bg-secondary transition-all duration-500 ease-out" id="dossier-boss-hp-bar" style="width: 65%;"></div>
+        </div>
+
+        <!-- 3-Column Combat Stats: HP, Damage Taken, Remaining -->
+        <div class="grid grid-cols-3 gap-2 mt-1 pt-2 border-t border-surface-container text-center">
+          <div class="bg-surface-container-low p-2 border border-outline-variant/30 flex flex-col">
+            <span class="font-label-sm text-[10px] uppercase text-outline font-bold">Damage Taken</span>
+            <span class="font-headline-sm text-sm font-black text-secondary mt-0.5" id="dossier-damage-taken">35 HP</span>
+            <span class="font-mono text-[10px] text-outline" id="dossier-damage-pct">35% Defeated</span>
+          </div>
+
+          <div class="bg-surface-container-low p-2 border border-outline-variant/30 flex flex-col">
+            <span class="font-label-sm text-[10px] uppercase text-outline font-bold">HP Remaining</span>
+            <span class="font-headline-sm text-sm font-black text-on-surface mt-0.5" id="dossier-hp-remaining">65 HP</span>
+            <span class="font-mono text-[10px] text-outline">To Slay Boss</span>
+          </div>
+
+          <div class="bg-surface-container-low p-2 border border-outline-variant/30 flex flex-col">
+            <span class="font-label-sm text-[10px] uppercase text-outline font-bold">Bounty Yield</span>
+            <span class="font-headline-sm text-sm font-black text-primary mt-0.5" id="dossier-bounty-xp">+200 XP</span>
+            <span class="font-mono text-[10px] text-outline">+Trophy Prog</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tactical Combat Log & Strike Rules -->
+      <div class="flex flex-col gap-1.5 font-body-sm text-[11px] text-on-surface-variant bg-surface-container-low p-3 border border-outline-variant/30">
+        <span class="font-label-sm text-[11px] uppercase font-bold text-on-surface flex items-center gap-1">
+          <span class="material-symbols-outlined text-primary text-[15px]">swords</span>
+          <span>Tactical Strike Mechanics</span>
+        </span>
+        <ul class="space-y-1 mt-0.5">
+          <li class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-primary shrink-0"></span>
+            <span><strong>Standard Strike:</strong> Clears 15–30 HP per completed protocol.</span>
+          </li>
+          <li class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-secondary shrink-0"></span>
+            <span><strong>Priority Boss Target:</strong> Inflicts <strong>double combat damage</strong> (up to 70 HP).</span>
+          </li>
+          <li class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-amber-500 shrink-0"></span>
+            <span><strong>Critical Hit (1.5×):</strong> Deals massive lethal damage directly to HP.</span>
+          </li>
+          <li class="flex items-center gap-1.5 text-outline">
+            <span class="w-1.5 h-1.5 bg-outline shrink-0"></span>
+            <span><strong>Shielding:</strong> Missed days heal boss by 15% HP unless streak freeze is active.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Modal Footer Action -->
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-surface-container">
+        <button id="dossier-spawn-next-btn" class="hidden flex-1 py-2 px-3 bg-secondary text-white text-on-secondary font-label-md text-xs uppercase font-bold tactile-btn flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#131b2e]" onclick="closeBossDossierModal(); handleSpawnNextBoss();">
+          <span class="material-symbols-outlined text-[16px]">swords</span>
+          <span>Deploy Next Tier Boss</span>
+        </button>
+        <button class="flex-1 py-2 px-4 bg-primary text-white text-on-primary font-label-md text-xs uppercase font-bold tactile-btn flex items-center justify-center gap-1" onclick="closeBossDossierModal()">
+          <span>Acknowledge Dossier</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Boss Victory Celebration Modal -->
-  <div class="fixed inset-0 z-[9600] bg-inverse-surface/80 backdrop-blur-sm hidden flex items-center justify-center p-4" id="boss-victory-modal" style="display: none;">
+  <div class="fixed inset-0 z-[9600] bg-inverse-surface/80 backdrop-blur-sm hidden flex items-center justify-center p-4" id="boss-victory-modal" style="display: none;" onclick="if (event.target === this) closeBossVictoryAndDeployNext();">
     <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-secondary p-5 shadow-md border border-outline-variant/60 flex flex-col gap-4 text-center relative animate-victory-pop">
+      <button class="modal-close-btn tactile-btn absolute top-3 right-3 text-on-surface-variant hover:text-secondary" onclick="closeBossVictoryAndDeployNext()" aria-label="Close modal">
+        <span class="material-symbols-outlined">close</span>
+      </button>
       <div class="w-16 h-16 bg-secondary text-on-secondary mx-auto flex items-center justify-center border-2 border-on-surface shadow-[4px_4px_0px_#131b2e]">
         <span class="material-symbols-outlined text-[36px]" style="font-variation-settings:'FILL' 1">skull</span>
       </div>
@@ -1799,14 +1921,14 @@
   </div>
 
   <!-- 7. Guild Squad Friend Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="guild-friend-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="guild-friend-modal" onclick="if (event.target === this) closeGuildFriendModal();">
     <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary-container p-5 shadow-md border border-outline-variant/60 flex flex-col space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-secondary text-[20px]">group_add</span>
           <h2 class="font-headline-sm text-headline-sm uppercase  text-on-surface font-bold">Recruit Squad Friend</h2>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="closeGuildFriendModal()">
+        <button class="modal-close-btn tactile-btn" onclick="closeGuildFriendModal()" aria-label="Close modal">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
@@ -1837,14 +1959,14 @@
   </div>
 
   <!-- 8. Operative Feedback Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="feedback-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="feedback-modal" onclick="if (event.target === this) closeFeedbackModal();">
     <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary p-5 shadow-md border border-outline-variant/60 flex flex-col space-y-4 my-auto">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[20px]">rate_review</span>
           <h2 class="font-headline-sm text-headline-sm uppercase  text-on-surface font-bold">Operative Telemetry Feedback</h2>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="closeFeedbackModal()">
+        <button class="modal-close-btn tactile-btn" onclick="closeFeedbackModal()" aria-label="Close modal">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
@@ -1892,14 +2014,14 @@
   </div>
 
   <!-- 9. Commercial Legal, Privacy Policy & Data Governance Modal -->
-  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="legal-modal">
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto" id="legal-modal" onclick="if (event.target === this) closeLegalModal();">
     <div class="bg-surface-container-lowest w-full max-w-md border-2 border-on-surface p-5 shadow-md border border-outline-variant/60 flex flex-col space-y-3 my-auto max-h-[85vh]">
       <div class="flex items-center justify-between pb-2 border-b border-surface-container">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
           <h2 class="font-headline-sm text-headline-sm uppercase  text-on-surface font-bold">HabitOps Commercial Compliance &amp; Privacy</h2>
         </div>
-        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="closeLegalModal()">
+        <button class="modal-close-btn tactile-btn" onclick="closeLegalModal()" aria-label="Close modal">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>

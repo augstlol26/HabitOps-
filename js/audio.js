@@ -141,6 +141,83 @@ class TacticalAudioEngine {
     }
   }
 
+  // Satisfying Acoustic Water Droplet Sound for Protocol Touch
+  playWaterDrop() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+
+      osc.type = 'sine';
+      // Fast upward pitch sweep mimicking water droplet surface tension plink
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(1580, now + 0.042);
+      osc.frequency.exponentialRampToValueAtTime(940, now + 0.085);
+
+      // Acoustic droplet formant filter
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1280, now);
+      filter.Q.setValueAtTime(3.8, now);
+
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.12);
+    } catch (e) {
+      console.warn('Water drop audio error:', e);
+    }
+  }
+
+  // Satisfying Tactile Pop on 2-Second Hold Completion
+  playPop() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+
+      // 1. Initial acoustic pop transient click
+      const clickOsc = this.ctx.createOscillator();
+      const clickGain = this.ctx.createGain();
+      clickOsc.type = 'sine';
+      clickOsc.frequency.setValueAtTime(1450, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(320, now + 0.016);
+      clickGain.gain.setValueAtTime(0.42, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+      clickOsc.connect(clickGain);
+      clickGain.connect(this.ctx.destination);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.02);
+
+      // 2. Resonant warm pop body (descending pressure release)
+      const bodyOsc = this.ctx.createOscillator();
+      const bodyGain = this.ctx.createGain();
+      bodyOsc.type = 'sine';
+      bodyOsc.frequency.setValueAtTime(640, now);
+      bodyOsc.frequency.exponentialRampToValueAtTime(118, now + 0.065);
+
+      bodyGain.gain.setValueAtTime(0.5, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+      bodyOsc.connect(bodyGain);
+      bodyGain.connect(this.ctx.destination);
+
+      bodyOsc.start(now);
+      bodyOsc.stop(now + 0.085);
+    } catch (e) {
+      console.warn('Pop audio error:', e);
+    }
+  }
+
   // Heavy mechanical thud / locked feedback
   playMechanicalThud() {
     if (this.muted) return;
