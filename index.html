@@ -319,39 +319,16 @@
       
       <!-- Compact Hero Progress & Daily Boss Alert -->
       <section class="flex flex-col space-y-3">
-        <!-- Rank Division & Main Streak -->
-        <div class="bg-surface-container-low p-4 flex flex-col space-y-3 border border-surface-container shadow-sm">
-          <div class="flex items-center justify-between">
-            <div class="flex flex-col">
-              <div class="flex items-center gap-1.5">
-                <span class="font-label-sm text-label-sm text-outline uppercase ">Rank Title</span>
-                <button class="text-label-sm font-label-sm uppercase bg-primary/10 text-primary px-2 py-0.5 font-bold hover:bg-primary hover:text-on-primary transition-colors" onclick="openRankRoadmapModal()">Lvl 200 Ladder</button>
-              </div>
-              <span class="font-headline-sm text-headline-sm text-on-surface uppercase tracking-tight font-bold" data-bind-rank>Initiate Recruit</span>
-            </div>
-            <div class="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 border border-[#e2e8f0]">
-              <span class="material-symbols-outlined text-secondary text-[18px] animate-flame">local_fire_department</span>
-              <span class="font-label-sm text-label-sm text-on-surface font-bold uppercase" data-bind-streak>0 Days Streak</span>
-            </div>
+        <!-- Operative Tactical Identity Bar (Rank & Streak) -->
+        <div class="bg-surface-container-low px-3.5 py-2.5 flex items-center justify-between border border-outline-variant/40 shadow-xs cursor-pointer hover:border-primary transition-colors tactile-btn" onclick="openRankRoadmapModal()" title="View Level 1–100 Rank Progression & Ladder">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0"></span>
+            <span class="font-mono text-[11px] uppercase text-outline font-bold">OPERATIVE RANK:</span>
+            <span class="font-mono text-xs text-on-surface uppercase font-black truncate" data-bind-rank>Initiate Recruit</span>
           </div>
-
-          <!-- Linear Level Progress Bar (Click to inspect Operative Status & Multipliers) -->
-          <div class="flex flex-col space-y-1.5 cursor-pointer hover:opacity-90 transition-opacity" onclick="openRankRoadmapModal()" title="View Operative Status & Rank Dossier">
-            <div class="flex justify-between items-center text-on-surface">
-              <span class="font-label-sm text-label-sm text-primary uppercase font-bold flex items-center gap-1">
-                <span class="material-symbols-outlined text-[14px]">military_tech</span>
-                <span id="today-level-progress-title">LVL 1 PROGRESS</span>
-              </span>
-              <span class="font-label-sm text-label-sm text-outline font-semibold" id="hero-xp-label">0 / 120 XP</span>
-            </div>
-            <div class="w-full h-2.5 bg-surface-container-highest relative overflow-hidden border border-outline-variant/30">
-              <div class="h-full bg-primary-container transition-all duration-700 ease-out striped-progress" id="hero-xp-bar-today" style="width: 0%;"></div>
-            </div>
-            <!-- Active Multipliers Bar -->
-            <div class="flex items-center justify-between pt-1 text-xs font-label-sm text-on-surface-variant">
-              <span id="active-multiplier-pill" class="text-primary font-bold">1.20× Active Multiplier</span>
-              <span id="active-combo-pill" class="text-secondary font-bold">Priority Crit Target Armed</span>
-            </div>
+          <div class="flex items-center gap-1.5 shrink-0 pl-2">
+            <span class="material-symbols-outlined text-secondary text-[16px] animate-flame">local_fire_department</span>
+            <span class="font-mono text-xs text-on-surface font-bold uppercase" data-bind-streak>0 Days Streak</span>
           </div>
         </div>
 
@@ -514,23 +491,6 @@
         </button>
       </section>
 
-      <!-- Quick Stat Summary Strip (3-Column Micro Metrics) -->
-      <section class="bg-surface-container-low p-3 border border-[#e2e8f0]">
-        <div class="grid grid-cols-3 divide-x-0 gap-2">
-          <div class="flex flex-col items-center text-center">
-            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Quests</span>
-            <span class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold" id="summary-quest-count">0 / 6</span>
-          </div>
-          <div class="flex flex-col items-center text-center">
-            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Streak</span>
-            <span class="font-headline-sm text-headline-sm text-secondary mt-0.5 font-bold" data-bind-streak-short>0 Days</span>
-          </div>
-          <div class="flex flex-col items-center text-center">
-            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Total XP</span>
-            <span class="font-headline-sm text-headline-sm text-primary mt-0.5 font-bold" id="summary-xp-gained">0 XP</span>
-          </div>
-        </div>
-      </section>
 
     </div>
 
