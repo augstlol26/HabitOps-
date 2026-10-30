@@ -1,0 +1,589 @@
+
+/* Type Hierarchy Enforcement (Operate Mode: >=1.25x steps) */
+h1 { font-size: 1.75rem !important; line-height: 1.2 !important; font-weight: 700; }
+h2 { font-size: 1.375rem !important; line-height: 1.25 !important; font-weight: 700; }
+h3 { font-size: 1.0625rem !important; line-height: 1.3 !important; font-weight: 600; }
+
+/* HabitOps - Tactical Brutalist Theme & Animation Engine */
+@layer base {
+  * {
+    border-radius: 0px !important;
+  }
+  html, body {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #faf8ff;
+  }
+  body {
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+
+::-webkit-scrollbar { display: none; }
+body {
+  min-height: max(884px, 100dvh);
+}
+
+/* Tactical State Transitions (150-250ms for snappy Operate mode UX) */
+.tactile-btn {
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, opacity 0.15s ease;
+}
+.tactile-btn:active {
+  transform: translate(1px, 1px);
+}
+
+/* Boss Slash Impact and Shake */
+@keyframes boss-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px) rotate(-0.5deg); }
+  40% { transform: translateX(4px) rotate(0.5deg); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+.boss-damage-shake {
+  animation: boss-shake 0.35s ease-in-out;
+}
+.boss-damaged {
+  animation: boss-shake 0.45s ease-in-out;
+}
+
+@keyframes slash-beam {
+  0% {
+    opacity: 0;
+    transform: translate(-100%, 0) skewX(-25deg);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(250%, 0) skewX(-25deg);
+  }
+}
+.slash-flash-active {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), #dc2c4f, transparent);
+  animation: slash-beam 0.5s ease-out forwards;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Tactical Sound Wave Ripple indicator */
+@keyframes ripple-wave {
+  0% {
+    opacity: 0.9;
+    transform: scaleX(0.2) scaleY(0.5);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1) scaleY(1.2);
+  }
+}
+.sound-ripple-active {
+  animation: ripple-wave 0.5s ease-out forwards;
+}
+
+/* Screen Shake for Strike Check-In */
+@keyframes shake-screen {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, 1px); }
+  80% { transform: translate(2px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+.screen-shake {
+  animation: shake-screen 0.38s ease-out;
+}
+
+/* Floating XP particle */
+@keyframes float-xp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translate3d(0, -8px, 0) scale(1.08);
+  }
+  80% {
+    opacity: 1;
+    transform: translate3d(0, -32px, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -48px, 0) scale(0.9);
+  }
+}
+.xp-float-particle {
+  position: absolute;
+  animation: float-xp 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  z-index: 50;
+}
+
+@keyframes float-xp-large {
+  0% { transform: translate(-50%, 0) scale(0.85); opacity: 0; }
+  20% { opacity: 1; transform: translate(-50%, -15px) scale(1.1); }
+  80% { opacity: 1; transform: translate(-50%, -55px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -75px) scale(0.9); }
+}
+.floating-toast-anim {
+  animation: float-xp-large 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Checkbox pop */
+@keyframes check-pop {
+  0% { transform: scale(0.8); }
+  55% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+.check-pop-anim {
+  animation: check-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Audio Equalizer Bars */
+@keyframes eq-pulse-1 {
+  0%, 100% { height: 4px; }
+  50% { height: 12px; }
+}
+@keyframes eq-pulse-2 {
+  0%, 100% { height: 11px; }
+  50% { height: 5px; }
+}
+@keyframes eq-pulse-3 {
+  0%, 100% { height: 6px; }
+  50% { height: 14px; }
+}
+.eq-bar-1 { animation: eq-pulse-1 0.75s ease-in-out infinite; }
+.eq-bar-2 { animation: eq-pulse-2 0.6s ease-in-out infinite 0.15s; }
+.eq-bar-3 { animation: eq-pulse-3 0.85s ease-in-out infinite 0.3s; }
+
+/* Strikethrough draw transition */
+.task-title {
+  position: relative;
+  display: inline-block;
+  transition: opacity 0.25s ease, color 0.25s ease;
+}
+.task-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0%;
+  height: 2px;
+  background-color: currentColor;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.task-title.is-completed {
+  opacity: 0.65;
+}
+.task-title.is-completed::after {
+  width: 100%;
+}
+
+/* Tactical selected state for Buffs */
+.buff-selected {
+  border: 2px solid #00687a !important;
+  background-color: #f0fdfa !important;
+  box-shadow: 2px 2px 0px #00687a;
+}
+
+/* Tactile button interaction */
+.tactile-btn {
+  user-select: none;
+  cursor: pointer;
+  transition: transform 0.08s ease, filter 0.1s ease;
+}
+.tactile-btn:active {
+  transform: translate(1px, 1px);
+}
+
+/* Tactical Solid Progress Bar with Crisp Edge */
+.striped-progress {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Trophy Tactical Flash */
+@keyframes trophyHighlightPulse {
+  0% { outline: 2px solid #06b6d4; outline-offset: -2px; }
+  50% { outline: 2px solid #dc2c4f; outline-offset: -2px; }
+  100% { outline: 1px solid rgba(188, 201, 205, 0.4); outline-offset: -1px; }
+}
+.trophy-sound-flash {
+  animation: trophyHighlightPulse 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Flash highlight */
+@keyframes flash-cyan {
+  0% { background-color: rgba(6, 182, 212, 0.35); }
+  100% { background-color: transparent; }
+}
+.flash-highlight {
+  animation: flash-cyan 0.7s ease-out;
+}
+
+/* View transitions */
+.view-panel {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.view-panel.active-view {
+  display: flex;
+  opacity: 1;
+}
+
+/* App container framing for responsive elegance */
+.app-viewport {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  background-color: #faf8ff;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+@media (max-width: 640px) {
+  .app-viewport {
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .task-title::after {
+    transition: none !important;
+  }
+}
+
+
+/* ═══════════════════════════════════════════
+   ONBOARDING SCREEN STYLES
+   ═══════════════════════════════════════════ */
+
+/* Selected state for struggle/target tiles */
+.ob-struggle-tile.ob-selected,
+.ob-target-tile.ob-selected {
+  border-color: #00687a !important;
+  background-color: #acedff !important;
+  box-shadow: 3px 3px 0px #00687a;
+}
+.ob-struggle-tile.ob-selected .material-symbols-outlined,
+.ob-target-tile.ob-selected .material-symbols-outlined {
+  color: #00424f !important;
+}
+
+/* Selected intensity tile */
+.ob-intensity-tile.ob-selected {
+  border-color: #00687a !important;
+  background-color: #acedff !important;
+  box-shadow: 4px 4px 0px #00687a;
+}
+
+/* Onboarding deploy button tactile lift */
+@keyframes deploy-pulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+#ob-deploy-btn {
+  animation: deploy-pulse 2s ease-in-out infinite;
+}
+
+/* Boss card reveal animation */
+@keyframes boss-reveal {
+  0%   { transform: translateY(20px) scale(0.96); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+#ob-boss-card {
+  animation: boss-reveal 0.5s ease-out both;
+}
+
+/* Onboarding step slide-in */
+@keyframes ob-slide-in {
+  from { transform: translateX(32px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.ob-step-enter {
+  animation: ob-slide-in 0.3s ease-out both;
+}
+@keyframes ob-slide-out {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(-32px); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════
+   QUEST DISAPPEAR / STRIKE VANISH ANIMATION
+   ═══════════════════════════════════════════ */
+@keyframes questStrikeVanish {
+  0% {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+    max-height: 120px;
+  }
+  30% {
+    transform: scale(1.02) translateX(6px);
+    background-color: rgba(6, 182, 212, 0.22);
+    border-color: #06b6d4;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.92) translateX(45px);
+    opacity: 0;
+    max-height: 0px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.quest-vanish-anim {
+  animation: questStrikeVanish 0.44s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Critical Strike Gold/Crimson Tactical Flash */
+@keyframes critStrikeFlash {
+  0% { outline: 3px solid #dc2c4f; outline-offset: -3px; }
+  50% { outline: 3px solid #f59e0b; outline-offset: -3px; }
+  100% { outline: none; }
+}
+.crit-flash-anim {
+  animation: critStrikeFlash 0.4s ease-out;
+}
+
+/* Animated Tactical Notification Banner */
+@keyframes notifSlideDown {
+  0% { transform: translate(-50%, -130%); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
+}
+.notif-banner-active {
+  animation: notifSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Base & Tactical Color Themes (Deep HUD Styling) */
+:root {
+  --theme-primary: #00687a;
+  --theme-primary-container: #007a8f;
+  --theme-primary-rgb: 0, 104, 122;
+  --theme-accent: #acedff;
+}
+
+body[data-theme="cyan"] {
+  --theme-primary: #00687a;
+  --theme-primary-container: #007a8f;
+  --theme-primary-rgb: 0, 104, 122;
+  --theme-accent: #acedff;
+}
+body[data-theme="crimson"] {
+  --theme-primary: #dc2626;
+  --theme-primary-container: #ef4444;
+  --theme-primary-rgb: 220, 38, 38;
+  --theme-accent: #fecaca;
+}
+body[data-theme="emerald"] {
+  --theme-primary: #059669;
+  --theme-primary-container: #10b981;
+  --theme-primary-rgb: 5, 150, 105;
+  --theme-accent: #a7f3d0;
+}
+body[data-theme="amethyst"] {
+  --theme-primary: #7c3aed;
+  --theme-primary-container: #8b5cf6;
+  --theme-primary-rgb: 124, 58, 237;
+  --theme-accent: #ddd6fe;
+}
+body[data-theme="solar"] {
+  --theme-primary: #d97706;
+  --theme-primary-container: #f59e0b;
+  --theme-primary-rgb: 217, 119, 6;
+  --theme-accent: #fde68a;
+}
+
+/* Deep Theme Application Across Full UI */
+.text-primary {
+  color: var(--theme-primary) !important;
+}
+.bg-primary {
+  background-color: var(--theme-primary) !important;
+}
+.bg-primary-container {
+  background-color: var(--theme-primary-container) !important;
+}
+.border-primary {
+  border-color: var(--theme-primary) !important;
+}
+.border-primary-container {
+  border-color: var(--theme-primary-container) !important;
+}
+
+/* Active Navigation Glowing Indicator & Tab Text */
+nav button.active-nav,
+nav button.active-nav span {
+  color: var(--theme-primary) !important;
+}
+nav button.active-nav .active-indicator {
+  background-color: var(--theme-primary) !important;
+}
+
+/* XP Progress Bars & Meters */
+#hero-xp-bar-today,
+#hero-xp-bar,
+#drawer-xp-bar,
+#dossier-xp-bar {
+  background: var(--theme-primary) !important;
+}
+
+/* 2-Second Hold-to-Clear Interaction Styles */
+.mission-hold-wrapper {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+.mission-hold-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 0%;
+  background-color: var(--theme-primary, #007a8f);
+  transition: width 150ms ease-out;
+  pointer-events: none;
+  z-index: 10;
+}
+.charging-hold {
+  border-color: var(--theme-primary, #007a8f) !important;
+  background-color: rgba(var(--theme-primary-rgb, 0, 104, 122), 0.08) !important;
+  transform: scale(0.995);
+  box-shadow: inset 0 0 10px rgba(var(--theme-primary-rgb, 0, 104, 122), 0.15);
+}
+.charging-hold .mission-hold-bar {
+  transition: width 2000ms linear;
+  width: 100%;
+}
+.charging-hold .checkbox-box {
+  border-color: var(--theme-primary, #007a8f) !important;
+  transform: scale(1.1);
+}
+
+/* Boss Victory Celebration Animation */
+@keyframes victoryPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-victory-pop {
+  animation: victoryPop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Night Ops Dark Mode */
+body.dark-ops,
+body.dark-ops main,
+body.dark-ops #view-onboarding {
+  background-color: #0b111e !important;
+  color: #e2e8f0 !important;
+}
+body.dark-ops header,
+body.dark-ops nav.fixed,
+body.dark-ops aside#side-drawer,
+body.dark-ops .bg-surface-container-lowest,
+body.dark-ops .bg-surface {
+  background-color: #111927 !important;
+  color: #f1f5f9 !important;
+  border-color: #1e293b !important;
+}
+body.dark-ops .bg-surface-container-low,
+body.dark-ops .bg-surface-container {
+  background-color: #172133 !important;
+  color: #e2e8f0 !important;
+  border-color: #26334d !important;
+}
+body.dark-ops .bg-surface-container-high,
+body.dark-ops .bg-surface-container-highest {
+  background-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+body.dark-ops .text-on-surface {
+  color: #f8fafc !important;
+}
+body.dark-ops .text-on-surface-variant,
+body.dark-ops .text-outline {
+  color: #94a3b8 !important;
+}
+body.dark-ops input,
+body.dark-ops select,
+body.dark-ops textarea {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+/* Tactical Screen Jolt on 2-Second Strike Release */
+@keyframes tacticalScreenJolt {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 2px); }
+}
+.screen-jolt {
+  animation: tacticalScreenJolt 0.24s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Adversary Low-HP Heartbeat Pulse (< 25% Boss HP) */
+@keyframes bossHeartbeatDanger {
+  0%, 100% {
+    border-color: #ff2a55 !important;
+    outline: 1px solid #ff2a55;
+    outline-offset: -1px;
+  }
+  50% {
+    border-color: #ff0033 !important;
+    outline: 2px solid #ff0033;
+    outline-offset: -2px;
+  }
+}
+.boss-critical-pulse {
+  animation: bossHeartbeatDanger 1.1s ease-in-out infinite !important;
+}
+
+/* Procedural Neon Slash Particle */
+.strike-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 6px;
+  height: 6px;
+  will-change: transform, opacity;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease-out;
+}
+
+

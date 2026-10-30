@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+  <meta content="mobile_tab" name="shell-type"/>
+  <title>HabitCraft — Tactical Habit Engine</title>
+
+  <!-- Typography & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS CDN with Custom Theme -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-container": "#e89337",
+            "error": "#ba1a1a",
+            "outline": "#6d797d",
+            "on-surface-variant": "#3d494c",
+            "on-primary-container": "#00424f",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#ffdadb",
+            "secondary-container": "#dc2c4f",
+            "surface": "#faf8ff",
+            "surface-variant": "#dae2fd",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-tertiary-container": "#5b3200",
+            "surface-container-high": "#e2e7ff",
+            "primary": "#00687a",
+            "on-secondary-fixed-variant": "#92002a",
+            "background": "#faf8ff",
+            "inverse-surface": "#283044",
+            "on-secondary-container": "#fffbff",
+            "on-error-container": "#93000a",
+            "tertiary-fixed-dim": "#ffb873",
+            "tertiary-fixed": "#ffdcbf",
+            "inverse-on-surface": "#eef0ff",
+            "on-surface": "#131b2e",
+            "on-background": "#131b2e",
+            "on-primary-fixed": "#001f26",
+            "surface-dim": "#d2d9f4",
+            "on-tertiary-fixed": "#2d1600",
+            "secondary-fixed-dim": "#ffb2b7",
+            "on-primary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "error-container": "#ffdad6",
+            "tertiary": "#8c5000",
+            "on-secondary-fixed": "#40000d",
+            "surface-container": "#eaedff",
+            "surface-tint": "#00687a",
+            "primary-fixed-dim": "#4cd7f6",
+            "inverse-primary": "#4cd7f6",
+            "surface-bright": "#faf8ff",
+            "on-tertiary-fixed-variant": "#6a3b00",
+            "outline-variant": "#bcc9cd",
+            "primary-fixed": "#acedff",
+            "secondary": "#b90538",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#06b6d4",
+            "surface-container-low": "#f2f3ff"
+          },
+          borderRadius: {
+            "DEFAULT": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          spacing: {
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2.5rem",
+            "margin": "1.25rem",
+            "margin-sm": "1rem",
+            "gutter-sm": "0.75rem"
+          },
+          fontFamily: {
+            "display-mobile": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "display": ["Space Grotesk", "sans-serif"],
+            "body-md": ["Space Grotesk", "sans-serif"],
+            "label-md": ["Space Grotesk", "sans-serif"],
+            "label-sm": ["Space Grotesk", "sans-serif"],
+            "body-sm": ["Space Grotesk", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "label-lg": ["Space Grotesk", "sans-serif"],
+            "body-lg": ["Space Grotesk", "sans-serif"]
+          },
+          fontSize: {
+            "display-mobile": ["32px", { lineHeight: "36px", letterSpacing: "-0.03em", fontWeight: "700" }],
+            "headline-lg": ["28px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "display": ["40px", { lineHeight: "44px", letterSpacing: "-0.04em", fontWeight: "700" }],
+            "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.04em", fontWeight: "700" }],
+            "label-sm": ["10px", { lineHeight: "12px", letterSpacing: "0.06em", fontWeight: "700" }],
+            "body-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.01em", fontWeight: "400" }],
+            "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "700" }],
+            "headline-sm": ["18px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "700" }],
+            "label-lg": ["14px", { lineHeight: "18px", letterSpacing: "0.02em", fontWeight: "700" }],
+            "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Styles & Tactical Animations -->
+  <link rel="stylesheet" href="css/styles.css"/>
+
+  <!-- PWA / Installable App -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="HabitCraft"/>
+  <meta name="theme-color" content="#00687a"/>
+  <link rel="apple-touch-icon" href="assets/icon-192.png"/>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen relative overflow-x-hidden">
+
+  <!-- Tactical Float Notification Anchor -->
+  <div class="pointer-events-none fixed inset-x-0 bottom-24 flex flex-col items-center justify-center z-50" id="float-container"></div>
+
+  <!-- SLIDE-OUT SIDEBAR DRAWER -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="drawer-backdrop"></div>
+  <aside class="fixed top-0 bottom-0 left-0 w-72 max-w-[85vw] z-50 bg-surface-container-lowest flex flex-col justify-between -translate-x-full transition-transform duration-300 ease-out shadow-[4px_0_0_#131b2e] border-r border-[#e2e8f0] pt-safe pb-safe" id="side-drawer">
+    <div class="flex flex-col p-margin gap-space-lg">
+      <div class="flex items-center justify-between border-b border-[#e2e8f0] pb-3">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-8 h-8 bg-primary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-primary-container text-[20px]">bolt</span>
+          </div>
+          <span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">HabitCraft</span>
+        </div>
+        <button aria-label="Close menu" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface active:bg-surface-container transition-colors" onclick="closeDrawer()">
+          <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+      </div>
+
+      <!-- Drawer Discipline Rank -->
+      <div class="bg-surface-container-low p-space-md flex flex-col gap-space-xs border border-[#e2e8f0]">
+        <div class="flex justify-between items-center">
+          <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Discipline Rank</span>
+          <span class="font-label-md text-label-md text-primary font-bold" data-bind-level>LVL 14</span>
+        </div>
+        <div class="w-full h-2 bg-surface-container-highest overflow-hidden">
+          <div class="bg-primary-container h-full w-[85%]"></div>
+        </div>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">3,420 / 4,000 XP</span>
+      </div>
+
+      <!-- Drawer Sound SFX Setting -->
+      <div class="px-3 py-2 bg-surface-container-low border border-[#e2e8f0] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[18px]" id="drawer-sound-icon">volume_up</span>
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm uppercase text-on-surface font-bold">Tactical Synth</span>
+            <span class="font-body-sm text-body-sm text-outline" id="drawer-sound-status">Synthesizer Active</span>
+          </div>
+        </div>
+        <button aria-label="Toggle SFX Mute" class="px-2 py-1 bg-surface-container-lowest border border-outline-variant font-label-sm text-label-sm uppercase hover:bg-surface-container-high active:scale-95 transition-all text-on-surface" onclick="toggleSound()">
+          <span id="drawer-sound-btn-text">Mute</span>
+        </button>
+      </div>
+
+      <!-- Drawer Navigation Links -->
+      <nav class="flex flex-col gap-space-xs">
+        <a class="flex items-center gap-space-md h-12 px-space-md bg-surface text-on-surface hover:bg-surface-container-high transition-colors border-l-4 border-l-transparent hover:border-l-primary-container" data-path="today" href="#">
+          <span class="material-symbols-outlined text-[20px] text-primary">check_box</span>
+          <span class="font-label-lg text-label-lg font-bold">Today / Quests</span>
+        </a>
+        <a class="flex items-center gap-space-md h-12 px-space-md bg-surface text-on-surface hover:bg-surface-container-high transition-colors border-l-4 border-l-transparent hover:border-l-secondary" data-path="weekly-review" href="#">
+          <span class="material-symbols-outlined text-[20px] text-secondary">calendar_month</span>
+          <span class="font-label-lg text-label-lg font-bold">Weekly Review</span>
+        </a>
+        <a class="flex items-center gap-space-md h-12 px-space-md bg-surface text-on-surface hover:bg-surface-container-high transition-colors border-l-4 border-l-transparent hover:border-l-primary-container" data-path="habits-lab" href="#">
+          <span class="material-symbols-outlined text-[20px] text-primary-container">science</span>
+          <span class="font-label-lg text-label-lg font-bold">Habits Lab</span>
+        </a>
+        <a class="flex items-center gap-space-md h-12 px-space-md bg-surface text-on-surface hover:bg-surface-container-high transition-colors border-l-4 border-l-transparent hover:border-l-tertiary-container" data-path="trophy-vault" href="#">
+          <span class="material-symbols-outlined text-[20px] text-tertiary-container">shield_person</span>
+          <span class="font-label-lg text-label-lg font-bold">Trophy Vault</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-margin flex flex-col gap-space-xs border-t border-[#e2e8f0]">
+      <a class="flex items-center gap-space-md h-11 px-space-md bg-primary-container/20 text-primary hover:bg-primary-container hover:text-on-surface transition-colors border border-primary-container/40" download="habitcraft.apk" href="habitcraft.apk" onclick="closeDrawer();">
+        <span class="material-symbols-outlined text-[20px]">android</span>
+        <span class="font-label-md text-label-md font-bold uppercase tracking-wider">Download Android APK</span>
+      </a>
+      <a class="flex items-center gap-space-md h-11 px-space-md text-primary hover:bg-surface-container transition-colors" href="#" onclick="replayOnboardingFlow(); return false;">
+        <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+        <span class="font-label-md text-label-md font-bold">Welcome Briefing &amp; Setup</span>
+      </a>
+      <a class="flex items-center gap-space-md h-11 px-space-md text-on-surface-variant hover:text-on-surface active:bg-surface-container transition-colors" href="#" onclick="showToast('HabitCraft Engine v2.4 Active', 'All Protocols Synchronized'); closeDrawer();">
+        <span class="material-symbols-outlined text-[20px]">tune</span>
+        <span class="font-label-md text-label-md font-bold">Engine Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- TOP APPLICATION HEADER (FIXED) -->
+  <header class="fixed top-0 inset-x-0 z-40 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#e2e8f0] pt-safe">
+    <div class="h-16 px-margin max-w-xl mx-auto flex items-center justify-between gap-space-sm">
+      <div class="flex items-center gap-space-sm">
+        <button aria-label="Open Drawer" class="w-10 h-10 bg-inverse-surface hover:bg-primary transition-colors flex items-center justify-center cursor-pointer active:scale-95 transition-transform" id="drawer-toggle-btn">
+          <span class="material-symbols-outlined text-primary-fixed text-[20px]">menu</span>
+        </button>
+        <div class="flex flex-col">
+          <span class="font-label-lg text-label-lg tracking-wider uppercase text-on-surface leading-none font-bold">HabitCraft</span>
+          <span class="font-label-sm text-label-sm uppercase text-primary font-bold">Tactical Engine</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-space-sm">
+        <!-- Master Tactical SFX Audio Synthesizer Button -->
+        <button aria-label="Toggle Sound Effects" class="h-7 px-2 bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/50 flex items-center gap-1.5 transition-colors cursor-pointer active:scale-95" id="sfx-toggle-btn" onclick="toggleSound()" title="Toggle Retro Synthesized Audio">
+          <span class="material-symbols-outlined text-primary text-[15px]" id="sfx-icon">volume_up</span>
+          <div class="flex items-end gap-[1px] h-3 px-0.5" id="sfx-wave-bars">
+            <span class="w-[2px] bg-primary-container eq-bar-1 h-2"></span>
+            <span class="w-[2px] bg-primary eq-bar-2 h-3"></span>
+            <span class="w-[2px] bg-secondary eq-bar-3 h-1.5"></span>
+          </div>
+          <span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-on-surface" id="sfx-label">SFX ON</span>
+        </button>
+
+        <!-- Level Badge -->
+        <div class="h-7 px-space-xs bg-surface-container-low flex items-center gap-1 border border-[#e2e8f0]">
+          <span class="material-symbols-outlined text-[14px] text-secondary animate-flame">local_fire_department</span>
+          <span class="font-label-sm text-label-sm text-on-surface font-bold" data-bind-level>LVL 14</span>
+        </div>
+
+        <!-- Profile Shortcut -->
+        <button class="w-8 h-8 bg-primary hover:bg-primary-container flex items-center justify-center text-on-primary hover:text-on-surface transition-colors cursor-pointer" onclick="navigateTo('trophy-vault')" title="Go to Profile">
+          <span class="material-symbols-outlined text-[18px]">person</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN SCROLLABLE VIEW CONTAINER (RESPONSIVE VIEWPORT) -->
+  <main class="flex-1 w-full max-w-xl mx-auto pt-16 pb-24 min-h-screen bg-surface">
+
+    <!-- ======================================================== -->
+    <!-- VIEW 1: TODAY'S DAILY QUESTS & BOSS ENCOUNTER            -->
+    <!-- ======================================================== -->
+    <div class="view-panel active-view flex-col w-full px-margin py-space-md space-y-5" id="view-today">
+      
+      <!-- Compact Hero Progress & Daily Boss Alert -->
+      <section class="flex flex-col space-y-3">
+        <!-- Rank Division & Main Streak -->
+        <div class="bg-surface-container-low p-4 flex flex-col space-y-3 border border-surface-container shadow-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col">
+              <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Rank Division</span>
+              <span class="font-headline-sm text-headline-sm text-on-surface uppercase tracking-tight font-bold">Shadow Striker</span>
+            </div>
+            <div class="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 border border-[#e2e8f0]">
+              <span class="material-symbols-outlined text-secondary text-[18px] animate-flame">local_fire_department</span>
+              <span class="font-label-sm text-label-sm text-on-surface font-bold uppercase">18 Days Streak</span>
+            </div>
+          </div>
+
+          <!-- Linear Level Progress Bar -->
+          <div class="flex flex-col space-y-1.5">
+            <div class="flex justify-between items-center text-on-surface">
+              <span class="font-label-sm text-label-sm text-primary uppercase font-bold" data-bind-level>LVL 14 PROGRESS</span>
+              <span class="font-label-sm text-label-sm text-outline font-semibold" id="hero-xp-label">3,420 / 4,000 XP</span>
+            </div>
+            <div class="w-full h-2 bg-surface-container-highest relative overflow-hidden">
+              <div class="h-full bg-primary-container transition-all duration-700 ease-out" id="hero-xp-bar-today" style="width: 85%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Boss Alert: Procrastination Titan with Dynamic Slash & Shake -->
+        <div class="bg-surface-container-low p-3.5 flex flex-col space-y-2 relative overflow-hidden transition-colors duration-300 border border-[#e2e8f0] shadow-sm" id="boss-card">
+          <div id="boss-slash-layer"></div>
+          <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-secondary via-primary-container to-secondary opacity-0 transition-opacity duration-300 pointer-events-none" id="boss-sound-ripple"></div>
+          
+          <div class="flex items-center justify-between relative z-10">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 bg-secondary-container flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-on-secondary text-[18px]">skull</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="font-label-sm text-label-sm text-on-surface uppercase truncate font-bold" id="today-boss-name">Procrastination Titan</span>
+                  <span class="opacity-0 transition-opacity duration-200 bg-secondary text-on-secondary px-1 py-0.2 font-label-sm text-[9px] uppercase tracking-wider font-bold" id="boss-impact-tag">⚔️ IMPACT [SFX]</span>
+                </div>
+                <span class="font-body-sm text-body-sm text-secondary truncate transition-all duration-300 font-medium" id="boss-subtext">15% HP remaining — 2 habits to strike!</span>
+              </div>
+            </div>
+            <div class="w-20 h-2 bg-surface-container-highest shrink-0 overflow-hidden ml-2 z-10 relative border border-[#e2e8f0]">
+              <div class="h-full bg-secondary transition-all duration-500 ease-out" id="boss-hp-bar" style="width: 15%;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Weekly Sequence Strip -->
+      <section class="flex flex-col space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Weekly Sequence</span>
+          <span class="font-label-sm text-label-sm text-primary uppercase font-bold">Week 42</span>
+        </div>
+        <div class="grid grid-cols-7 gap-1">
+          <div class="bg-surface-container-low py-2 flex flex-col items-center gap-1 text-center border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm text-outline">M</span>
+            <span class="font-label-md text-label-md text-on-surface font-bold">14</span>
+            <span class="material-symbols-outlined text-primary-container text-[14px]">check</span>
+          </div>
+          <div class="bg-surface-container-low py-2 flex flex-col items-center gap-1 text-center border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm text-outline">T</span>
+            <span class="font-label-md text-label-md text-on-surface font-bold">15</span>
+            <span class="material-symbols-outlined text-primary-container text-[14px]">check</span>
+          </div>
+          <div class="bg-surface-container-low py-2 flex flex-col items-center gap-1 text-center border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm text-outline">W</span>
+            <span class="font-label-md text-label-md text-on-surface font-bold">16</span>
+            <span class="material-symbols-outlined text-primary-container text-[14px]">check</span>
+          </div>
+          <div class="bg-surface-container-low py-2 flex flex-col items-center gap-1 text-center border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm text-outline">T</span>
+            <span class="font-label-md text-label-md text-on-surface font-bold">17</span>
+            <span class="material-symbols-outlined text-primary-container text-[14px]">check</span>
+          </div>
+          <div class="bg-inverse-surface py-2 flex flex-col items-center gap-1 text-center border border-inverse-surface">
+            <span class="font-label-sm text-label-sm text-primary-fixed font-bold">F</span>
+            <span class="font-label-md text-label-md text-on-secondary font-bold">18</span>
+            <span class="material-symbols-outlined text-primary-container text-[14px]">radio_button_checked</span>
+          </div>
+          <div class="bg-surface-container-lowest py-2 flex flex-col items-center gap-1 text-center border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm text-outline">S</span>
+            <span class="font-label-md text-label-md text-outline">19</span>
+            <span class="w-1.5 h-1.5 bg-surface-container-highest my-1"></span>
+          </div>
+          <div class="bg-surface-container-lowest py-2 flex flex-col items-center gap-1 text-center border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm text-outline">S</span>
+            <span class="font-label-md text-label-md text-outline">20</span>
+            <span class="w-1.5 h-1.5 bg-surface-container-highest my-1"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Routine Pillars: Morning, Afternoon, Evening -->
+      <div class="flex flex-col space-y-5">
+        <!-- Morning Protocol -->
+        <section class="flex flex-col space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Morning Protocol</span>
+            <span class="font-label-sm text-label-sm text-primary font-bold" id="morning-status-text">2/2 Complete</span>
+          </div>
+          <div class="flex flex-col space-y-2" id="morning-quests-list"></div>
+        </section>
+
+        <!-- Afternoon Focus -->
+        <section class="flex flex-col space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Afternoon Focus</span>
+            <span class="font-label-sm text-label-sm text-secondary font-bold" id="afternoon-status-text">Active Encounters</span>
+          </div>
+          <div class="flex flex-col space-y-2" id="afternoon-quests-list"></div>
+        </section>
+
+        <!-- Evening Wind Down -->
+        <section class="flex flex-col space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-bold">Evening Wind Down</span>
+            <span class="font-label-sm text-label-sm text-outline font-semibold" id="evening-status-text">Pending</span>
+          </div>
+          <div class="flex flex-col space-y-2" id="evening-quests-list"></div>
+        </section>
+      </div>
+
+      <!-- Trophy & Milestone Encounter Chest (Interactive Fanfare) -->
+      <section class="bg-surface-container-low border border-primary-container/40 p-3.5 flex items-center justify-between relative overflow-hidden shadow-sm" id="trophy-banner">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-inverse-surface border border-primary-container text-primary-fixed flex items-center justify-center relative shadow-[0_0_12px_rgba(6,182,212,0.25)]">
+            <span class="material-symbols-outlined text-[22px] text-tertiary-container" id="trophy-icon">military_tech</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm uppercase text-primary font-bold">Milestone Chest Available</span>
+            <span class="font-body-sm text-body-sm text-on-surface" id="trophy-desc">Chain 18 Unlocked · Claim Rare Trophy</span>
+          </div>
+        </div>
+        <button aria-label="Unlock Trophy Fanfare" class="h-8 px-3 bg-primary hover:bg-inverse-surface text-on-primary font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-1 active:scale-95 transition-all shadow-sm tactile-btn" id="trophy-claim-btn" onclick="handleClaimTrophy()">
+          <span class="material-symbols-outlined text-[15px]">lock_open</span>
+          <span id="trophy-btn-label">Claim</span>
+        </button>
+      </section>
+
+      <!-- Quick Stat Summary Strip (3-Column Micro Metrics) -->
+      <section class="bg-surface-container-low p-3 border border-[#e2e8f0]">
+        <div class="grid grid-cols-3 divide-x-0 gap-2">
+          <div class="flex flex-col items-center text-center">
+            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Quests</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface mt-0.5 font-bold" id="summary-quest-count">2 / 6</span>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Streak</span>
+            <span class="font-headline-sm text-headline-sm text-secondary mt-0.5 font-bold">18 Days</span>
+          </div>
+          <div class="flex flex-col items-center text-center">
+            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Gained</span>
+            <span class="font-headline-sm text-headline-sm text-primary mt-0.5 font-bold" id="summary-xp-gained">+60 XP</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 2: HABIT QUEST DETAILS (STACK NAVIGATION)          -->
+    <!-- ======================================================== -->
+    <div class="view-panel flex-col w-full px-margin py-space-md space-y-space-lg" id="view-habit-details">
+      
+      <!-- Back Navigation Header -->
+      <div class="flex items-center justify-between pb-2 border-b border-[#e2e8f0]">
+        <button class="flex items-center gap-1 font-label-sm text-label-sm uppercase font-bold text-primary hover:text-on-surface transition-colors tactile-btn" onclick="navigateTo('today')">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          <span>Back to Quests</span>
+        </button>
+        <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Tactical Protocol View</span>
+      </div>
+
+      <!-- Core Identity Banner -->
+      <div class="flex flex-col bg-surface-container-lowest p-space-md border border-surface-container shadow-sm">
+        <div class="flex items-center justify-between gap-space-sm mb-space-sm">
+          <div class="flex items-center gap-space-xs">
+            <span class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase px-2 py-0.5 tracking-wider font-semibold">
+              Physical Mastery
+            </span>
+            <span class="bg-primary-container/20 border border-primary-container/40 text-primary font-label-sm text-label-sm px-2 py-0.5 tracking-wider font-bold">
+              +80 XP / STRIKE
+            </span>
+          </div>
+          <div class="boss-glow flex items-center gap-1 bg-secondary-container/15 border border-secondary/30 text-secondary px-2 py-0.5">
+            <span class="material-symbols-outlined text-[14px]">swords</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Boss Hit Active</span>
+          </div>
+        </div>
+
+        <div class="flex items-start justify-between gap-space-md mt-1">
+          <div>
+            <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight uppercase font-bold">
+              Deep Workout / Gym
+            </h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Heavy mechanical tension &amp; functional endurance protocol
+            </p>
+          </div>
+          <div class="w-12 h-12 bg-surface-container-high border border-outline-variant/40 flex items-center justify-center shrink-0 text-on-surface">
+            <span class="material-symbols-outlined text-[26px]">fitness_center</span>
+          </div>
+        </div>
+
+        <!-- Streak Metric Badges -->
+        <div class="grid grid-cols-2 gap-space-sm mt-space-md">
+          <div class="flex items-center gap-space-sm p-space-sm bg-surface-container-low border border-surface-container transition-all" id="streak-card">
+            <div class="w-9 h-9 bg-secondary flex items-center justify-center text-on-secondary shrink-0 flame-anim">
+              <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Current Streak</span>
+              <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold" id="streak-count-display">18 Days</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-space-sm p-space-sm bg-surface-container-low border border-surface-container">
+            <div class="w-9 h-9 bg-primary flex items-center justify-center text-on-primary shrink-0">
+              <span class="material-symbols-outlined text-[20px]">military_tech</span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Personal Best</span>
+              <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">24 Days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone & Level Progress -->
+      <div class="flex flex-col bg-surface-container-lowest p-space-md border border-surface-container shadow-sm">
+        <div class="flex items-center justify-between mb-space-xs">
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+            <span class="font-label-lg text-label-lg text-on-surface uppercase tracking-wide font-bold">Tier 3 / Veteran Striker</span>
+          </div>
+          <span class="font-label-md text-label-md text-primary font-bold" id="xp-fraction-label">380 / 500 XP</span>
+        </div>
+        <!-- Progress Bar with Tactical Shimmer -->
+        <div class="w-full h-3 bg-surface-container-high relative overflow-hidden mt-1 shimmer-active">
+          <div class="h-full bg-primary-container transition-all duration-700 ease-out" id="quest-progress-fill" style="width: 76%;"></div>
+        </div>
+        <div class="flex items-center justify-between mt-space-xs text-on-surface-variant">
+          <span class="font-label-sm text-label-sm">Next: Iron Physique (+1.2x Multiplier)</span>
+          <span class="font-label-sm text-label-sm font-bold text-on-surface" id="xp-left-label">120 XP Left</span>
+        </div>
+        <div class="grid grid-cols-2 gap-space-sm mt-space-md pt-space-sm bg-surface-container-low p-space-sm border border-surface-container">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Total Sessions</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold" id="total-sessions-label">54 Logged</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Time Invested</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold" id="time-invested-label">42.5 hrs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Protocol & Cadence -->
+      <div class="flex flex-col bg-surface-container-lowest p-space-md border border-surface-container shadow-sm space-y-space-md">
+        <div class="flex items-center justify-between pb-space-xs">
+          <h3 class="font-label-lg text-label-lg text-on-surface uppercase tracking-wider font-bold">
+            Operational Protocol
+          </h3>
+          <button aria-label="Edit Protocol Settings" class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center tactile-btn" onclick="toggleProtocolModal(true)">
+            <span class="material-symbols-outlined text-[19px]">settings</span>
+          </button>
+        </div>
+        <div class="space-y-space-sm">
+          <div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low border border-surface-container">
+            <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">calendar_month</span>
+            <div class="flex flex-col flex-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold">Cadence</span>
+              <span class="font-body-md text-body-md text-on-surface" id="proto-cadence-val">Mon, Wed, Fri, Sat @ 17:30</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low border border-surface-container">
+            <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">timer</span>
+            <div class="flex flex-col flex-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold">Standard Target</span>
+              <span class="font-body-md text-body-md text-on-surface" id="proto-target-val">45 mins — Upper Hypertrophy / Functional Power</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low border border-surface-container">
+            <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">crisis_alert</span>
+            <div class="flex flex-col flex-1">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-bold">Action Cue / Trigger</span>
+              <span class="font-body-md text-body-md text-on-surface" id="proto-cue-val">Leave gym shoes &amp; water bottle by desk station at 17:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Ledger -->
+      <div class="flex flex-col bg-surface-container-lowest p-space-md border border-surface-container shadow-sm">
+        <div class="flex items-center justify-between mb-space-sm">
+          <h3 class="font-label-lg text-label-lg text-on-surface uppercase tracking-wider font-bold">
+            Strike Ledger (Recent)
+          </h3>
+          <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Last 7 Cycles</span>
+        </div>
+        <div class="space-y-2">
+          <!-- Session 1 (Today) -->
+          <div class="flex flex-col border border-surface-container transition-all" id="session-today-card">
+            <div class="flex items-center justify-between p-space-sm bg-surface-container cursor-pointer select-none" onclick="toggleTelemetry('telemetry-today')">
+              <div class="flex items-center gap-space-sm">
+                <button aria-label="Toggle Strike Status" class="w-6 h-6 bg-surface-container-lowest flex items-center justify-center shrink-0 border border-outline-variant/40 hover:border-primary-container transition-colors tactile-btn" id="strike-box-today" onclick="event.stopPropagation(); executeStrikeCheckIn();" type="button">
+                  <span class="material-symbols-outlined text-[16px] text-on-surface-variant" id="strike-icon-today">hourglass_empty</span>
+                </button>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-space-xs">
+                    <span class="font-label-md text-label-md text-on-surface font-bold">Oct 18 (Today)</span>
+                    <span class="bg-tertiary-container/30 text-tertiary font-label-sm text-label-sm px-1.5 py-0.2 uppercase font-bold" id="badge-status-today">Pending</span>
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant" id="strike-subtext-today">Awaiting Execution Encounter</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-label-md text-on-surface-variant font-bold" id="strike-xp-today">+80 XP</span>
+                <span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform" id="arrow-telemetry-today">expand_more</span>
+              </div>
+            </div>
+            <div class="hidden px-space-sm py-space-xs bg-surface-container-low text-xs border-t border-surface-container text-on-surface-variant" id="telemetry-today">
+              <div class="grid grid-cols-2 gap-2 py-1 font-body-sm">
+                <div><span class="font-bold text-on-surface">Target Duration:</span> 45 mins</div>
+                <div><span class="font-bold text-on-surface">Target Zone:</span> Hypertrophy Zone 3</div>
+                <div><span class="font-bold text-on-surface">Warmup:</span> Dynamic Shoulder Prehab</div>
+                <div><span class="font-bold text-on-surface">Multipliers:</span> Boss Surge (+1.2x)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Session 2 (Oct 16) -->
+          <div class="flex flex-col border border-surface-container transition-all">
+            <div class="flex items-center justify-between p-space-sm bg-surface-container-low cursor-pointer select-none hover:bg-surface-container transition-colors" onclick="toggleTelemetry('telemetry-oct16')">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-6 h-6 bg-primary-container flex items-center justify-center text-on-surface shrink-0">
+                  <span class="material-symbols-outlined text-[16px] font-bold">check</span>
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-space-xs">
+                    <span class="font-label-md text-label-md text-on-surface font-bold">Oct 16</span>
+                    <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-1.5 py-0.2 font-semibold">48m</span>
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">Heavy Back &amp; Core • RPE 8</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-label-md text-primary font-bold">+80 XP</span>
+                <span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform" id="arrow-telemetry-oct16">expand_more</span>
+              </div>
+            </div>
+            <div class="hidden px-space-sm py-2 bg-surface-container-lowest text-xs border-t border-surface-container" id="telemetry-oct16">
+              <div class="grid grid-cols-2 gap-2 text-on-surface-variant font-body-sm">
+                <div><span class="font-bold text-on-surface">Deadlift:</span> 4 sets × 6 reps @ 140kg</div>
+                <div><span class="font-bold text-on-surface">Lat Pulldown:</span> 3 sets × 10 reps @ 75kg</div>
+                <div><span class="font-bold text-on-surface">Ab Wheel:</span> 4 sets × 15 reps</div>
+                <div><span class="font-bold text-on-surface">Rest Cadence:</span> 120s strict</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Session 3 (Oct 14) -->
+          <div class="flex flex-col border border-surface-container transition-all">
+            <div class="flex items-center justify-between p-space-sm bg-surface-container-low cursor-pointer select-none hover:bg-surface-container transition-colors" onclick="toggleTelemetry('telemetry-oct14')">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-6 h-6 bg-primary-container flex items-center justify-center text-on-surface shrink-0">
+                  <span class="material-symbols-outlined text-[16px] font-bold">check</span>
+                </div>
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-space-xs">
+                    <span class="font-label-md text-label-md text-on-surface font-bold">Oct 14</span>
+                    <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-1.5 py-0.2 font-semibold">45m</span>
+                  </div>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">Shoulder Press &amp; Pulls • RPE 7.5</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-label-md text-label-md text-primary font-bold">+80 XP</span>
+                <span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform" id="arrow-telemetry-oct14">expand_more</span>
+              </div>
+            </div>
+            <div class="hidden px-space-sm py-2 bg-surface-container-lowest text-xs border-t border-surface-container" id="telemetry-oct14">
+              <div class="grid grid-cols-2 gap-2 text-on-surface-variant font-body-sm">
+                <div><span class="font-bold text-on-surface">OHP:</span> 4 sets × 8 reps @ 55kg</div>
+                <div><span class="font-bold text-on-surface">Face Pulls:</span> 3 sets × 15 reps @ 25kg</div>
+                <div><span class="font-bold text-on-surface">Dips:</span> 3 sets × BW+15kg</div>
+                <div><span class="font-bold text-on-surface">Peak HR:</span> 154 bpm</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Hub -->
+      <div class="flex flex-col gap-space-sm pt-space-xs sticky bottom-3 z-30 bg-surface/95 backdrop-blur-sm p-1 border border-surface-container-high">
+        <button class="w-full min-h-[52px] bg-inverse-surface text-inverse-on-surface hover:bg-primary-container hover:text-on-surface active:scale-[0.98] flex items-center justify-center gap-space-sm transition-all uppercase tracking-wider font-label-lg text-label-lg shadow-md cursor-pointer border border-transparent tactile-btn" id="checkin-btn" onclick="executeStrikeCheckIn()">
+          <span class="material-symbols-outlined text-[20px]" id="checkin-icon">bolt</span>
+          <span id="checkin-text">Check In Strike (+80 XP)</span>
+        </button>
+        <div class="grid grid-cols-2 gap-space-sm">
+          <button class="w-full min-h-[44px] bg-surface-container-lowest text-on-surface hover:bg-surface-container flex items-center justify-center gap-space-xs font-label-md text-label-md uppercase tracking-wider shadow-sm transition-colors border border-surface-container tactile-btn" onclick="toggleProtocolModal(true)">
+            <span class="material-symbols-outlined text-[18px]">tune</span>
+            <span>Edit Protocol</span>
+          </button>
+          <button class="w-full min-h-[44px] bg-surface-container-lowest text-on-surface hover:bg-surface-container flex items-center justify-center gap-space-xs font-label-md text-label-md uppercase tracking-wider shadow-sm transition-colors border border-surface-container tactile-btn" onclick="toggleLogNoteModal(true)">
+            <span class="material-symbols-outlined text-[18px]">edit_note</span>
+            <span>Log Notes</span>
+          </button>
+        </div>
+        <div class="hidden flex items-center justify-between text-xs px-2 pt-1 text-on-surface-variant font-label-sm" id="undo-container">
+          <span>STRIKE LOGGED TODAY</span>
+          <button class="text-secondary uppercase underline hover:text-secondary-container transition-colors tracking-wider font-bold" onclick="revertStrikeCheckIn()">Revert / Undo</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 3: WEEKLY REVIEW & REFLECTION                      -->
+    <!-- ======================================================== -->
+    <div class="view-panel flex-col w-full px-margin py-space-md gap-space-lg" id="view-weekly-review">
+      
+      <!-- TOP SUMMARY SECTION -->
+      <section class="flex flex-col gap-space-md">
+        <div class="flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">Protocol Archive</span>
+            <h1 class="font-headline-md text-headline-md tracking-tight text-on-surface font-bold">Oct 14 – Oct 20 Review</h1>
+          </div>
+          <div class="h-8 px-space-sm bg-surface-container-high flex items-center gap-1.5 text-on-surface border border-[#e2e8f0]">
+            <span class="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
+            <span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Week 42</span>
+          </div>
+        </div>
+
+        <!-- STAT STRIP: 3 Square Panels with Rollup Counters -->
+        <div class="grid grid-cols-3 gap-space-xs">
+          <div class="bg-surface-container-lowest p-space-sm flex flex-col justify-between shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0] min-h-[96px]">
+            <div class="flex items-center justify-between">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Rate</span>
+              <div class="w-2 h-2 bg-primary-container"></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex items-baseline">
+                <span class="font-headline-sm text-headline-sm text-on-surface leading-none font-bold" id="stat-rate">88%</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-primary font-bold mt-1 tracking-tight">On Target</span>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest p-space-sm flex flex-col justify-between shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0] min-h-[96px]">
+            <div class="flex items-center justify-between">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Streak</span>
+              <span class="material-symbols-outlined text-[14px] text-secondary">local_fire_department</span>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex items-baseline">
+                <span class="font-headline-sm text-headline-sm text-on-surface leading-none font-bold" id="stat-streak-review">6/7</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant mt-1 font-medium">Days Hit</span>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest p-space-sm flex flex-col justify-between shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0] min-h-[96px]">
+            <div class="flex items-center justify-between">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Gains</span>
+              <span class="material-symbols-outlined text-[14px] text-tertiary-container">bolt</span>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex items-baseline">
+                <span class="font-headline-sm text-headline-sm text-on-surface leading-none font-bold" id="stat-gains">+420</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant mt-1 font-medium">XP Yield</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TITAN RAID VICTORY CALLOUT WITH SHIMMER MOTION -->
+        <div class="relative bg-surface-container-lowest shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-[#e2e8f0] overflow-hidden">
+          <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg] animate-shimmer"></div>
+          </div>
+          <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+          <div class="p-space-md pl-space-lg flex flex-col gap-space-xs relative z-10">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-space-xs">
+                <span class="material-symbols-outlined text-[18px] text-secondary">skull</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">Raid Target Cleared</span>
+              </div>
+              <span class="badge-victory-glow font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed-variant px-1.5 py-0.5 font-bold uppercase tracking-wider border border-secondary/20">+150 XP Bonus</span>
+            </div>
+            <div class="flex items-baseline justify-between mt-1">
+              <h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight font-bold">Procrastination Titan</h2>
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Trophy Claimed</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Execution barrier broken via uninterrupted morning blocks and zero-latency starts.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WEEKLY COMPLETION CADENCE (BAR CHART WITH INTERACTIVE TOOLTIP) -->
+      <section class="flex flex-col gap-space-sm bg-surface-container-lowest p-space-md shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0]">
+        <div class="flex items-center justify-between mb-space-xs">
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Cadence Rhythm</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">Weekly Distribution</span>
+          </div>
+          <div class="flex items-center gap-space-xs">
+            <span class="inline-block w-2.5 h-2.5 bg-primary-container"></span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Done</span>
+          </div>
+        </div>
+
+        <!-- Interactive Feedback Tooltip -->
+        <div class="min-h-[26px] px-space-xs flex items-center justify-between bg-surface-container-low border border-[#e2e8f0] text-on-surface transition-all duration-200" id="chart-tooltip">
+          <div class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-primary-container"></span>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold text-primary" id="tooltip-day">Tuesday</span>
+            <span class="font-body-sm text-body-sm text-on-surface" id="tooltip-text">6/6 Quests Cleared (100%)</span>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-mono" id="tooltip-extra">Apex Focus</span>
+        </div>
+
+        <!-- Chart Bars Container -->
+        <div class="flex items-end justify-between gap-2 pt-space-xs h-36 px-space-xs relative" id="weekly-bars-container">
+          <!-- Mon -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Monday" data-extra="Full Output" data-stats="6/6 Quests Cleared (100%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">6/6</span>
+            <div class="w-full bg-primary-container transition-all duration-700 ease-out origin-bottom group-hover:brightness-110 chart-bar" data-target-height="100%" style="height: 100%;"></div>
+            <span class="font-label-sm text-label-sm uppercase text-on-surface font-semibold pt-1">M</span>
+          </div>
+          <!-- Tue -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Tuesday" data-extra="Apex Focus" data-stats="6/6 Quests Cleared (100%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-primary font-bold">6/6</span>
+            <div class="w-full bg-primary-container transition-all duration-700 ease-out origin-bottom group-hover:brightness-110 relative chart-bar ring-2 ring-primary" data-target-height="100%" style="height: 100%;">
+              <div class="absolute -top-1.5 inset-x-0 h-1.5 bg-primary"></div>
+            </div>
+            <span class="font-label-sm text-label-sm uppercase text-primary font-bold pt-1">T</span>
+          </div>
+          <!-- Wed -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Wednesday" data-extra="Consistent" data-stats="6/6 Quests Cleared (100%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">6/6</span>
+            <div class="w-full bg-primary-container transition-all duration-700 ease-out origin-bottom group-hover:brightness-110 chart-bar" data-target-height="100%" style="height: 100%;"></div>
+            <span class="font-label-sm text-label-sm uppercase text-on-surface font-semibold pt-1">W</span>
+          </div>
+          <!-- Thu -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Thursday" data-extra="Target Hit" data-stats="5/6 Quests Cleared (83%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">5/6</span>
+            <div class="w-full bg-primary-container transition-all duration-700 ease-out origin-bottom group-hover:brightness-110 chart-bar" data-target-height="83%" style="height: 83%;"></div>
+            <span class="font-label-sm text-label-sm uppercase text-on-surface font-semibold pt-1">T</span>
+          </div>
+          <!-- Fri -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Friday" data-extra="Sprint Final" data-stats="6/6 Quests Cleared (100%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">6/6</span>
+            <div class="w-full bg-primary-container transition-all duration-700 ease-out origin-bottom group-hover:brightness-110 chart-bar" data-target-height="100%" style="height: 100%;"></div>
+            <span class="font-label-sm text-label-sm uppercase text-on-surface font-semibold pt-1">F</span>
+          </div>
+          <!-- Sat -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Saturday" data-extra="Rest Phase" data-stats="4/6 Quests Cleared (66%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">4/6</span>
+            <div class="w-full bg-surface-container-high transition-all duration-700 ease-out origin-bottom group-hover:brightness-105 chart-bar" data-target-height="66%" style="height: 66%;"></div>
+            <span class="font-label-sm text-label-sm uppercase text-on-surface-variant pt-1 font-semibold">S</span>
+          </div>
+          <!-- Sun -->
+          <div class="group flex flex-col items-center gap-1 flex-1 h-full justify-end cursor-pointer" data-day="Sunday" data-extra="Weekly Reset" data-stats="5/6 Quests Cleared (83%)" onclick="selectBar(this)">
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">5/6</span>
+            <div class="w-full bg-primary-container transition-all duration-700 ease-out origin-bottom group-hover:brightness-110 chart-bar" data-target-height="83%" style="height: 83%;"></div>
+            <span class="font-label-sm text-label-sm uppercase text-on-surface font-semibold pt-1">S</span>
+          </div>
+        </div>
+
+        <!-- Phase High/Low Tags -->
+        <div class="grid grid-cols-2 gap-space-sm pt-space-sm">
+          <div class="bg-surface-container-low p-space-sm flex items-center justify-between border border-[#e2e8f0] pulse-apex-glow">
+            <div class="flex flex-col">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Peak Output</span>
+              <span class="font-body-sm text-body-sm font-semibold text-on-surface">Tuesday • Apex Focus</span>
+            </div>
+            <span class="material-symbols-outlined text-[18px] text-primary">trending_up</span>
+          </div>
+          <div class="bg-surface-container-low p-space-sm flex items-center justify-between border border-[#e2e8f0]">
+            <div class="flex flex-col">
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Lowest Rhythm</span>
+              <span class="font-body-sm text-body-sm font-semibold text-on-surface">Saturday • Rest Phase</span>
+            </div>
+            <span class="material-symbols-outlined text-[18px] text-on-surface-variant">bed</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- KEY HABIT BREAKDOWN (DISCIPLINE MATRIX) -->
+      <section class="flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between">
+          <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Discipline Matrix</span>
+          <span class="font-label-sm text-label-sm text-primary font-bold uppercase">3 Pillars Analyzed</span>
+        </div>
+
+        <!-- Pillar 1 -->
+        <div class="bg-surface-container-lowest p-space-md shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0] flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-sm">
+              <div class="w-7 h-7 bg-primary-container flex items-center justify-center text-on-primary-container">
+                <span class="material-symbols-outlined text-[16px]">wb_sunny</span>
+              </div>
+              <span class="font-label-lg text-label-lg text-on-surface font-bold">Morning Protocol</span>
+            </div>
+            <span class="font-label-md text-label-md text-primary font-bold matrix-counter" data-target="100">100% Hit</span>
+          </div>
+          <div class="w-full bg-surface-container-high h-1.5 mt-1 overflow-hidden">
+            <div class="bg-primary-container h-full transition-all duration-1000 ease-out matrix-bar" data-width="100%" style="width: 100%;"></div>
+          </div>
+          <div class="flex items-center justify-between mt-1 text-on-surface-variant">
+            <span class="font-body-sm text-body-sm">Hydration, Mindful Breathing, Cold Shower</span>
+            <span class="font-label-sm text-label-sm uppercase font-semibold text-primary">7/7 Days</span>
+          </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="bg-surface-container-lowest p-space-md shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0] flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-sm">
+              <div class="w-7 h-7 bg-surface-container-high flex items-center justify-center text-on-surface border border-[#e2e8f0]">
+                <span class="material-symbols-outlined text-[16px]">terminal</span>
+              </div>
+              <span class="font-label-lg text-label-lg text-on-surface font-bold">Deep Work / Focus</span>
+            </div>
+            <span class="font-label-md text-label-md text-on-surface font-bold matrix-counter" data-target="85">85% Hit</span>
+          </div>
+          <div class="w-full bg-surface-container-high h-1.5 mt-1 overflow-hidden">
+            <div class="bg-primary-container h-full transition-all duration-1000 ease-out matrix-bar" data-width="85%" style="width: 85%;"></div>
+          </div>
+          <div class="flex items-center justify-between mt-1 text-on-surface-variant">
+            <span class="font-body-sm text-body-sm">4.5 hours aggregate focus blocks logged</span>
+            <span class="font-label-sm text-label-sm uppercase font-semibold">6/7 Days</span>
+          </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="bg-surface-container-lowest p-space-md shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0] flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-sm">
+              <div class="w-7 h-7 bg-surface-container-high flex items-center justify-center text-on-surface border border-[#e2e8f0]">
+                <span class="material-symbols-outlined text-[16px]">nights_stay</span>
+              </div>
+              <span class="font-label-lg text-label-lg text-on-surface font-bold">Evening Wind Down</span>
+            </div>
+            <span class="font-label-md text-label-md text-secondary font-bold matrix-counter" data-target="71">71% Hit</span>
+          </div>
+          <div class="w-full bg-surface-container-high h-1.5 mt-1 overflow-hidden">
+            <div class="bg-secondary-container h-full transition-all duration-1000 ease-out matrix-bar" data-width="71%" style="width: 71%;"></div>
+          </div>
+          <div class="flex items-center justify-between mt-1 text-on-surface-variant">
+            <span class="font-body-sm text-body-sm">Digital Sunset threshold slipped 2 nights</span>
+            <span class="font-label-sm text-label-sm uppercase font-semibold">5/7 Days</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- FIELD REFLECTION & JOURNALING -->
+      <section class="flex flex-col gap-space-sm bg-surface-container-lowest p-space-md shadow-[0_1px_4px_rgba(0,0,0,0.02)] border border-[#e2e8f0]">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-space-xs">
+            <span class="material-symbols-outlined text-[18px] text-primary">edit_note</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Field Reflection</span>
+          </div>
+          <button class="font-label-sm text-label-sm text-primary uppercase font-bold cursor-pointer hover:underline px-2 py-0.5 active:bg-surface-container transition-colors tactile-btn" id="save-reflection-btn">Save</button>
+        </div>
+        <div class="flex flex-col gap-space-xs mt-1">
+          <label class="font-label-md text-label-md text-on-surface font-semibold" for="reflection-input">
+            What unlock gave you the most momentum this week?
+          </label>
+          <div class="bg-surface-container-low p-space-sm relative border border-[#e2e8f0]">
+            <textarea class="w-full bg-transparent font-body-md text-body-md text-on-surface resize-none focus:outline-none leading-relaxed" id="reflection-input" placeholder="Document your breakthrough..." rows="3">Setting phone in another room at 10 PM eliminated late-night doomscrolling and made morning deep work effortless.</textarea>
+          </div>
+        </div>
+
+        <!-- Rating Meters -->
+        <div class="grid grid-cols-3 gap-space-xs pt-space-xs">
+          <div class="bg-surface-container-low p-space-sm flex flex-col gap-1 border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-semibold">Energy</span>
+            <div class="flex items-center gap-0.5" data-rating-group="energy">
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="0"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="1"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="2"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="3"></span>
+              <span class="w-2.5 h-2.5 bg-surface-container-highest cursor-pointer" data-star-idx="4"></span>
+            </div>
+            <span class="font-label-sm text-label-sm text-on-surface font-bold mt-0.5" id="rating-val-energy">4 / 5</span>
+          </div>
+
+          <div class="bg-surface-container-low p-space-sm flex flex-col gap-1 border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-semibold">Discipline</span>
+            <div class="flex items-center gap-0.5" data-rating-group="discipline">
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="0"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="1"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="2"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="3"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="4"></span>
+            </div>
+            <span class="font-label-sm text-label-sm text-primary font-bold mt-0.5" id="rating-val-discipline">5 / 5</span>
+          </div>
+
+          <div class="bg-surface-container-low p-space-sm flex flex-col gap-1 border border-[#e2e8f0]">
+            <span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-semibold">Recovery</span>
+            <div class="flex items-center gap-0.5" data-rating-group="recovery">
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="0"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="1"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="2"></span>
+              <span class="w-2.5 h-2.5 bg-primary-container cursor-pointer" data-star-idx="3"></span>
+              <span class="w-2.5 h-2.5 bg-surface-container-highest cursor-pointer" data-star-idx="4"></span>
+            </div>
+            <span class="font-label-sm text-label-sm text-on-surface font-bold mt-0.5" id="rating-val-recovery">4 / 5</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIONABLE NEXT WEEK BLUEPRINT -->
+      <section class="flex flex-col gap-space-sm">
+        <div class="bg-surface-container-high p-space-md flex items-center justify-between border border-[#e2e8f0]">
+          <div class="flex items-center gap-space-sm">
+            <div class="w-9 h-9 bg-inverse-surface flex items-center justify-center text-inverse-on-surface">
+              <span class="material-symbols-outlined text-[20px]">swords</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold">Upcoming Encounter</span>
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold">Distraction Drake</span>
+            </div>
+          </div>
+          <span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-1 font-bold text-on-surface uppercase tracking-wide border border-[#e2e8f0]">LVL 15</span>
+        </div>
+        <button class="w-full h-12 bg-on-surface text-surface flex items-center justify-center gap-space-sm active:bg-primary-container active:text-on-primary-container transition-colors font-label-lg text-label-lg tracking-wider uppercase font-bold tactile-btn" id="commit-btn" onclick="commitWeeklyBlueprint()">
+          <span class="material-symbols-outlined text-[20px]">verified</span>
+          <span>Commit to Week 43 Blueprint</span>
+        </button>
+      </section>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 4: HABITS LAB (PROTOCOL WORKSTATION)                -->
+    <!-- ======================================================== -->
+    <div class="view-panel flex-col w-full px-margin py-space-md gap-space-lg" id="view-habits-lab">
+      
+      <!-- Lab Header -->
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col">
+          <span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-bold">Habit Matrix Lab</span>
+          <h1 class="font-headline-md text-headline-md text-on-surface font-bold">Protocol Roster</h1>
+        </div>
+        <button class="h-9 px-3 bg-primary hover:bg-primary-container text-on-primary hover:text-on-surface font-label-sm text-label-sm uppercase font-bold tracking-wider flex items-center gap-1 tactile-btn shadow-sm" onclick="toggleAddHabitModal(true)">
+          <span class="material-symbols-outlined text-[18px]">add</span>
+          <span>New Protocol</span>
+        </button>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="grid grid-cols-4 gap-1 p-1 bg-surface-container-low border border-[#e2e8f0]">
+        <button class="py-1.5 font-label-sm text-label-sm uppercase font-bold bg-inverse-surface text-on-secondary transition-colors tactile-btn" data-lab-filter="all">All</button>
+        <button class="py-1.5 font-label-sm text-label-sm uppercase font-bold bg-surface-container-high text-on-surface-variant transition-colors tactile-btn" data-lab-filter="morning">Morning</button>
+        <button class="py-1.5 font-label-sm text-label-sm uppercase font-bold bg-surface-container-high text-on-surface-variant transition-colors tactile-btn" data-lab-filter="afternoon">Afternoon</button>
+        <button class="py-1.5 font-label-sm text-label-sm uppercase font-bold bg-surface-container-high text-on-surface-variant transition-colors tactile-btn" data-lab-filter="evening">Evening</button>
+      </div>
+
+      <!-- Habits Grid -->
+      <div class="flex flex-col space-y-3" id="habits-lab-grid"></div>
+
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 5: PROFILE & TROPHY VAULT                          -->
+    <!-- ======================================================== -->
+    <div class="view-panel flex-col w-full px-margin py-space-md gap-space-lg" id="view-trophy-vault">
+      
+      <!-- USER HERO PROFILE SECTION -->
+      <section class="flex flex-col bg-surface-container-lowest p-space-md shadow-sm gap-space-md border border-outline-variant/20 relative">
+        <div class="flex items-start gap-space-md">
+          <div class="relative w-16 h-16 bg-surface-container shrink-0 border border-outline-variant/40">
+            <img class="w-full h-full object-cover" alt="Alex Vance Tactical Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbMnwYtjt9Sy1qV2KUyk7GBVI3GGDJrLUzVkyyejrUmPxxkFuNo5_jF3qIbv-65R4tzyhFe3GtRiHlkf_RdFAeb-N9ixlLH4-7UG-kKQD4iiCyZwTTjwgZq6JQ9spKE9G-WWlO-z35MaFfbO-KK1Qu62pxVberaNy9wXyMs8nepNn-2l8NFDt2XBDa89i0ann5fKsokqR1eqI0C0Qij6GLW3dqYYq5paLcgwhzruWL"/>
+            <div class="absolute -bottom-1 -right-1 bg-surface text-on-surface px-1.5 py-0.5 shadow-sm border border-outline-variant/30">
+              <span class="font-label-sm text-label-sm tracking-wider uppercase text-primary font-bold" data-bind-level>LVL 14</span>
+            </div>
+          </div>
+          <div class="flex flex-col min-w-0 flex-1 justify-center">
+            <div class="flex items-center justify-between gap-space-xs">
+              <h2 class="font-headline-sm text-headline-sm text-on-surface truncate font-bold" data-bind-username>Alex Vance</h2>
+              <span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-primary-container text-on-primary-container uppercase font-bold tracking-wider">PRO RANK</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant truncate mt-0.5">Shadow Striker · Guild Valkyrie #3</p>
+            <div class="flex items-center gap-1.5 mt-2">
+              <span class="w-2 h-2 bg-primary-container inline-block animate-pulse"></span>
+              <span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider font-semibold">Active Protocol: Phase 04</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- XP Progression Bar -->
+        <div class="flex flex-col gap-1.5 bg-surface-container-low p-space-sm border border-outline-variant/20">
+          <div class="flex justify-between items-center text-on-surface">
+            <span class="font-label-sm text-label-sm uppercase text-on-surface-variant font-semibold">XP Progression</span>
+            <span class="font-label-sm text-label-sm text-primary font-bold" id="xp-counter-label">3,420 / 4,000 XP (85%)</span>
+          </div>
+          <div class="w-full h-2.5 bg-surface-container-highest relative overflow-hidden">
+            <div class="h-full bg-primary-container transition-all duration-1000 ease-out striped-progress relative" id="hero-xp-bar" style="width: 85%;"></div>
+          </div>
+          <div class="flex justify-between items-center text-on-surface-variant">
+            <span class="font-body-sm text-body-sm">Next milestone: Lvl 15 Master Striker</span>
+            <span class="font-label-sm text-label-sm uppercase text-secondary font-bold">+580 XP Req</span>
+          </div>
+        </div>
+
+        <!-- Core Stats Summary Strip: 4 Square Metric Blocks with Count-Up -->
+        <div class="grid grid-cols-2 gap-space-sm sm:grid-cols-4">
+          <div class="bg-surface-container-low p-space-sm flex flex-col justify-between border border-outline-variant/20 hover:border-secondary/50 transition-colors cursor-pointer tactile-btn" onclick="showToast('Active Streak: 18 Days unbroken flow')">
+            <div class="flex items-center justify-between text-secondary">
+              <span class="material-symbols-outlined text-[18px] animate-flame">local_fire_department</span>
+              <span class="font-label-sm text-label-sm font-bold tracking-wider">STREAK</span>
+            </div>
+            <div class="mt-2">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="stat-streak">18d</span>
+              <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Current Flow</p>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-low p-space-sm flex flex-col justify-between border border-outline-variant/20 hover:border-primary/50 transition-colors cursor-pointer tactile-btn" onclick="showToast('Consistency Rating: 94% execution rate')">
+            <div class="flex items-center justify-between text-primary">
+              <span class="material-symbols-outlined text-[18px]">verified</span>
+              <span class="font-label-sm text-label-sm font-bold tracking-wider">ACCURACY</span>
+            </div>
+            <div class="mt-2">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="stat-accuracy">94%</span>
+              <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Consistency</p>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-low p-space-sm flex flex-col justify-between border border-outline-variant/20 hover:border-primary-container transition-colors cursor-pointer tactile-btn" onclick="showToast('Total Protocol Quests Cleared: 124 completed')">
+            <div class="flex items-center justify-between text-primary-container">
+              <span class="material-symbols-outlined text-[18px]">task_alt</span>
+              <span class="font-label-sm text-label-sm font-bold tracking-wider">LOGS</span>
+            </div>
+            <div class="mt-2">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="stat-logs">124</span>
+              <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Quests Cleared</p>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-low p-space-sm flex flex-col justify-between border border-outline-variant/20 hover:border-tertiary transition-colors cursor-pointer tactile-btn" onclick="window.audioEngine.playBossHorn(); showToast('Boss Commemoration: 8 Backlog Titans Slain!')">
+            <div class="flex items-center justify-between text-tertiary">
+              <span class="material-symbols-outlined text-[18px]">swords</span>
+              <span class="font-label-sm text-label-sm font-bold tracking-wider">DEFEATED</span>
+            </div>
+            <div class="mt-2">
+              <span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="stat-bosses">8</span>
+              <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Bosses Slain</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIVE BUFFS & PERKS MATRIX -->
+      <section class="flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px] animate-pulse">bolt</span>
+            <h3 class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">Buff Matrix</h3>
+          </div>
+          <span class="font-label-sm text-label-sm uppercase px-2 py-0.5 bg-surface-container-high text-on-surface-variant font-bold">3 Active</span>
+        </div>
+
+        <div class="flex flex-col gap-space-xs">
+          <!-- Buff 1 -->
+          <div class="flex flex-col bg-surface-container-lowest p-space-sm shadow-sm border border-outline-variant/20 cursor-pointer transition-all duration-200 hover:border-primary-container tactile-btn relative" id="buff-card-1" onclick="toggleBuff('buff-card-1', '1.5x Morning Multiplier', 'Active boost applied to all tasks logged prior to 08:30 AM local time.', '04:11:42 remaining')">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-space-sm min-w-0">
+                <div class="w-10 h-10 bg-primary-container/20 flex items-center justify-center shrink-0 border border-primary-container/30">
+                  <span class="material-symbols-outlined text-primary text-[22px]">wb_sunny</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="font-label-lg text-label-lg text-on-surface truncate font-bold">1.5x Morning Multiplier</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">Bonus yield for rituals logged prior to 08:30</span>
+                </div>
+              </div>
+              <div class="text-right shrink-0 pl-2">
+                <span class="font-label-sm text-label-sm text-primary uppercase block font-bold font-mono tracking-tighter" id="countdown-timer">04:11:42</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant flex items-center justify-end gap-1"><span class="w-1.5 h-1.5 bg-primary-container inline-block animate-ping"></span>Remaining</span>
+              </div>
+            </div>
+            <div class="hidden pt-space-xs mt-space-xs border-t border-dashed border-outline-variant/40 text-on-surface text-body-sm flex-col gap-1" id="buff-card-1-detail">
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Telemetry Status: Active calibration protocol. Early wake-up habit logged at 06:15 AM today triggered this boost multiplier.</p>
+              <div class="flex justify-between items-center font-label-sm text-label-sm pt-1 text-primary font-bold">
+                <span>BONUS APPLIED: +175 XP TODAY</span>
+                <span class="underline">INSPECT PROTOCOL</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buff 2 -->
+          <div class="flex flex-col bg-surface-container-lowest p-space-sm shadow-sm border border-outline-variant/20 cursor-pointer transition-all duration-200 hover:border-secondary tactile-btn relative" id="buff-card-2" onclick="toggleBuff('buff-card-2', 'Titan Crusher', '+15% XP damage against weekly target entities', 'Passive Perk', true)">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-space-sm min-w-0">
+                <div class="w-10 h-10 bg-secondary-fixed flex items-center justify-center shrink-0 border border-secondary/30">
+                  <span class="material-symbols-outlined text-secondary text-[22px]">military_tech</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="font-label-lg text-label-lg text-on-surface truncate font-bold">Titan Crusher</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">+15% XP damage against weekly target entities</span>
+                </div>
+              </div>
+              <div class="shrink-0 pl-2 flex items-center gap-1.5">
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-secondary-container text-on-secondary-container uppercase font-bold">Passive</span>
+              </div>
+            </div>
+            <div class="hidden pt-space-xs mt-space-xs border-t border-dashed border-outline-variant/40 text-on-surface text-body-sm flex-col gap-1" id="buff-card-2-detail">
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Synergy Perk: Earned after slaying 5 weekly backlog raid bosses. Grants continuous offensive boost across all sprint tasks.</p>
+              <div class="flex justify-between items-center font-label-sm text-label-sm pt-1 text-secondary font-bold">
+                <span>EFFICIENCY: OPTIMAL (+15%)</span>
+                <button class="underline uppercase text-label-sm font-bold bg-secondary/10 px-2 py-0.5 hover:bg-secondary/20 transition-colors" onclick="event.stopPropagation(); window.audioEngine.playBossHorn(); showToast('Warhorn Blasts! Titan Defeat Confirmed');">BLAST WARHORN</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buff 3 -->
+          <div class="flex flex-col bg-surface-container-lowest p-space-sm shadow-sm border border-outline-variant/20 cursor-pointer transition-all duration-200 hover:border-primary tactile-btn relative" id="buff-card-3" onclick="toggleBuff('buff-card-3', 'Iron Will Mantle', 'Streak Freeze Shield primed against missed day', '1x Ready')">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-space-sm min-w-0">
+                <div class="w-10 h-10 bg-surface-container-high flex items-center justify-center shrink-0 border border-outline-variant/40">
+                  <span class="material-symbols-outlined text-on-surface text-[22px]">shield</span>
+                </div>
+                <div class="flex flex-col min-w-0">
+                  <span class="font-label-lg text-label-lg text-on-surface truncate font-bold">Iron Will Mantle</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">Streak Freeze Shield primed against missed day</span>
+                </div>
+              </div>
+              <div class="shrink-0 pl-2">
+                <span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-surface-container-highest text-on-surface uppercase font-bold">1x Ready</span>
+              </div>
+            </div>
+            <div class="hidden pt-space-xs mt-space-xs border-t border-dashed border-outline-variant/40 text-on-surface text-body-sm flex-col gap-1" id="buff-card-3-detail">
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Defense Matrix: Stored in inventory. If any habit is incomplete at 23:59:59, this shield expends automatically to safeguard the 18-day streak.</p>
+              <div class="flex justify-between items-center font-label-sm text-label-sm pt-1 text-primary font-bold">
+                <span>STATUS: PRIMED &amp; ARMED</span>
+                <span class="underline">INVENTORY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TROPHY VAULT & BADGES SHOWCASE -->
+      <section class="flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary-container text-[20px]">trophy</span>
+            <h3 class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">Trophy Vault</h3>
+          </div>
+          <span class="font-label-sm text-label-sm uppercase text-primary font-bold">3 Unlocked / 2 Locked</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+          <!-- Trophy 1 -->
+          <div class="bg-surface-container-lowest p-space-md flex flex-col justify-between shadow-sm relative border border-outline-variant/20 shimmer-active cursor-pointer tactile-btn hover:border-tertiary-container transition-all" onclick="openTrophyCard(this, 'titan_slayer')">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-tertiary-container"></div>
+            <div class="flex items-start justify-between gap-space-sm pl-1">
+              <div class="w-12 h-12 bg-tertiary-fixed flex items-center justify-center shrink-0 border border-tertiary/20">
+                <span class="material-symbols-outlined text-tertiary text-[26px]">skull</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px] text-tertiary">music_note</span>
+                <span class="font-label-sm text-label-sm px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed uppercase font-bold tracking-wider">Unlocked</span>
+              </div>
+            </div>
+            <div class="mt-space-md pl-1">
+              <h4 class="font-label-lg text-label-lg text-on-surface font-bold">Procrastination Titan Slayer</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Crushed 7-day high-difficulty backlog without single deferral.</p>
+              <div class="flex justify-between items-center mt-space-sm text-on-surface-variant">
+                <span class="font-label-sm text-label-sm uppercase text-tertiary font-bold">Oct 18 · Completed</span>
+                <span class="font-label-sm text-label-sm font-bold text-on-surface">+350 XP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trophy 2 -->
+          <div class="bg-surface-container-lowest p-space-md flex flex-col justify-between shadow-sm relative border border-outline-variant/20 shimmer-active cursor-pointer tactile-btn hover:border-primary-container transition-all" onclick="openTrophyCard(this, 'centurion')">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+            <div class="flex items-start justify-between gap-space-sm pl-1">
+              <div class="w-12 h-12 bg-primary-fixed flex items-center justify-center shrink-0 border border-primary/20">
+                <span class="material-symbols-outlined text-primary text-[26px]">workspace_premium</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px] text-primary">music_note</span>
+                <span class="font-label-sm text-label-sm px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant uppercase font-bold tracking-wider">Unlocked</span>
+              </div>
+            </div>
+            <div class="mt-space-md pl-1">
+              <h4 class="font-label-lg text-label-lg text-on-surface font-bold">Centurion of Habit</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Logged over 100 successful routine completions across all disciplines.</p>
+              <div class="flex justify-between items-center mt-space-sm text-on-surface-variant">
+                <span class="font-label-sm text-label-sm uppercase text-primary font-bold">Sep 29 · Completed</span>
+                <span class="font-label-sm text-label-sm font-bold text-on-surface">+500 XP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trophy 3 -->
+          <div class="bg-surface-container-lowest p-space-md flex flex-col justify-between shadow-sm relative border border-outline-variant/20 shimmer-active cursor-pointer tactile-btn hover:border-primary transition-all" onclick="openTrophyCard(this, 'dawn_patrol')">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+            <div class="flex items-start justify-between gap-space-sm pl-1">
+              <div class="w-12 h-12 bg-surface-container-high flex items-center justify-center shrink-0 border border-primary/20">
+                <span class="material-symbols-outlined text-primary text-[26px]">alarm_on</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px] text-primary">music_note</span>
+                <span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container-high text-on-surface-variant uppercase font-bold tracking-wider">Unlocked</span>
+              </div>
+            </div>
+            <div class="mt-space-md pl-1">
+              <h4 class="font-label-lg text-label-lg text-on-surface font-bold">Dawn Patrol</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">20 morning protocols completed and checked before 08:00 AM.</p>
+              <div class="flex justify-between items-center mt-space-sm text-on-surface-variant">
+                <span class="font-label-sm text-label-sm uppercase text-primary font-bold">Nov 02 · Completed</span>
+                <span class="font-label-sm text-label-sm font-bold text-on-surface">+200 XP</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trophy 4 (Locked) -->
+          <div class="bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm border border-outline-variant/30 cursor-pointer tactile-btn hover:border-secondary-container transition-all" onclick="openTrophyCard(this, 'iron_fortress')">
+            <div class="flex items-start justify-between gap-space-sm">
+              <div class="w-12 h-12 bg-surface-container-highest flex items-center justify-center shrink-0 border border-outline-variant/30">
+                <span class="material-symbols-outlined text-outline text-[26px]">castle</span>
+              </div>
+              <span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container-highest text-on-surface-variant uppercase font-bold tracking-wider">Locked</span>
+            </div>
+            <div class="mt-space-md">
+              <h4 class="font-label-lg text-label-lg text-on-surface font-bold">Iron Fortress</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Maintain an unbroken 30-day streak on all core protocols.</p>
+              <div class="mt-2.5">
+                <div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface-variant font-semibold">
+                  <span>Progress</span>
+                  <span class="font-bold text-on-surface">18 / 30 Days</span>
+                </div>
+                <div class="w-full h-2 bg-surface-container-highest overflow-hidden">
+                  <div class="h-full bg-secondary-container transition-all duration-1000 ease-out" id="trophy-prog-1" style="width: 60%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trophy 5 (Locked) -->
+          <div class="bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm border border-outline-variant/30 sm:col-span-2 cursor-pointer tactile-btn hover:border-primary-container transition-all" onclick="openTrophyCard(this, 'night_owl')">
+            <div class="flex items-start justify-between gap-space-sm">
+              <div class="w-12 h-12 bg-surface-container-highest flex items-center justify-center shrink-0 border border-outline-variant/30">
+                <span class="material-symbols-outlined text-outline text-[26px]">dark_mode</span>
+              </div>
+              <span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container-highest text-on-surface-variant uppercase font-bold tracking-wider">Locked</span>
+            </div>
+            <div class="mt-space-md">
+              <h4 class="font-label-lg text-label-lg text-on-surface font-bold">Night Owl Silent</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Zero screen time recorded past 22:00 for 14 consecutive evenings.</p>
+              <div class="mt-2.5">
+                <div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface-variant font-semibold">
+                  <span>Progress</span>
+                  <span class="font-bold text-on-surface">9 / 14 Days</span>
+                </div>
+                <div class="w-full h-2 bg-surface-container-highest overflow-hidden">
+                  <div class="h-full bg-primary-container transition-all duration-1000 ease-out" id="trophy-prog-2" style="width: 64%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VALKYRIE GUILD LEADERBOARD -->
+      <section class="flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-[20px]">groups</span>
+            <h3 class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">Valkyrie Guild Leaderboard</h3>
+          </div>
+          <button class="font-label-sm text-label-sm text-primary uppercase font-bold hover:underline tactile-btn" onclick="showToast('Loading Full Guild Roster (32 Members)...')">Full Guild</button>
+        </div>
+
+        <div class="flex flex-col gap-1.5 bg-surface-container-lowest p-space-sm shadow-sm border border-outline-variant/20">
+          <div class="flex items-center justify-between p-space-sm bg-surface-container-low hover:bg-surface-container-high transition-colors cursor-pointer border border-transparent tactile-btn" onclick="showToast('Sentinel Elena Vance-Reyes · Tier 1 Leader')">
+            <div class="flex items-center gap-space-sm min-w-0">
+              <div class="w-7 h-7 bg-tertiary-container flex items-center justify-center font-label-sm text-label-sm text-on-tertiary font-bold shrink-0">#1</div>
+              <div class="flex flex-col min-w-0">
+                <span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Elena Vance-Reyes</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Grand Sentinel · 24d Streak</span>
+              </div>
+            </div>
+            <span class="font-label-md text-label-md text-on-surface font-bold shrink-0">4,120 XP</span>
+          </div>
+
+          <div class="flex items-center justify-between p-space-sm bg-surface-container-low hover:bg-surface-container-high transition-colors cursor-pointer border border-transparent tactile-btn" onclick="showToast('Vanguard Marcus Cole · Defense Lead')">
+            <div class="flex items-center gap-space-sm min-w-0">
+              <div class="w-7 h-7 bg-surface-container-high flex items-center justify-center font-label-sm text-label-sm text-on-surface font-bold shrink-0">#2</div>
+              <div class="flex flex-col min-w-0">
+                <span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Marcus Cole</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Iron Vanguard · 19d Streak</span>
+              </div>
+            </div>
+            <span class="font-label-md text-label-md text-on-surface font-bold shrink-0">3,890 XP</span>
+          </div>
+
+          <div class="flex items-center justify-between p-space-sm bg-surface-container-lowest relative shadow-sm border border-primary-container/40 cursor-pointer tactile-btn hover:bg-primary/5 transition-colors" onclick="showToast('Your Current Position: Rank #3 // 470 XP to Rank #2')">
+            <div class="absolute inset-y-0 left-0 w-1.5 bg-primary-container"></div>
+            <div class="flex items-center gap-space-sm min-w-0 pl-1">
+              <div class="w-7 h-7 bg-primary-container flex items-center justify-center font-label-sm text-label-sm text-on-primary-container font-bold shrink-0">#3</div>
+              <div class="flex flex-col min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-label-lg text-label-lg text-on-surface font-bold truncate" data-bind-username>Alex Vance</span>
+                  <span class="font-label-sm text-label-sm px-1 py-0.2 bg-primary-container text-on-primary-container font-bold uppercase tracking-wider">YOU</span>
+                </div>
+                <span class="font-body-sm text-body-sm text-primary font-medium">Shadow Striker · 18d Streak</span>
+              </div>
+            </div>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold shrink-0">3,420 XP</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUICK ACCOUNT SETTINGS & EXPORT -->
+      <section class="flex flex-col gap-space-sm">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-outline text-[20px]">tune</span>
+          <h3 class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">System Controls</h3>
+        </div>
+        <div class="flex flex-col bg-surface-container-lowest shadow-sm border border-outline-variant/20">
+          <button class="w-full h-12 px-space-md flex items-center justify-between hover:bg-surface-container-low transition-colors text-left tactile-btn" onclick="navigateTo('habits-lab')">
+            <div class="flex items-center gap-space-sm text-on-surface">
+              <span class="material-symbols-outlined text-[20px] text-primary">rule</span>
+              <span class="font-label-lg text-label-lg font-bold">Manage Habits &amp; Protocols</span>
+            </div>
+            <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+          </button>
+          <div class="w-full h-[1px] bg-surface-container"></div>
+          <button class="w-full h-12 px-space-md flex items-center justify-between hover:bg-surface-container-low transition-colors text-left tactile-btn" onclick="showToast('Notification Reminders: Set to 07:30 Daily')">
+            <div class="flex items-center gap-space-sm text-on-surface">
+              <span class="material-symbols-outlined text-[20px] text-secondary">notifications_active</span>
+              <span class="font-label-lg text-label-lg font-bold">Notification Reminders</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-label-sm text-label-sm text-secondary uppercase font-bold">07:30 Daily</span>
+              <span class="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+            </div>
+          </button>
+          <div class="w-full h-[1px] bg-surface-container"></div>
+          <div class="flex items-center justify-between p-space-md bg-surface-container-lowest">
+            <div class="flex items-center gap-space-sm text-on-surface">
+              <span class="material-symbols-outlined text-[20px] text-primary">android</span>
+              <div class="flex flex-col">
+                <span class="font-label-lg text-label-lg font-bold">HabitCraft Android APK</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">v1.1.0 · Native Offline Build</span>
+              </div>
+            </div>
+            <a class="px-3 py-1.5 bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface font-label-sm text-label-sm uppercase font-bold tracking-wider tactile-btn flex items-center gap-1" download="habitcraft.apk" href="habitcraft.apk">
+              <span class="material-symbols-outlined text-[15px]">download</span>
+              <span>Install APK</span>
+            </a>
+          </div>
+          <div class="w-full h-[1px] bg-surface-container"></div>
+          <div class="flex items-center justify-between p-space-md bg-surface-container-lowest">
+            <div class="flex items-center gap-space-sm text-on-surface">
+              <span class="material-symbols-outlined text-[20px] text-primary-container">file_download</span>
+              <span class="font-label-lg text-label-lg font-bold">Export Data Payload</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-1 bg-surface-container-high hover:bg-primary-container hover:text-on-surface font-label-sm text-label-sm uppercase font-bold tracking-wider border border-[#e2e8f0] tactile-btn" onclick="exportUserData('csv')">CSV</button>
+              <button class="px-3 py-1 bg-inverse-surface text-on-secondary hover:bg-primary font-label-sm text-label-sm uppercase font-bold tracking-wider tactile-btn" onclick="exportUserData('json')">JSON</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-t border-[#e2e8f0]" data-nav-container>
+    <div class="max-w-xl mx-auto flex justify-around items-center h-16 px-margin-sm">
+      <a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] transition-colors text-primary-container font-bold" data-path="today" href="#">
+        <span class="material-symbols-outlined text-[22px]">task_alt</span>
+        <span class="font-label-sm text-label-sm">Today</span>
+      </a>
+      <a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-on-surface active:bg-surface-container-high transition-colors" data-path="weekly-review" href="#">
+        <span class="material-symbols-outlined text-[22px]">analytics</span>
+        <span class="font-label-sm text-label-sm">Review</span>
+      </a>
+      <a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-on-surface active:bg-surface-container-high transition-colors" data-path="habits-lab" href="#">
+        <span class="material-symbols-outlined text-[22px]">science</span>
+        <span class="font-label-sm text-label-sm">Habits</span>
+      </a>
+      <a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-on-surface active:bg-surface-container-high transition-colors" data-path="trophy-vault" href="#">
+        <span class="material-symbols-outlined text-[22px]">shield_person</span>
+        <span class="font-label-sm text-label-sm">Profile</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ======================================================== -->
+  <!-- MODALS                                                   -->
+  <!-- ======================================================== -->
+
+  <!-- 1. Edit Protocol Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="protocol-modal">
+    <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary-container p-5 shadow-2xl flex flex-col space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+          <h2 class="font-label-lg text-label-lg uppercase tracking-wider text-on-surface font-bold">Edit Operational Protocol</h2>
+        </div>
+        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="toggleProtocolModal(false)">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <div class="space-y-3 font-body-sm text-on-surface">
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Cadence Days &amp; Time</label>
+          <input class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-cadence" type="text" value="Mon, Wed, Fri, Sat @ 17:30"/>
+        </div>
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Standard Target</label>
+          <input class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-target" type="text" value="45 mins — Upper Hypertrophy / Functional Power"/>
+        </div>
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Action Cue / Environmental Trigger</label>
+          <input class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-cue" type="text" value="Leave gym shoes &amp; water bottle by desk station at 17:00"/>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-surface-container">
+        <button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container font-label-md text-label-md uppercase tactile-btn font-bold" onclick="toggleProtocolModal(false)">Cancel</button>
+        <button class="px-5 py-2 bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface font-label-md text-label-md uppercase font-bold tracking-wider tactile-btn" id="save-protocol-btn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Log Notes Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="note-modal">
+    <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary p-5 shadow-2xl flex flex-col space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">edit_note</span>
+          <h2 class="font-label-lg text-label-lg uppercase tracking-wider text-on-surface font-bold">Log Session Telemetry</h2>
+        </div>
+        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="toggleLogNoteModal(false)">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <div class="space-y-3 font-body-sm text-on-surface">
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Session Notes &amp; RPE Score</label>
+          <textarea class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none resize-none" id="input-session-note" rows="3" placeholder="e.g. Back Squat 5x5 @ 125kg · Smooth lockout, RPE 8.5"></textarea>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-surface-container">
+        <button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container font-label-md text-label-md uppercase tactile-btn font-bold" onclick="toggleLogNoteModal(false)">Cancel</button>
+        <button class="px-5 py-2 bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface font-label-md text-label-md uppercase font-bold tracking-wider tactile-btn" id="save-note-btn">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Add Custom Habit Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm hidden flex items-center justify-center p-4" id="add-habit-modal">
+    <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-primary-container p-5 shadow-2xl flex flex-col space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-container">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[20px]">science</span>
+          <h2 class="font-label-lg text-label-lg uppercase tracking-wider text-on-surface font-bold">Create New Protocol</h2>
+        </div>
+        <button class="p-1 hover:bg-surface-container text-on-surface-variant hover:text-on-surface tactile-btn" onclick="toggleAddHabitModal(false)">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <div class="space-y-3 font-body-sm text-on-surface">
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Protocol Title</label>
+          <input class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-habit-title" placeholder="e.g. Cold Exposure (3 mins)" type="text"/>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Time Pillar</label>
+            <select class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-habit-group">
+              <option value="morning">Morning</option>
+              <option value="afternoon" selected>Afternoon</option>
+              <option value="evening">Evening</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">XP Yield</label>
+            <input class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-habit-xp" type="number" value="40"/>
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant mb-1 font-bold">Standard Target &amp; Description</label>
+          <input class="w-full bg-surface-container-low border border-outline-variant p-2 text-sm font-body-md focus:border-primary-container focus:outline-none" id="input-habit-subtext" placeholder="e.g. 52°F shower baseline · Vagal nerve reset" type="text"/>
+        </div>
+        <div class="flex items-center gap-2 pt-1">
+          <input class="w-4 h-4 text-primary bg-surface-container-low border-outline-variant focus:ring-0" id="input-habit-boss" type="checkbox"/>
+          <label class="font-label-sm text-label-sm uppercase text-on-surface font-bold" for="input-habit-boss">Tag as Boss Strike (+15% Damage)</label>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-surface-container">
+        <button class="px-4 py-2 text-on-surface-variant hover:bg-surface-container font-label-md text-label-md uppercase tactile-btn font-bold" onclick="toggleAddHabitModal(false)">Cancel</button>
+        <button class="px-5 py-2 bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface font-label-md text-label-md uppercase font-bold tracking-wider tactile-btn" id="save-habit-btn">Commission Protocol</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Trophy Inspection Modal -->
+  <div class="fixed inset-0 z-50 bg-inverse-surface/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 flex items-center justify-center p-margin" id="trophy-modal">
+    <div class="bg-surface-container-lowest w-full max-w-sm border-2 border-on-surface flex flex-col shadow-[8px_8px_0px_#131b2e] p-space-md gap-space-md relative transform scale-95 transition-transform duration-200" id="trophy-modal-box">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-12 h-12 flex items-center justify-center border border-on-surface/20" id="modal-icon-bg">
+            <span class="material-symbols-outlined text-[28px]" id="modal-icon">military_tech</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm uppercase font-bold tracking-wider" id="modal-status-badge">UNLOCKED</span>
+            <h3 class="font-headline-sm text-headline-sm leading-tight text-on-surface font-bold" id="modal-title">Trophy Name</h3>
+          </div>
+        </div>
+        <button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container-high transition-colors tactile-btn" onclick="closeTrophyModal()">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <div class="flex flex-col gap-space-xs bg-surface-container-low p-space-sm border border-outline-variant/30">
+        <div class="flex justify-between font-label-sm text-label-sm">
+          <span class="text-on-surface-variant uppercase font-semibold">Requirement Metric</span>
+          <span class="font-bold text-primary" id="modal-metric">Oct 18 · Completed</span>
+        </div>
+        <div class="flex justify-between font-label-sm text-label-sm">
+          <span class="text-on-surface-variant uppercase font-semibold">Yield Bounty</span>
+          <span class="font-bold text-secondary" id="modal-reward">+350 XP</span>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider font-bold">Quest Protocol Lore</span>
+        <p class="font-body-sm text-body-sm text-on-surface" id="modal-desc">Detailed tactical description.</p>
+      </div>
+      <!-- Replay Fanfare button -->
+      <div class="hidden flex-wrap gap-1 justify-center py-1" id="modal-burst">
+        <span class="px-2 py-0.5 bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold animate-pulse">★ PROTOCOL MASTERED ★</span>
+        <button class="px-2 py-0.5 bg-secondary text-on-secondary font-label-sm text-label-sm uppercase font-bold tactile-btn flex items-center gap-1" onclick="replayModalAudio()">
+          <span class="material-symbols-outlined text-[14px]">volume_up</span> Replay Fanfare
+        </button>
+      </div>
+      <div class="flex gap-space-sm mt-1">
+        <button class="flex-1 h-10 bg-primary text-on-primary font-label-md text-label-md uppercase font-bold tracking-wider hover:bg-primary/90 tactile-btn" onclick="closeTrophyModal(); showToast('Badge telemetry shared to Valkyrie Guild feed');">Share to Guild</button>
+        <button class="h-10 px-4 bg-surface-container-high text-on-surface font-label-md text-label-md uppercase font-bold hover:bg-surface-container-highest tactile-btn" onclick="closeTrophyModal()">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Interactive Action Toast -->
+  <div class="fixed bottom-20 left-4 right-4 max-w-sm mx-auto bg-inverse-surface text-inverse-on-surface p-space-md opacity-0 pointer-events-none transition-all duration-200 z-50 flex items-center justify-between shadow-[4px_4px_0px_#000000] border border-outline-variant/30" id="action-toast">
+    <div class="flex items-center gap-space-sm">
+      <span class="material-symbols-outlined text-primary-container text-[20px] animate-pulse">check_circle</span>
+      <div class="flex flex-col">
+        <span class="font-label-md text-label-md uppercase tracking-wider font-bold" id="toast-message">Protocol Executed</span>
+        <span class="font-label-sm text-label-sm text-outline hidden" id="toast-sub"></span>
+      </div>
+    </div>
+    <button class="text-inverse-on-surface hover:text-primary-container p-1 tactile-btn" onclick="document.getElementById('action-toast').classList.add('opacity-0', 'pointer-events-none')">
+      <span class="material-symbols-outlined text-[18px]">close</span>
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- ONBOARDING OVERLAY (shown on first launch, hides after setup) -->
+  <!-- ============================================================ -->
+  <div id="view-onboarding" class="fixed inset-0 z-[9999] bg-surface flex flex-col overflow-y-auto" style="display:none!important">
+
+    <!-- Step progress bar -->
+    <div class="fixed top-0 inset-x-0 h-1 bg-surface-container-highest z-10">
+      <div id="ob-progress-bar" class="h-full bg-primary-container transition-all duration-500 ease-out" style="width:0%"></div>
+    </div>
+
+    <!-- Step panels container -->
+    <div id="ob-steps-container" class="flex-1 flex flex-col">
+
+      <!-- ─────── STEP 1: WELCOME BRIEFING & EXCITING NOTE ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe" data-step="1">
+        <div class="flex-1 flex flex-col justify-center gap-space-md max-w-lg mx-auto w-full">
+          <!-- Status & Logo lockup -->
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-sm">
+              <div class="w-11 h-11 bg-primary-container flex items-center justify-center shadow-[3px_3px_0px_#131b2e] border border-on-surface">
+                <span class="material-symbols-outlined text-on-primary-container text-[26px]" style="font-variation-settings:'FILL' 1">bolt</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold leading-none">HabitCraft</span>
+                <span class="font-label-sm text-label-sm uppercase text-primary font-bold tracking-widest mt-0.5">Tactical Habit OS</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 bg-surface-container-low px-2.5 py-1 border border-primary-container/50">
+              <span class="w-2 h-2 bg-primary-container animate-pulse"></span>
+              <span class="font-label-sm text-label-sm uppercase text-primary font-bold">System Online</span>
+            </div>
+          </div>
+
+          <!-- Hero Welcome Headline -->
+          <div class="mt-1">
+            <p class="font-label-sm text-label-sm uppercase tracking-[0.16em] text-secondary font-bold mb-1">Welcome, Future Striker</p>
+            <h1 class="font-display-mobile text-display-mobile text-on-surface leading-tight">
+              Your habits are no longer chores.<br/>
+              <span class="text-primary">They are weapons.</span>
+            </h1>
+          </div>
+
+          <!-- Exciting Personal Note Dossier Card -->
+          <div class="bg-surface-container-lowest border-2 border-on-surface p-4 shadow-[5px_5px_0px_#131b2e] flex flex-col gap-3 relative">
+            <div class="flex items-center justify-between border-b border-surface-container pb-2">
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-secondary text-[18px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-bold">A Note Before You Begin</span>
+              </div>
+              <span class="font-label-sm text-[10px] bg-primary-fixed text-on-primary-fixed px-1.5 py-0.5 font-bold uppercase">Day 01</span>
+            </div>
+
+            <div class="space-y-2 font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              <p class="text-on-surface font-bold">
+                Forget boring spreadsheets and guilt-trip checklists. You just stepped into a live tactical arena.
+              </p>
+              <p>
+                Every time you show up — whether it's a workout, 20 minutes of deep focus, or putting your phone down on time — you deal <strong class="text-secondary">real combat damage</strong> to your personal Procrastination Boss.
+              </p>
+              <p class="text-primary font-semibold">
+                Stack streaks, unlock rare trophies in your vault, and watch yourself level up in real life. Small daily strikes create an unstoppable version of you. Let's build your battle loadout!
+              </p>
+            </div>
+
+            <!-- 3 Mini Excitement Pillars -->
+            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-surface-container text-center">
+              <div class="bg-surface-container-low p-2 border border-outline-variant/30">
+                <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings:'FILL' 1">swords</span>
+                <div class="font-label-sm text-[10px] font-bold uppercase text-on-surface mt-0.5">Slay Bosses</div>
+              </div>
+              <div class="bg-surface-container-low p-2 border border-outline-variant/30">
+                <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">military_tech</span>
+                <div class="font-label-sm text-[10px] font-bold uppercase text-on-surface mt-0.5">Rank Up XP</div>
+              </div>
+              <div class="bg-surface-container-low p-2 border border-outline-variant/30">
+                <span class="material-symbols-outlined text-tertiary-container text-[20px]" style="font-variation-settings:'FILL' 1">emoji_events</span>
+                <div class="font-label-sm text-[10px] font-bold uppercase text-on-surface mt-0.5">Trophy Vault</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="obNext(1)" class="ob-next-btn w-full max-w-lg mx-auto h-14 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-widest font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px] mt-5 mb-safe">
+          <span>I'm Ready — Start Setup</span>
+          <span class="material-symbols-outlined text-[22px]">bolt</span>
+        </button>
+      </div>
+
+      <!-- ─────── STEP 2: CALLSIGN ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="2">
+        <div class="flex-1 flex flex-col justify-center gap-space-lg">
+          <div>
+            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Step 1 of 5 · Protocol Initiation</p>
+            <h1 class="font-display-mobile text-display-mobile text-on-surface leading-tight mb-3">Claim your<br/>operative<br/>callsign.</h1>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">How should the tactical engine address you in mission briefings and victory ledgers?</p>
+          </div>
+
+          <!-- Callsign input -->
+          <div class="flex flex-col gap-space-xs mt-2">
+            <label class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-bold" for="ob-callsign">Your Callsign (Name)</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">person</span>
+              <input
+                id="ob-callsign"
+                type="text"
+                maxlength="24"
+                placeholder="e.g. Alex Vance"
+                autocomplete="name"
+                class="w-full h-14 pl-10 pr-4 bg-surface-container border-2 border-outline-variant font-body-lg text-body-lg text-on-surface placeholder-outline focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">This is how you'll appear in your mission reports.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-6 mb-safe">
+          <button onclick="obBack(2)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          </button>
+          <button onclick="obNext(2)" class="ob-next-btn flex-1 h-14 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-widest font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
+            Continue
+            <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ─────── STEP 3: STRUGGLES ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="3">
+        <div class="flex-1 flex flex-col gap-space-lg">
+          <div>
+            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Threat Assessment</p>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">What's working<br/>against you?</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Select all that apply. HabitCraft will configure your quests to target these specifically.</p>
+          </div>
+
+          <div id="ob-struggles-grid" class="grid grid-cols-2 gap-2">
+            <!-- each tile: data-value, toggles selected class -->
+            <button onclick="obToggleStruggle(this)" data-value="doomscrolling"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">smartphone</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Doomscrolling</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Losing hours to the feed</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="procrastination"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">hourglass_empty</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Procrastination</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Delaying the important</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="poor_sleep"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">bedtime</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Poor Sleep</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Late nights, groggy days</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="inconsistency"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">sync_problem</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Inconsistency</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Starting but not sticking</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="low_motivation"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">battery_1_bar</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Low Motivation</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Nothing feels worth it</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="focus"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">psychology</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Lack of Focus</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Scattered, distracted mind</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="stress"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">mood_bad</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Chronic Stress</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Always overwhelmed</span>
+            </button>
+            <button onclick="obToggleStruggle(this)" data-value="sedentary"
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">chair</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Sedentary Life</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Too much sitting</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-6 mb-safe">
+          <button onclick="obBack(3)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          </button>
+          <button onclick="obNext(3)" class="flex-1 h-14 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-widest font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
+            Next <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ─────── STEP 4: TARGET PROTOCOLS ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="4">
+        <div class="flex-1 flex flex-col gap-space-lg">
+          <div>
+            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Mission Protocols</p>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Build your<br/>battle stack.</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Which routines do you want to lock in? These become your core quest categories.</p>
+          </div>
+
+          <div id="ob-targets-grid" class="grid grid-cols-2 gap-2">
+            <button onclick="obToggleTarget(this)" data-value="morning"
+              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-[28px]" style="color:#e89337;font-variation-settings:'FILL' 1">wb_sunny</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Morning Routine</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Win the first hour</span>
+            </button>
+            <button onclick="obToggleTarget(this)" data-value="deepwork"
+              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-[28px]" style="color:#00687a;font-variation-settings:'FILL' 1">terminal</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Deep Work</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Zero-distraction output</span>
+            </button>
+            <button onclick="obToggleTarget(this)" data-value="physical"
+              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-[28px]" style="color:#b90538;font-variation-settings:'FILL' 1">fitness_center</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Physical Training</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Move, lift, sweat</span>
+            </button>
+            <button onclick="obToggleTarget(this)" data-value="evening"
+              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-[28px]" style="color:#6d797d;font-variation-settings:'FILL' 1">nights_stay</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Evening Wind Down</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Recover and reset</span>
+            </button>
+            <button onclick="obToggleTarget(this)" data-value="reading"
+              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-[28px]" style="color:#00424f;font-variation-settings:'FILL' 1">menu_book</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Reading</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">30 min minimum</span>
+            </button>
+            <button onclick="obToggleTarget(this)" data-value="mindfulness"
+              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
+              <span class="material-symbols-outlined text-[28px]" style="color:#8c5000;font-variation-settings:'FILL' 1">self_improvement</span>
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Mindfulness</span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Meditate and reflect</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-6 mb-safe">
+          <button onclick="obBack(4)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          </button>
+          <button onclick="obNext(4)" class="flex-1 h-14 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-widest font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none">
+            Next <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ─────── STEP 5: INTENSITY RANK ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="5">
+        <div class="flex-1 flex flex-col gap-space-lg">
+          <div>
+            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Difficulty Protocol</p>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Set your<br/>intensity rank.</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">This controls quest difficulty and XP multipliers. You can change it later.</p>
+          </div>
+
+          <div id="ob-intensity-list" class="flex flex-col gap-3">
+            <button onclick="obSelectIntensity(this,'recruit')"
+              class="ob-intensity-tile flex items-center gap-space-md p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left"
+              data-value="recruit">
+              <div class="w-12 h-12 flex items-center justify-center bg-surface-container-high border border-outline-variant flex-shrink-0">
+                <span class="material-symbols-outlined text-[28px]" style="color:#6d797d;font-variation-settings:'FILL' 1">shield</span>
+              </div>
+              <div class="flex-1">
+                <div class="font-label-lg text-label-lg font-bold text-on-surface uppercase">Recruit</div>
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Gentle start · 0.8× XP · Manageable daily targets</div>
+              </div>
+            </button>
+
+            <button onclick="obSelectIntensity(this,'operative')"
+              class="ob-intensity-tile flex items-center gap-space-md p-space-md border-2 border-primary bg-surface-container-low hover:border-primary transition-all text-left"
+              data-value="operative" style="border-color:#00687a">
+              <div class="w-12 h-12 flex items-center justify-center bg-primary-container border border-primary flex-shrink-0">
+                <span class="material-symbols-outlined text-[28px] text-on-primary-container" style="font-variation-settings:'FILL' 1">military_tech</span>
+              </div>
+              <div class="flex-1">
+                <div class="font-label-lg text-label-lg font-bold text-primary uppercase">Operative <span class="font-label-sm text-label-sm bg-primary text-on-primary px-1 py-0.5 ml-1">RECOMMENDED</span></div>
+                <div class="font-body-sm text-body-sm text-on-surface-variant">Balanced challenge · 1.0× XP · Standard mission load</div>
+              </div>
+            </button>
+
+            <button onclick="obSelectIntensity(this,'striker')"
+              class="ob-intensity-tile flex items-center gap-space-md p-space-md border-2 border-outline-variant bg-surface-container hover:border-secondary transition-all text-left"
+              data-value="striker">
+              <div class="w-12 h-12 flex items-center justify-center bg-secondary-container border border-secondary-container flex-shrink-0">
+                <span class="material-symbols-outlined text-[28px] text-on-secondary-container" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+              </div>
+              <div class="flex-1">
+                <div class="font-label-lg text-label-lg font-bold text-secondary uppercase">Striker</div>
+                <div class="font-body-sm text-body-sm text-on-surface-variant">No mercy · 1.5× XP · High output, high reward</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-6 mb-safe">
+          <button onclick="obBack(5)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          </button>
+          <button onclick="obNext(5)" class="flex-1 h-14 bg-primary text-on-primary font-label-lg text-label-lg uppercase tracking-widest font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none">
+            Next <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ─────── STEP 6: BOSS REVEAL ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="6">
+        <div class="flex-1 flex flex-col justify-center gap-space-lg">
+          <div>
+            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Adversary Identified</p>
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-3">Your boss has<br/>been named.</h2>
+          </div>
+
+          <!-- Boss card -->
+          <div id="ob-boss-card" class="bg-inverse-surface p-space-lg flex flex-col gap-space-md border-l-4 border-secondary shadow-[4px_4px_0px_#b90538]">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold mb-1">Final Boss · Season I</p>
+                <h3 id="ob-boss-name" class="font-headline-md text-headline-md text-inverse-on-surface font-bold">The Distraction Demon</h3>
+                <p id="ob-boss-desc" class="font-body-sm text-body-sm text-outline mt-1">Born from your patterns. Defeated by your discipline.</p>
+              </div>
+              <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-secondary border-2 border-secondary-container">
+                <span class="material-symbols-outlined text-on-secondary text-[32px]" style="font-variation-settings:'FILL' 1">skull</span>
+              </div>
+            </div>
+            <!-- HP bar -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between">
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">HP</span>
+                <span class="font-label-sm text-label-sm text-secondary font-bold">100 / 100</span>
+              </div>
+              <div class="h-3 bg-surface-container-highest w-full overflow-hidden">
+                <div class="h-full bg-secondary" style="width:100%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md border border-outline-variant">
+            <p class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-bold">Your mission summary</p>
+            <p id="ob-summary-text" class="font-body-md text-body-md text-on-surface">Complete your daily quests to chip away at this boss. Slay it before the week ends to earn legendary XP.</p>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-6 mb-safe">
+          <button onclick="obBack(6)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
+            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          </button>
+          <button onclick="obDeploy()" id="ob-deploy-btn"
+            class="flex-1 h-14 bg-secondary text-on-secondary font-label-lg text-label-lg uppercase tracking-widest font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1">rocket_launch</span>
+            Deploy Protocol
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /ob-steps-container -->
+  </div>
+  <!-- END ONBOARDING -->
+
+  <!-- Application Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('[HabitCraft] SW registered, scope:', reg.scope))
+          .catch(err => console.warn('[HabitCraft] SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>

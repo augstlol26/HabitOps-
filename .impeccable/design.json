@@ -1,0 +1,23 @@
+{
+  "schema": 2,
+  "direction": "name-as-monument",
+  "theme": "light",
+  "tokens": {
+    "color": {
+      "bg": "#F3F4F0",
+      "surface": "#E6E8E2",
+      "ink": "#111315",
+      "muted": "#4A4E54",
+      "accent": "#D91E2A",
+      "accentInk": "#F3F4F0",
+      "fieldDark": "#111315",
+      "fieldDarkInk": "#F3F4F0"
+    },
+    "typography": {
+      "display": "General Sans",
+      "sans": "General Sans",
+      "scale": ["14px", "17px", "24px", "58px", "228px"]
+    }
+  }
+}
+

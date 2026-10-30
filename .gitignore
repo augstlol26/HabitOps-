@@ -1,0 +1,8 @@
+node_modules/
+.taste-skill/
+.DS_Store
+Thumbs.db
+*.log
+android-build/aligned.apk
+android-build/unaligned.apk
+android-build/classes.dex

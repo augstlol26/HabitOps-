@@ -1,0 +1,36 @@
+{
+  "name": "HabitOps — Tactical Habit Engine",
+  "short_name": "HabitOps",
+  "description": "Gamified habit tracking with boss battles, XP systems and weekly raids.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf8ff",
+  "theme_color": "#00687a",
+  "categories": ["productivity", "lifestyle", "health"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Today's Quests",
+      "short_name": "Quests",
+      "description": "Jump straight to today's habit quests",
+      "url": "./index.html#today",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
+

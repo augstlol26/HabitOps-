@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HabitOps · Tactical Gamified Habit Operating System</title>
+  <meta name="description" content="Tactical discipline for daily routines. Hold two seconds to strike the weekly adversary boss, guard your streak with EMP shields, and climb to Level 100." />
+  <link rel="icon" type="image/png" href="assets/icon-192.png" />
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+    :root {
+      --bg: #F3F4F0;
+      --surface: #E6E8E2;
+      --ink: #111315;
+      --muted: #4A4E54;
+      --accent: #B81420;
+      --accent-ink: #FFFFFF;
+      --field-1: #111315;
+      --field-1-ink: #F3F4F0;
+
+      --font-display: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-sans: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* Strict 5-step typographic scale */
+      --t-hero: clamp(4.25rem, 15.8vw, 15.5rem);
+      --t-h2: clamp(2.15rem, 4.2vw, 3.6rem);
+      --t-h3: clamp(1.25rem, 1.8vw, 1.5rem);
+      --t-body: 1.0625rem;
+      --t-small: 0.875rem;
+
+      --gutter: clamp(20px, 4.5vw, 64px);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body {
+      min-height: 100svh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: var(--t-body);
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    img, video, canvas, svg { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    p { max-width: 60ch; text-wrap: pretty; }
+    h1, h2, h3 { text-wrap: balance; font-family: var(--font-display); font-weight: 700; }
+    .nums { font-variant-numeric: tabular-nums; }
+
+    .wrap {
+      width: 100%;
+      max-width: 1440px;
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    /* Motion system (20+ revealed elements for choreographed entrance) */
+    @keyframes riseIn {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulseBar {
+      0%, 100% { transform: scaleX(1); opacity: 1; }
+      50% { transform: scaleX(0.96); opacity: 0.82; }
+    }
+    .motion-node {
+      animation: riseIn 0.7s var(--ease-out) both;
+      transition: transform 0.45s var(--ease-out), opacity 0.45s var(--ease-out);
+    }
+    .d-1 { animation-delay: 0.04s; }
+    .d-2 { animation-delay: 0.08s; }
+    .d-3 { animation-delay: 0.12s; }
+    .d-4 { animation-delay: 0.16s; }
+    .d-5 { animation-delay: 0.20s; }
+    .d-6 { animation-delay: 0.24s; }
+    .d-7 { animation-delay: 0.28s; }
+    .d-8 { animation-delay: 0.32s; }
+
+    /* Navigation */
+    .site-header {
+      padding-block: 22px;
+    }
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .brand-link {
+      font-weight: 700;
+      font-size: var(--t-h3);
+      letter-spacing: -0.03em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 2.5vw, 32px);
+      flex-wrap: wrap;
+      font-size: var(--t-small);
+      font-weight: 500;
+    }
+    .nav-links a {
+      transition: opacity 0.2s var(--ease-out);
+    }
+    .nav-links a:hover { opacity: 0.68; }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 22px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: var(--t-small);
+      font-weight: 700;
+      border-radius: 6px;
+      transition: transform 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+    }
+    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 22px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: var(--t-small);
+      font-weight: 700;
+      border-radius: 6px;
+      transition: transform 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+    }
+    .btn-secondary:hover { opacity: 0.86; transform: translateY(-1px); }
+
+    /* HERO: Name-as-Monument */
+    .hero-section {
+      min-height: calc(100svh - 76px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: clamp(16px, 3vw, 40px);
+      padding-bottom: clamp(16px, 2.5vw, 32px);
+      gap: clamp(24px, 4vw, 48px);
+    }
+    .hero-upper {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(24px, 3.5vw, 48px);
+      align-items: center;
+    }
+    .hero-copy {
+      grid-column: 1 / 6;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .hero-lead {
+      font-size: var(--t-h3);
+      line-height: 1.38;
+      font-weight: 500;
+      color: var(--ink);
+      max-width: 38ch;
+    }
+    .hero-sub {
+      font-size: var(--t-body);
+      color: var(--muted);
+      max-width: 44ch;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .hero-stage-col {
+      grid-column: 6 / 13;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .three-stage {
+      width: 100%;
+      height: clamp(270px, 36svh, 390px);
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #strike-core-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .stage-hud {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      pointer-events: none;
+      font-size: var(--t-small);
+      font-weight: 700;
+    }
+    .stage-meter-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .stage-meter-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.06s linear;
+    }
+
+    .monument-title {
+      font-size: var(--t-hero);
+      line-height: 0.84;
+      letter-spacing: -0.045em;
+      font-weight: 700;
+      color: var(--ink);
+      margin-left: -0.03em;
+      transform-origin: left bottom;
+      will-change: transform;
+    }
+
+    /* SECTION 2: SHOWCASE (50/50 split) */
+    .showcase-section {
+      padding-block: clamp(72px, 10vw, 136px);
+      background: var(--surface);
+    }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(28px, 4vw, 56px);
+      align-items: center;
+    }
+    .showcase-media {
+      grid-column: 1 / 8;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .video-frame {
+      background: var(--field-1);
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+    .video-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .video-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: var(--t-small);
+      color: var(--muted);
+    }
+    .showcase-copy {
+      grid-column: 8 / 13;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .section-h2 {
+      font-size: var(--t-h2);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      max-width: 16ch;
+    }
+    .cell-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .action-cell {
+      background: var(--bg);
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: transform 0.2s var(--ease-out);
+    }
+    .action-cell:hover { transform: translateY(-2px); }
+    .action-cell.primary-cell {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    .action-cell-title {
+      font-size: var(--t-h3);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .action-cell-sub {
+      font-size: var(--t-small);
+    }
+
+    /* SECTION 3: FEATURES (Small proof beside text) */
+    .features-section {
+      padding-block: clamp(72px, 10vw, 136px);
+    }
+    .features-header {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(24px, 3.5vw, 48px);
+      align-items: end;
+      margin-bottom: clamp(40px, 6vw, 72px);
+    }
+    .features-header h2 {
+      grid-column: 1 / 7;
+    }
+    .features-header p {
+      grid-column: 7 / 13;
+      color: var(--muted);
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(24px, 3vw, 36px);
+    }
+    .feature-block {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .ui-proof {
+      background: var(--surface);
+      padding: 22px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ui-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: var(--t-small);
+      font-weight: 700;
+    }
+    .ui-bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .ui-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 5px;
+      animation: pulseBar 3.2s var(--ease-out) infinite;
+      transform-origin: left center;
+    }
+    .ui-bar-fill.dark-fill {
+      background: var(--ink);
+    }
+    .ui-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 4px;
+      font-size: var(--t-small);
+      font-weight: 700;
+    }
+    .ui-tag.crimson {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    .feature-copy h3 {
+      font-size: var(--t-h3);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .feature-copy p {
+      color: var(--muted);
+      font-size: var(--t-body);
+    }
+
+    /* SECTION 4: HOW IT WORKS (Run-in column + Campaign Visual Plates) */
+    .process-section {
+      padding-block: clamp(72px, 10vw, 136px);
+      background: var(--surface);
+    }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(28px, 4vw, 56px);
+      align-items: start;
+    }
+    .process-left {
+      grid-column: 1 / 6;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .process-right {
+      grid-column: 6 / 13;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+    .run-in-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .run-in-item {
+      padding: 0;
+      font-size: var(--t-body);
+      color: var(--muted);
+    }
+    .run-in-lead {
+      color: var(--ink);
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .plate-card {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .plate-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .plate-caption {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--t-small);
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .plate-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* SECTION 5: INVERTED CTA & FOOTER */
+    .inverted-field {
+      background: var(--field-1);
+      color: var(--field-1-ink);
+      padding-top: clamp(72px, 10vw, 136px);
+      padding-bottom: clamp(32px, 5vw, 56px);
+    }
+    .cta-block {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(24px, 4vw, 48px);
+      align-items: end;
+      margin-bottom: clamp(64px, 9vw, 112px);
+    }
+    .cta-block h2 {
+      grid-column: 1 / 8;
+      font-size: var(--t-h2);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+    .cta-actions {
+      grid-column: 8 / 13;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .cta-actions p {
+      color: #B4B8BF;
+      font-size: var(--t-body);
+    }
+    .btn-light {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 22px;
+      background: #23272C;
+      color: var(--field-1-ink);
+      font-size: var(--t-small);
+      font-weight: 700;
+      border-radius: 6px;
+      transition: opacity 0.2s var(--ease-out);
+    }
+    .btn-light:hover { opacity: 0.88; }
+
+    .footer-cols {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: clamp(48px, 7vw, 84px);
+      font-size: var(--t-small);
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-col-title {
+      font-weight: 700;
+      color: var(--field-1-ink);
+      margin-bottom: 4px;
+    }
+    .footer-col a, .footer-col span {
+      color: #A5AAB2;
+    }
+    .footer-col a:hover {
+      color: var(--field-1-ink);
+    }
+    .footer-monument {
+      width: 100%;
+      margin-top: 16px;
+    }
+    .footer-monument svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      fill: var(--field-1-ink);
+    }
+
+    @media (max-width: 960px) {
+      .monument-title {
+        order: -1;
+      }
+      .hero-copy, .hero-stage-col,
+      .showcase-media, .showcase-copy,
+      .features-header h2, .features-header p,
+      .process-left, .process-right,
+      .cta-block h2, .cta-actions {
+        grid-column: 1 / -1;
+      }
+      .features-grid, .plate-pair, .cell-pair {
+        grid-template-columns: 1fr;
+      }
+      .footer-cols {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header wrap motion-node d-1">
+    <div class="nav-row">
+      <a href="#top" class="brand-link">HabitOps</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#showcase">Showcase</a>
+        <a href="#discipline">Discipline</a>
+        <a href="#protocol">How It Works</a>
+        <a href="index.html">Web App</a>
+        <a href="habitops.apk" download="HabitOps.apk" class="btn-primary">Download APK</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- SECTION 1: HERO (Name-as-Monument + Interactive Three.js Strike Core) -->
+    <section class="hero-section wrap">
+      <div class="hero-upper">
+        <div class="hero-copy motion-node d-2">
+          <p class="hero-lead">
+            Tactical discipline for daily routines that demand follow-through. Hold two seconds to strike the weekly adversary, guard your streak with EMP shields, and climb to Level 100.
+          </p>
+          <p class="hero-sub">
+            Built for Android and Web with zero cloud sign-ups, anti-tap-slip verification, and real combat telemetry.
+          </p>
+          <div class="hero-actions motion-node d-3">
+            <a href="habitops.apk" download="HabitOps.apk" class="btn-primary">Download Android APK</a>
+            <a href="index.html" class="btn-secondary">Launch Live Web App</a>
+          </div>
+        </div>
+
+        <div class="hero-stage-col motion-node d-4">
+          <div class="three-stage" id="hero-three-stage" data-ui="strike-core-stage" role="region" aria-label="Interactive 3D Tactical Strike Core">
+            <canvas id="strike-core-canvas"></canvas>
+            <div class="stage-hud">
+              <span id="core-status-label" class="nums">Core integrity 100% · Hold 2.0s to strike</span>
+              <div class="stage-meter-track">
+                <div class="stage-meter-fill" id="core-charge-bar"></div>
+              </div>
+              <span id="core-timer-label" class="nums">0.0s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="monument-title motion-node d-5" id="monument-heading">HABITOPS</h1>
+    </section>
+
+    <!-- SECTION 2: SHOWCASE (50/50 split with Flagship Commercial Video) -->
+    <section id="showcase" class="showcase-section">
+      <div class="wrap showcase-grid">
+        <div class="showcase-media motion-node d-2">
+          <div class="video-frame">
+            <video id="commercial-video" src="assets/habitops-commercial.mp4" poster="assets/habitops-commercial-poster.jpg" autoplay loop muted playsinline></video>
+          </div>
+          <div class="video-controls-bar" data-ui="video-controls">
+            <span class="nums">HabitOps Commercial Reel · 1080p 60fps</span>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <button type="button" class="btn-secondary" style="padding:7px 14px;" onclick="triggerDemoStrikeSfx()">Test Strike Audio</button>
+              <label class="btn-secondary" style="padding:7px 14px; cursor:pointer;">
+                Load Custom Video
+                <input type="file" id="custom-video-input" accept="video/*" style="display:none;" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase-copy motion-node d-3">
+          <h2 class="section-h2">Two seconds locks it in.</h2>
+          <p>
+            Ordinary habit trackers reward accidental taps and hollow checkboxes. HabitOps requires a deliberate two-second press-and-hold on every scheduled protocol, charging a kinetic strike bar that damages the weekly boss and awards verified experience points.
+          </p>
+          <div class="cell-pair">
+            <a href="habitops.apk" download="HabitOps.apk" class="action-cell primary-cell motion-node d-4">
+              <span class="action-cell-title">Android APK</span>
+              <span class="action-cell-sub nums">v1.1 Signed Package · 5.1 MB</span>
+            </a>
+            <a href="index.html" class="action-cell motion-node d-5">
+              <span class="action-cell-title">Browser OS</span>
+              <span class="action-cell-sub">Instant Local-First Web App</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: FEATURES (Small UI proof beside text) -->
+    <section id="discipline" class="features-section wrap">
+      <div class="features-header">
+        <h2 class="section-h2 motion-node d-1">Engineered to make slacking visible.</h2>
+        <p class="motion-node d-2">
+          Every action inside HabitOps feeds a live combat loop. Clear your morning, midday, and evening windows on time to multiply XP output and keep the weekly adversary suppressed.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <article class="feature-block motion-node d-3">
+          <div class="ui-proof" data-ui="strike-protocol-card">
+            <div class="ui-row">
+              <span class="nums">06:30 · HYDRATION &amp; MOBILITY</span>
+              <span class="ui-tag crimson nums">+50 XP · 2.0S HOLD</span>
+            </div>
+            <div class="ui-bar-track">
+              <div class="ui-bar-fill" style="width: 88%;"></div>
+            </div>
+            <div class="ui-row" style="color:var(--muted); font-weight:500;">
+              <span>Anti-Slip Hold Verification Active</span>
+              <span class="nums">20% Critical Chance</span>
+            </div>
+          </div>
+          <div class="feature-copy">
+            <h3>Deliberate Two-Second Strike</h3>
+            <p>
+              Press and hold any mission card for two full seconds to charge the kinetic bar. Releasing early cancels the strike, preventing accidental pocket taps and making every cleared task feel earned.
+            </p>
+          </div>
+        </article>
+
+        <!-- Feature 2 -->
+        <article class="feature-block motion-node d-4">
+          <div class="ui-proof" data-ui="adversary-boss-meter">
+            <div class="ui-row">
+              <span>ADVERSARY · PROCRASTINATION LEVIATHAN</span>
+              <span class="ui-tag crimson nums">18% HP CRITICAL</span>
+            </div>
+            <div class="ui-bar-track">
+              <div class="ui-bar-fill" style="width: 18%;"></div>
+            </div>
+            <div class="ui-row" style="color:var(--muted); font-weight:500;">
+              <span class="nums">24h Miss Penalty: +15% HP Regen</span>
+              <span class="nums">Low-HP Pulse Active</span>
+            </div>
+          </div>
+          <div class="feature-copy">
+            <h3>Adversaries That Regenerate</h3>
+            <p>
+              Abandon your protocols for a full day and the weekly boss recovers 15% of its health pool. Push a full-health boss into enrage and its maximum armor increases by 10%.
+            </p>
+          </div>
+        </article>
+
+        <!-- Feature 3 -->
+        <article class="feature-block motion-node d-5">
+          <div class="ui-proof" data-ui="emp-shield-telemetry">
+            <div class="ui-row">
+              <span>TACTICAL EMP STREAK SHIELD</span>
+              <span class="ui-tag nums">2 SHIELDS ARMED</span>
+            </div>
+            <div class="ui-bar-track">
+              <div class="ui-bar-fill dark-fill" style="width: 100%;"></div>
+            </div>
+            <div class="ui-row" style="color:var(--muted); font-weight:500;">
+              <span class="nums">30-Day Streak · 2.5x XP Multiplier</span>
+              <span class="nums">+1 Shield Every 10 Levels</span>
+            </div>
+          </div>
+          <div class="feature-copy">
+            <h3>Tactical EMP Streak Protection</h3>
+            <p>
+              Operatives start with one EMP shield and earn another every 10 levels. If life forces a missed day, an EMP shield deploys automatically at midnight to freeze your streak and block boss healing.
+            </p>
+          </div>
+        </article>
+
+        <!-- Feature 4 -->
+        <article class="feature-block motion-node d-6">
+          <div class="ui-proof" data-ui="operative-battle-card">
+            <div class="ui-row">
+              <span class="nums">RANK 100 · APEX GRANDMASTER</span>
+              <span class="ui-tag nums">1080×1350 PNG</span>
+            </div>
+            <div class="ui-bar-track">
+              <div class="ui-bar-fill dark-fill" style="width: 94%;"></div>
+            </div>
+            <div class="ui-row" style="color:var(--muted); font-weight:500;">
+              <span class="nums">14 Bosses Defeated · 4 Squad Allies</span>
+              <span>1-Tap Dossier Export</span>
+            </div>
+          </div>
+          <div class="feature-copy">
+            <h3>Collectible Operative Battle Cards</h3>
+            <p>
+              Advance through six tactical titles from Level 1 Initiate to Level 100 Apex Grandmaster. Export a high-resolution Battle Card PNG from your dossier to share verified streaks with your guild.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION 4: HOW IT WORKS (Run-in column + Campaign Plates) -->
+    <section id="protocol" class="process-section">
+      <div class="wrap process-grid">
+        <div class="process-left motion-node d-2">
+          <h2 class="section-h2">Three rules govern the field.</h2>
+          <p>
+            No account registration, no subscription walls, and no manual XP inflation. Install the Android APK or open the browser app to begin your first seven-day boss operation immediately.
+          </p>
+          <figure class="plate-card motion-node d-3">
+            <img src="assets/promo-apex-poster.jpg" alt="HabitOps Weekly Adversary Boss Telemetry Poster" loading="lazy" />
+            <figcaption class="plate-caption">
+              <span>Adversary Engagement HUD</span>
+              <span class="nums">Plate 01</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="process-right">
+          <div class="run-in-list">
+            <div class="run-in-item motion-node d-4">
+              <p>
+                <span class="run-in-lead">Assign your time windows.</span>
+                Select from curated tactical routines or schedule custom protocols across morning, afternoon, and evening slots. Window monitoring groups overdue tasks into a single clean alert rather than notification spam.
+              </p>
+            </div>
+            <div class="run-in-item motion-node d-5">
+              <p>
+                <span class="run-in-lead">Hold two seconds to execute.</span>
+                Each protocol awards a fixed 50 base XP scaled by your active streak multiplier up to 2.5x. Every strike carries a 20% chance to trigger a double-damage critical hit with particle slash feedback.
+              </p>
+            </div>
+            <div class="run-in-item motion-node d-6">
+              <p>
+                <span class="run-in-lead">Defeat the boss and export proof.</span>
+                Drain the weekly boss to zero HP before Sunday night to claim bonus XP, earn rank promotions every 20 levels, and generate your sharable Operative Battle Card.
+              </p>
+            </div>
+          </div>
+
+          <div class="plate-pair">
+            <figure class="plate-card motion-node d-7">
+              <img src="assets/promo-hero-banner.jpg" alt="HabitOps Tactical Command Center Interface" loading="lazy" />
+              <figcaption class="plate-caption">
+                <span>Command Center View</span>
+                <span class="nums">Plate 02</span>
+              </figcaption>
+            </figure>
+            <figure class="plate-card motion-node d-8">
+              <img src="assets/promo-social-ad.jpg" alt="HabitOps Operative Battle Card Dossier Export" loading="lazy" />
+              <figcaption class="plate-caption">
+                <span>Operative Dossier Card</span>
+                <span class="nums">Plate 03</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SECTION 5: INVERTED CLOSING CTA & MONUMENT FOOTER -->
+  <footer class="inverted-field">
+    <div class="wrap">
+      <div class="cta-block motion-node d-2">
+        <h2>Hold two seconds. Slay the week.</h2>
+        <div class="cta-actions">
+          <p>
+            Install the signed Android package or launch the local-first web application in your browser right now.
+          </p>
+          <div style="display:flex; gap:14px; flex-wrap:wrap;">
+            <a href="habitops.apk" download="HabitOps.apk" class="btn-primary">Download Android APK</a>
+            <a href="index.html" class="btn-light">Open Web App</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-cols motion-node d-3">
+        <div class="footer-col">
+          <span class="footer-col-title">Application</span>
+          <a href="index.html">Launch HabitOps Web OS</a>
+          <a href="habitops.apk" download="HabitOps.apk">Download Android APK (v1.1)</a>
+          <a href="#showcase">Commercial Showcase</a>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Specifications</span>
+          <span class="nums">2.0s Anti-Slip Hold Verification</span>
+          <span class="nums">Level 100 Apex Grandmaster Ladder</span>
+          <span class="nums">100% Offline LocalStorage Engine</span>
+        </div>
+        <div class="footer-col">
+          <span class="footer-col-title">Production</span>
+          <a href="flow-studio.html">Google Flow Studio &amp; WAV Soundboard</a>
+          <a href="#discipline">Combat Telemetry</a>
+          <a href="#protocol">Field Rules</a>
+        </div>
+      </div>
+
+      <div class="footer-monument motion-node d-4" aria-hidden="true">
+        <svg viewBox="0 0 1200 185" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="158" font-family="'General Sans', sans-serif" font-weight="700" font-size="212" letter-spacing="-8">HABITOPS</text>
+        </svg>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Monumental H1 subtle scroll scale
+    (function initMonumentScroll() {
+      const h1 = document.getElementById('monument-heading');
+      if (!h1) return;
+      window.addEventListener('scroll', () => {
+        const y = Math.min(window.scrollY, 500);
+        const scale = Math.max(0.92, 1 - y * 0.00014);
+        h1.style.transform = 'scale(' + scale.toFixed(4) + ')';
+      }, { passive: true });
+    })();
+
+    // WebAudio synthesis for interactive 3D Strike Core & Demo button
+    let audioCtx = null;
+    let chargeOsc = null;
+    let chargeGain = null;
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function startChargeSound() {
+      const ctx = ensureAudio();
+      if (!ctx) return;
+      stopChargeSound();
+      const now = ctx.currentTime;
+      chargeOsc = ctx.createOscillator();
+      chargeGain = ctx.createGain();
+      chargeOsc.type = 'sawtooth';
+      chargeOsc.frequency.setValueAtTime(95, now);
+      chargeOsc.frequency.exponentialRampToValueAtTime(520, now + 2.0);
+      chargeGain.gain.setValueAtTime(0.01, now);
+      chargeGain.gain.linearRampToValueAtTime(0.18, now + 1.9);
+      chargeOsc.connect(chargeGain);
+      chargeGain.connect(ctx.destination);
+      chargeOsc.start(now);
+    }
+
+    function stopChargeSound() {
+      if (chargeOsc) {
+        try { chargeOsc.stop(); } catch (e) {}
+        chargeOsc = null;
+      }
+    }
+
+    function playCriticalBurstSound() {
+      const ctx = ensureAudio();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const sub = ctx.createOscillator();
+      const sg = ctx.createGain();
+      sub.type = 'sine';
+      sub.frequency.setValueAtTime(165, now);
+      sub.frequency.exponentialRampToValueAtTime(36, now + 0.36);
+      sg.gain.setValueAtTime(0.38, now);
+      sg.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+      sub.connect(sg);
+      sg.connect(ctx.destination);
+      sub.start(now);
+      sub.stop(now + 0.4);
+
+      [587.33, 880, 1174.66].forEach((freq, idx) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, now + idx * 0.055);
+        g.gain.setValueAtTime(0.18, now + idx * 0.055);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.055 + 0.25);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(now + idx * 0.055);
+        o.stop(now + idx * 0.055 + 0.27);
+      });
+    }
+
+    function triggerDemoStrikeSfx() {
+      playCriticalBurstSound();
+    }
+
+    // Custom video swapper for Google Flow exports
+    const customVideoInput = document.getElementById('custom-video-input');
+    const commercialVideo = document.getElementById('commercial-video');
+    if (customVideoInput && commercialVideo) {
+      customVideoInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        commercialVideo.src = URL.createObjectURL(file);
+        commercialVideo.muted = false;
+        commercialVideo.play();
+      });
+    }
+
+    // Interactive Three.js 3D Tactical Strike Core
+    (function initThreeStrikeCore() {
+      const stage = document.getElementById('hero-three-stage');
+      const canvas = document.getElementById('strike-core-canvas');
+      const barEl = document.getElementById('core-charge-bar');
+      const timerEl = document.getElementById('core-timer-label');
+      const statusEl = document.getElementById('core-status-label');
+      if (!stage || !canvas || typeof THREE === 'undefined') return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, stage.clientWidth / stage.clientHeight, 0.1, 100);
+      camera.position.set(0, 0, 5.2);
+
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      } catch (e) {
+        return;
+      }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(stage.clientWidth, stage.clientHeight);
+
+      const rootGroup = new THREE.Group();
+      scene.add(rootGroup);
+
+      // Lighting
+      const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.15);
+      dirLight1.position.set(4, 5, 4);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0xD91E2A, 0.75);
+      dirLight2.position.set(-4, -3, 2);
+      scene.add(dirLight2);
+
+      const ambLight = new THREE.AmbientLight(0xF3F4F0, 0.65);
+      scene.add(ambLight);
+
+      // Core faceted icosahedron
+      const coreGeo = new THREE.IcosahedronGeometry(1.18, 1);
+      const coreMat = new THREE.MeshStandardMaterial({
+        color: 0x111315,
+        roughness: 0.28,
+        metalness: 0.45,
+        flatShading: true
+      });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      rootGroup.add(coreMesh);
+
+      // Crisp wireframe cage
+      const wireGeo = new THREE.IcosahedronGeometry(1.21, 1);
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: 0xD91E2A,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.65
+      });
+      const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+      rootGroup.add(wireMesh);
+
+      // Orbital tactical rings
+      const ringGeo1 = new THREE.TorusGeometry(1.75, 0.018, 12, 72);
+      const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x111315 });
+      const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+      ring1.rotation.x = Math.PI * 0.35;
+      rootGroup.add(ring1);
+
+      const ringGeo2 = new THREE.TorusGeometry(2.02, 0.014, 12, 72);
+      const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xD91E2A });
+      const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+      ring2.rotation.y = Math.PI * 0.28;
+      rootGroup.add(ring2);
+
+      // Orbiting kinetic shards
+      const shards = [];
+      const shardGeo = new THREE.OctahedronGeometry(0.11, 0);
+      for (let i = 0; i < 14; i++) {
+        const sm = new THREE.MeshStandardMaterial({
+          color: i % 2 === 0 ? 0xD91E2A : 0x111315,
+          roughness: 0.3,
+          flatShading: true
+        });
+        const mesh = new THREE.Mesh(shardGeo, sm);
+        const angle = (i / 14) * Math.PI * 2;
+        const radius = 1.55 + (i % 3) * 0.22;
+        mesh.userData = { angle, radius, yOff: (i - 7) * 0.12, burst: 0 };
+        rootGroup.add(mesh);
+        shards.push(mesh);
+      }
+
+      let pointerX = 0;
+      let pointerY = 0;
+      let holding = false;
+      let holdStart = 0;
+      let chargeRatio = 0;
+      let burstImpulse = 0;
+
+      stage.addEventListener('pointermove', (e) => {
+        const rect = stage.getBoundingClientRect();
+        pointerX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        pointerY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      });
+
+      function beginHold() {
+        holding = true;
+        holdStart = performance.now();
+        statusEl.textContent = 'CHARGING TACTICAL STRIKE... KEEP HOLDING';
+        startChargeSound();
+      }
+
+      function endHold() {
+        if (!holding) return;
+        holding = false;
+        stopChargeSound();
+        if (chargeRatio < 1) {
+          chargeRatio = 0;
+          barEl.style.width = '0%';
+          timerEl.textContent = '0.0s';
+          statusEl.textContent = 'HOLD CANCELLED · PRESS & HOLD 2.0S TO STRIKE';
+        }
+      }
+
+      stage.addEventListener('pointerdown', beginHold);
+      window.addEventListener('pointerup', endHold);
+      stage.addEventListener('pointerleave', endHold);
+
+      window.addEventListener('resize', () => {
+        if (!stage.clientWidth || !stage.clientHeight) return;
+        camera.aspect = stage.clientWidth / stage.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(stage.clientWidth, stage.clientHeight);
+      });
+
+      function animate(now) {
+        requestAnimationFrame(animate);
+
+        if (holding) {
+          const elapsed = (now - holdStart) / 1000;
+          chargeRatio = Math.min(1, elapsed / 2.0);
+          barEl.style.width = (chargeRatio * 100).toFixed(1) + '%';
+          timerEl.textContent = Math.min(2.0, elapsed).toFixed(1) + 's';
+
+          if (chargeRatio >= 1) {
+            holding = false;
+            stopChargeSound();
+            playCriticalBurstSound();
+            burstImpulse = 1.0;
+            statusEl.textContent = 'CRITICAL BOSS STRIKE LOCKED · -250 HP · +50 XP';
+            setTimeout(() => {
+              chargeRatio = 0;
+              barEl.style.width = '0%';
+              timerEl.textContent = '0.0s';
+              statusEl.textContent = 'CORE INTEGRITY 100% · HOLD 2.0S TO STRIKE';
+            }, 1400);
+          }
+        }
+
+        burstImpulse *= 0.92;
+        const speedMult = 1 + chargeRatio * 5 + burstImpulse * 8;
+
+        coreMesh.rotation.y += 0.006 * speedMult;
+        coreMesh.rotation.x += 0.004 * speedMult;
+        wireMesh.rotation.y = -coreMesh.rotation.y * 0.8;
+        wireMesh.rotation.z += 0.005 * speedMult;
+
+        const scalePulse = 1 + chargeRatio * 0.18 + burstImpulse * 0.35;
+        coreMesh.scale.setScalar(scalePulse);
+        wireMesh.scale.setScalar(scalePulse * 1.03);
+
+        ring1.rotation.z += 0.008 * speedMult;
+        ring2.rotation.x -= 0.007 * speedMult;
+
+        shards.forEach((s, idx) => {
+          s.userData.angle += (0.009 + idx * 0.0005) * speedMult;
+          const r = s.userData.radius + chargeRatio * 0.25 + burstImpulse * 1.1;
+          s.position.set(
+            Math.cos(s.userData.angle) * r,
+            s.userData.yOff + Math.sin(s.userData.angle * 1.5) * 0.25,
+            Math.sin(s.userData.angle) * r
+          );
+          s.rotation.x += 0.02 * speedMult;
+          s.rotation.y += 0.02 * speedMult;
+        });
+
+        rootGroup.rotation.y += (pointerX * 0.35 - rootGroup.rotation.y) * 0.06;
+        rootGroup.rotation.x += (pointerY * 0.25 - rootGroup.rotation.x) * 0.06;
+
+        renderer.render(scene, camera);
+      }
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>

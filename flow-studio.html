@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HabitOps — Google Flow Production Studio &amp; WAV Soundboard</title>
+  <link rel="icon" type="image/png" href="assets/icon-192.png" />
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F3F4F0;
+      --surface: #E6E8E2;
+      --surface-strong: #DADDD5;
+      --ink: #111315;
+      --muted: #4A4E54;
+      --accent: #D91E2A;
+      --accent-ink: #F3F4F0;
+      --field-dark: #111315;
+      --field-dark-ink: #F3F4F0;
+      --font-sans: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --gutter: clamp(20px, 4vw, 56px);
+    }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .nums { font-variant-numeric: tabular-nums; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px var(--gutter);
+      background: var(--surface);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 1.125rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge {
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      border-radius: 6px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    .btn:hover { opacity: 0.92; }
+    .btn:active { transform: scale(0.98); }
+    .btn-dark {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .btn-surface {
+      background: var(--surface-strong);
+      color: var(--ink);
+    }
+
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: clamp(40px, 6vw, 84px) var(--gutter);
+    }
+    .hero-head {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: end;
+      margin-bottom: 56px;
+    }
+    @media (max-width: 900px) {
+      .hero-head { grid-template-columns: 1fr; }
+    }
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4.25rem);
+      line-height: 0.96;
+      letter-spacing: -0.035em;
+      font-weight: 700;
+    }
+    .lead {
+      font-size: 1.0625rem;
+      color: var(--muted);
+      max-width: 58ch;
+      margin-top: 16px;
+    }
+    .section-block {
+      margin-top: 72px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    h2 {
+      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      font-weight: 700;
+    }
+    .sub-note {
+      color: var(--muted);
+      font-size: 0.9375rem;
+    }
+
+    /* Prompt Grid */
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .prompt-card {
+      background: var(--surface);
+      padding: 28px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .prompt-card.flagship {
+      background: var(--field-dark);
+      color: var(--field-dark-ink);
+      grid-column: 1 / -1;
+    }
+    .prompt-card.flagship .prompt-meta,
+    .prompt-card.flagship .prompt-usage {
+      color: #B4B8BF;
+    }
+    .prompt-card.flagship .prompt-box {
+      background: #1B1E22;
+      color: #F3F4F0;
+    }
+    .prompt-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+    .prompt-meta {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .prompt-box {
+      background: var(--bg);
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      color: var(--ink);
+      user-select: all;
+    }
+    .prompt-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .prompt-usage {
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    /* Soundboard Grid */
+    .sound-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .sound-card {
+      background: var(--surface);
+      padding: 22px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .sound-name {
+      font-weight: 700;
+      font-size: 1.0625rem;
+    }
+    .sound-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .sound-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .sound-controls .btn {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 0.875rem;
+    }
+
+    /* Dropzone */
+    .drop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 860px) {
+      .drop-grid { grid-template-columns: 1fr; }
+    }
+    .drop-panel {
+      background: var(--surface);
+      padding: 28px;
+      border-radius: 8px;
+    }
+    .file-target-list {
+      list-style: none;
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .file-target-list li {
+      background: var(--bg);
+      padding: 14px 16px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.9375rem;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.85em;
+      background: var(--surface-strong);
+      padding: 3px 7px;
+      border-radius: 4px;
+    }
+    .preview-stage {
+      margin-top: 16px;
+      background: var(--ink);
+      color: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .preview-stage video,
+    .preview-stage img {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: contain;
+      display: block;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+    }
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <a href="landing.html">HABITOPS</a>
+      <span class="badge">GOOGLE FLOW STUDIO</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#video-prompts">Video Prompts</a>
+      <a href="#image-prompts">Image Prompts</a>
+      <a href="#soundboard">WAV Soundboard</a>
+      <a href="#handoff">Asset Hand-Off</a>
+      <a href="landing.html" class="btn btn-dark">Back to Commercial Site</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero-head">
+      <div>
+        <h1>Google Flow Production Studio</h1>
+        <p class="lead">
+          Internal creator workspace separated from the public commercial site. Copy pre-engineered prompts into Google Flow, download 44.1kHz 16-bit PCM WAV sound effects for your timeline, and preview your exported advertisement video and campaign stills.
+        </p>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-start;">
+        <button class="btn" onclick="downloadAllWavFiles()">Download All 9 SFX (.WAV)</button>
+        <a href="landing.html" class="btn btn-surface">View Public Site (landing.html)</a>
+      </div>
+    </section>
+
+    <!-- 1. VIDEO PROMPTS FOR GOOGLE FLOW -->
+    <section id="video-prompts" class="section-block">
+      <div class="section-header">
+        <h2>1. Google Flow Video Prompts</h2>
+        <p class="sub-note">Click any prompt to copy it directly into Google Flow.</p>
+      </div>
+
+      <div class="prompt-grid">
+        <!-- Flagship Commercial Video -->
+        <article class="prompt-card flagship">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+              <h3 class="prompt-title">Flagship Commercial Advertisement &amp; Website Showcase Video</h3>
+              <span class="badge" style="background:var(--accent); color:var(--accent-ink);">PRIMARY HERO AD (16:9 &amp; 9:16)</span>
+            </div>
+            <p class="prompt-meta nums">Duration: 12–15s · Resolution: 1080p · Target file: assets/habitops-commercial.mp4</p>
+          </div>
+          <div class="prompt-box" id="prompt-video-flagship">Cinematic commercial product film for "HabitOps", a tactical habit-tracking and RPG boss-battle mobile app. Shot in crisp architectural daylight on a warm stone desk (#F3F4F0) with high-contrast carbon shadows and signal vermilion (#D91E2A) telemetry accents. Scene 1 (0-4s): Extreme macro close-up of a matte black Android smartphone resting on architectural concrete; a finger presses and holds a glowing mission card labeled "06:30 HYDRATION + MOBILITY". An intense signal-red charge bar fills over 2.0 seconds as a faceted 3D geometric polyhedron hovers and spins beside the phone. Scene 2 (4-9s): At 2.0 seconds, the bar locks in with a razor-sharp neon particle slash across the glass and a subtle 3px camera jolt; the hovering 3D core shatters into luminous shards while a holographic Weekly Adversary Boss ("THE PROCRASTINATION LEVIATHAN") takes -250 CRITICAL STRIKE damage, its health bar dropping into a pulsing crimson low-HP state. Scene 3 (9-15s): The screen transitions to a gold-trimmed Level 100 "APEX GRANDMASTER" Operative Battle Card with an active 2.5X Streak Multiplier and Tactical EMP Shield badge. Ultra-clean commercial lighting, 60fps macro lens, zero clutter, physical camera optics.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Pair with: <strong>Full Combat Combo (.WAV)</strong> + <strong>Level Up Fanfare (.WAV)</strong></span>
+            <button class="btn" onclick="copyText('prompt-video-flagship', 'Flagship Commercial Ad prompt copied')">Copy Prompt for Google Flow</button>
+          </div>
+        </article>
+
+        <!-- Short Video 1 -->
+        <article class="prompt-card">
+          <div>
+            <h3 class="prompt-title">Video 01: The 2-Second Tactical Strike</h3>
+            <p class="prompt-meta nums">Duration: 8–10s · Aspect: 9:16 Vertical or 16:9 · Viral Hook</p>
+          </div>
+          <div class="prompt-box" id="prompt-video-1">Macro product shot of a sleek smartphone running the HabitOps Tactical RPG app. A user's thumb presses and holds a habit card for a deliberate 2.0-second charge. A crisp vermilion laser progress bar fills from left to right with rising kinetic tension. On completion, a burst of 14 geometric particles erupts across the UI, the phone frame jolts with tactile impact, and a floating "+50 XP · 2.5X STREAK MULTIPLIER" readout locks into place while the weekly boss health bar drops sharply. High-speed commercial cinematography, crisp daylight studio lighting.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Pair with: <code>charge-hum-2s.wav</code> + <code>critical-strike.wav</code></span>
+            <button class="btn btn-dark" onclick="copyText('prompt-video-1', 'Video 01 prompt copied')">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- Short Video 2 -->
+        <article class="prompt-card">
+          <div>
+            <h3 class="prompt-title">Video 02: Boss Regeneration vs. EMP Shield</h3>
+            <p class="prompt-meta nums">Duration: 8–10s · Aspect: 9:16 Vertical · Stakes &amp; Urgency</p>
+          </div>
+          <div class="prompt-box" id="prompt-video-2">Split-moment tactical UI sequence for HabitOps. First half: A red warning alert reads "24H INACTIVITY DETECTED — BOSS REGENERATING +15% HP" as a menacing geometric boss core pulses and its health bar climbs back up. Second half: A cyan "TACTICAL EMP SHIELD DEPLOYED" badge activates automatically, sending an electromagnetic ripple across the screen that freezes the boss regeneration at zero and protects the user's 30-day streak. Crisp typographic HUD, tactile motion graphics, 60fps.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Pair with: <code>boss-horn.wav</code> + <code>emp-shield.wav</code></span>
+            <button class="btn btn-dark" onclick="copyText('prompt-video-2', 'Video 02 prompt copied')">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- Short Video 3 -->
+        <article class="prompt-card">
+          <div>
+            <h3 class="prompt-title">Video 03: Rank 1 to Level 100 Battle Card</h3>
+            <p class="prompt-meta nums">Duration: 8–10s · Aspect: 9:16 Vertical · Social Proof</p>
+          </div>
+          <div class="prompt-box" id="prompt-video-3">Fast-paced kinetic montage of an operative's rank badge evolving inside HabitOps: Level 1 Initiate, Level 20 Specialist, Level 40 Vanguard, Level 60 Commander, Level 80 Wraith, culminating in a monumental Level 100 "APEX GRANDMASTER" emblem. The user taps "Export Battle Card" and a razor-sharp 1080x1350 collectible dossier card slides out with verified streak telemetry, bosses defeated, and custom squad insignia. Daylight architectural backdrop, premium industrial design.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Pair with: <code>level-up.wav</code> + <code>trophy-fanfare.wav</code></span>
+            <button class="btn btn-dark" onclick="copyText('prompt-video-3', 'Video 03 prompt copied')">Copy Prompt</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 2. PROMOTIONAL IMAGE PROMPTS FOR GOOGLE FLOW -->
+    <section id="image-prompts" class="section-block">
+      <div class="section-header">
+        <h2>2. Google Flow Promotional Image Prompts</h2>
+        <p class="sub-note">Generate these 3 campaign visuals in Google Flow, then hand them to me or drop them below to replace the site's plates.</p>
+      </div>
+
+      <div class="prompt-grid">
+        <article class="prompt-card">
+          <div>
+            <h3 class="prompt-title">Image 01: Tactical HUD Hero Banner (16:9)</h3>
+            <p class="prompt-meta nums">Target filename: <code>assets/promo-hero-banner.jpg</code></p>
+          </div>
+          <div class="prompt-box" id="prompt-img-1">Editorial commercial product photography of a matte carbon smartphone lying on a sunlit architectural travertine stone surface (#F3F4F0). On the screen is the HabitOps interface showing a 2-second hold-to-strike progress bar at 100%, a faceted 3D crimson polyhedron boss core fracturing under a critical hit, and clean tabular typography reading "HABITOPS — LEVEL 100 APEX GRANDMASTER". Hard natural daylight casting crisp geometric shadows, Leica 50mm studio product shot, zero AI neon clutter.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Used in: How It Works Plate 01 &amp; Video Poster</span>
+            <button class="btn btn-dark" onclick="copyText('prompt-img-1', 'Image 01 prompt copied')">Copy Image Prompt</button>
+          </div>
+        </article>
+
+        <article class="prompt-card">
+          <div>
+            <h3 class="prompt-title">Image 02: Adversary Boss Poster (9:16 or 4:5)</h3>
+            <p class="prompt-meta nums">Target filename: <code>assets/promo-apex-poster.jpg</code></p>
+          </div>
+          <div class="prompt-box" id="prompt-img-2">Minimalist Swiss-tactical poster design for HabitOps. A monumental faceted 3D obsidian and vermilion (#D91E2A) icosahedron suspended in a bright architectural stone void (#F3F4F0), surrounded by precision orbital rings and tabular telemetry readouts: "BOSS HP 18% CRITICAL — ENRAGE TIMER ACTIVE — 2.0S HOLD TO STRIKE". High-contrast editorial graphic design, General Sans bold grotesque typography, gallery-grade print aesthetic.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Used in: How It Works Plate 02</span>
+            <button class="btn btn-dark" onclick="copyText('prompt-img-2', 'Image 02 prompt copied')">Copy Image Prompt</button>
+          </div>
+        </article>
+
+        <article class="prompt-card">
+          <div>
+            <h3 class="prompt-title">Image 03: Operative Battle Card Social Ad (1:1)</h3>
+            <p class="prompt-meta nums">Target filename: <code>assets/promo-social-ad.jpg</code></p>
+          </div>
+          <div class="prompt-box" id="prompt-img-3">Square 1:1 commercial campaign still showing two smartphones side-by-side on a light concrete surface: the left phone displays an exported HabitOps "Operative Battle Card" (Level 100 Apex Grandmaster, 2.5x Streak Multiplier, 14 Bosses Defeated, 2 Tactical EMP Shields), while the right phone displays the active daily protocol checklist with a glowing crimson 2-second strike bar. Crisp studio daylight, authentic physical materials, ultra-clean commercial photography.</div>
+          <div class="prompt-actions">
+            <span class="prompt-usage">Used in: How It Works Plate 03</span>
+            <button class="btn btn-dark" onclick="copyText('prompt-img-3', 'Image 03 prompt copied')">Copy Image Prompt</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. SOUNDBOARD & WAV EXPORTER FOR GOOGLE FLOW -->
+    <section id="soundboard" class="section-block">
+      <div class="section-header">
+        <h2>3. Google Flow Soundboard &amp; .WAV Audio Exporter</h2>
+        <p class="sub-note">Every sound is synthesized directly from HabitOps's WebAudio engine and exported as a standard 44.1kHz 16-bit PCM <code>.wav</code> file for Google Flow.</p>
+      </div>
+
+      <div class="sound-grid" id="soundboard-grid">
+        <!-- Populated by script below -->
+      </div>
+    </section>
+
+    <!-- 4. LIVE ASSET PREVIEWER & HANDOFF -->
+    <section id="handoff" class="section-block">
+      <div class="section-header">
+        <h2>4. Test Your Google Flow Exports &amp; Hand-Off Map</h2>
+        <p class="sub-note">Drop your exported Google Flow video or images below to preview them immediately, or place them in <code>assets/</code>.</p>
+      </div>
+
+      <div class="drop-grid">
+        <div class="drop-panel">
+          <h3 class="prompt-title">Live Google Flow Media Tester</h3>
+          <p class="sound-desc" style="margin-bottom:16px;">Select an <code>.mp4</code>, <code>.webm</code>, <code>.jpg</code>, or <code>.png</code> generated by Google Flow to inspect how it plays in the HabitOps frame.</p>
+          <input type="file" id="flow-file-input" accept="video/*,image/*" style="margin-bottom:12px;" />
+          <div class="preview-stage" id="flow-preview-stage">
+            <video src="assets/habitops-commercial.mp4" poster="assets/habitops-commercial-poster.jpg" autoplay loop muted playsinline controls></video>
+          </div>
+        </div>
+
+        <div class="drop-panel">
+          <h3 class="prompt-title">Exact File Paths for Permanent Site Integration</h3>
+          <p class="sound-desc">When your Google Flow renders are ready, provide them to me in chat (or save them to these exact paths in your workspace) and they will appear automatically on <code>landing.html</code>:</p>
+          <ul class="file-target-list">
+            <li>
+              <span>Flagship Commercial Video (16:9 MP4)</span>
+              <code>assets/habitops-commercial.mp4</code>
+            </li>
+            <li>
+              <span>Commercial Video Poster Frame (JPG)</span>
+              <code>assets/habitops-commercial-poster.jpg</code>
+            </li>
+            <li>
+              <span>Hero Campaign Banner (16:9 JPG)</span>
+              <code>assets/promo-hero-banner.jpg</code>
+            </li>
+            <li>
+              <span>Adversary Boss Poster (4:5 / 9:16 JPG)</span>
+              <code>assets/promo-apex-poster.jpg</code>
+            </li>
+            <li>
+              <span>Operative Social Ad (1:1 JPG)</span>
+              <code>assets/promo-social-ad.jpg</code>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Copied to clipboard</div>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('visible');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.classList.remove('visible'), 2400);
+    }
+
+    function copyText(id, label) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+        showToast(label || 'Copied to clipboard');
+      });
+    }
+
+    // Procedural WebAudio definitions that work on both live AudioContext and OfflineAudioContext
+    const SOUND_LIBRARY = [
+      {
+        id: 'charge-hum-2s',
+        name: '01. 2.0s Hold-to-Strike Charge Hum',
+        file: 'habitops-charge-hum-2s.wav',
+        duration: 2.15,
+        desc: 'Rising sawtooth + sub-harmonic turbine charge that builds over the 2.0-second mission hold.',
+        render(ctx) {
+          const now = 0.02;
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const filter = ctx.createBiquadFilter();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'triangle';
+          osc1.frequency.setValueAtTime(95, now);
+          osc1.frequency.exponentialRampToValueAtTime(520, now + 2.0);
+          osc2.frequency.setValueAtTime(47.5, now);
+          osc2.frequency.exponentialRampToValueAtTime(260, now + 2.0);
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(240, now);
+          filter.frequency.exponentialRampToValueAtTime(3400, now + 2.0);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.26, now + 1.85);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 2.08);
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 2.1);
+          osc2.stop(now + 2.1);
+        }
+      },
+      {
+        id: 'critical-strike',
+        name: '02. Critical Boss Strike (2x Impact)',
+        file: 'habitops-critical-strike.wav',
+        duration: 0.75,
+        desc: 'Sub-bass kinetic drop + metallic square-wave slash triggered when a 2-second hold crits.',
+        render(ctx) {
+          const now = 0.02;
+          const sub = ctx.createOscillator();
+          const subGain = ctx.createGain();
+          sub.type = 'sine';
+          sub.frequency.setValueAtTime(160, now);
+          sub.frequency.exponentialRampToValueAtTime(36, now + 0.35);
+          subGain.gain.setValueAtTime(0.45, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+          sub.connect(subGain);
+          subGain.connect(ctx.destination);
+          sub.start(now);
+          sub.stop(now + 0.4);
+
+          [587.33, 880, 1174.66].forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'square';
+            o.frequency.setValueAtTime(freq, now + 0.04 + i * 0.055);
+            g.gain.setValueAtTime(0.18, now + 0.04 + i * 0.055);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 0.28 + i * 0.055);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + 0.04 + i * 0.055);
+            o.stop(now + 0.3 + i * 0.055);
+          });
+        }
+      },
+      {
+        id: 'boss-hit',
+        name: '03. Standard Protocol Strike',
+        file: 'habitops-protocol-strike.wav',
+        duration: 0.55,
+        desc: 'Crisp two-tone tactical confirmation chime with low-end punch on daily mission completion.',
+        render(ctx) {
+          const now = 0.02;
+          [440, 659.25].forEach((freq, idx) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + idx * 0.09);
+            g.gain.setValueAtTime(0.28, now + idx * 0.09);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.26);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + idx * 0.09);
+            o.stop(now + idx * 0.09 + 0.28);
+          });
+        }
+      },
+      {
+        id: 'heartbeat-pulse',
+        name: '04. Low-HP Boss Heartbeat Pulse (<25% HP)',
+        file: 'habitops-low-hp-heartbeat.wav',
+        duration: 0.9,
+        desc: 'Dual-thump sub-bass crimson warning pulse when the weekly adversary drops below 25% HP.',
+        render(ctx) {
+          const now = 0.02;
+          [0, 0.24].forEach((offset, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(idx === 0 ? 68 : 54, now + offset);
+            osc.frequency.exponentialRampToValueAtTime(28, now + offset + 0.19);
+            gain.gain.setValueAtTime(idx === 0 ? 0.38 : 0.26, now + offset);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.21);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + offset);
+            osc.stop(now + offset + 0.22);
+          });
+        }
+      },
+      {
+        id: 'emp-shield',
+        name: '05. Tactical EMP Streak Shield Deploy',
+        file: 'habitops-emp-shield.wav',
+        duration: 0.75,
+        desc: 'Electromagnetic ascending harmonic barrier that blocks boss HP regeneration on a missed day.',
+        render(ctx) {
+          const now = 0.02;
+          [320, 480, 720, 960].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.25, now + idx * 0.06 + 0.22);
+            gain.gain.setValueAtTime(0.22, now + idx * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.26);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.06);
+            osc.stop(now + idx * 0.06 + 0.28);
+          });
+        }
+      },
+      {
+        id: 'boss-horn',
+        name: '06. Boss Regeneration / Enrage Alarm',
+        file: 'habitops-boss-enrage-horn.wav',
+        duration: 1.0,
+        desc: 'Low brassy sawtooth warning horn when inactivity triggers +15% boss HP regeneration.',
+        render(ctx) {
+          const now = 0.02;
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const filter = ctx.createBiquadFilter();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(110, now);
+          osc1.frequency.linearRampToValueAtTime(92, now + 0.85);
+          osc2.frequency.setValueAtTime(110.8, now);
+          osc2.frequency.linearRampToValueAtTime(92.6, now + 0.85);
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(620, now);
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.32, now + 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.92);
+          osc2.stop(now + 0.92);
+        }
+      },
+      {
+        id: 'level-up',
+        name: '07. Operative Rank PromotionArpeggio',
+        file: 'habitops-level-up.wav',
+        duration: 0.95,
+        desc: 'Four-stage ascending tactical synth arpeggio played when XP crosses a level threshold.',
+        render(ctx) {
+          const now = 0.02;
+          [440, 554.37, 659.25, 880].forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + i * 0.09);
+            g.gain.setValueAtTime(0.26, now + i * 0.09);
+            g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.42);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + i * 0.09);
+            o.stop(now + i * 0.09 + 0.45);
+          });
+        }
+      },
+      {
+        id: 'trophy-fanfare',
+        name: '08. Weekly Adversary Defeated Fanfare',
+        file: 'habitops-boss-defeated-fanfare.wav',
+        duration: 1.35,
+        desc: 'Full chordal victory fanfare when the Weekly Adversary reaches 0 HP.',
+        render(ctx) {
+          const now = 0.02;
+          const notes = [
+            { f: 523.25, t: 0.0, d: 0.16 },
+            { f: 659.25, t: 0.14, d: 0.16 },
+            { f: 783.99, t: 0.28, d: 0.18 },
+            { f: 1046.5, t: 0.44, d: 0.75 }
+          ];
+          notes.forEach((n) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(n.f, now + n.t);
+            g.gain.setValueAtTime(0.28, now + n.t);
+            g.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(now + n.t);
+            o.stop(now + n.t + n.d + 0.02);
+          });
+        }
+      },
+      {
+        id: 'full-combat-combo',
+        name: '09. Full 3.2s Commercial Ad Audio Stem',
+        file: 'habitops-full-commercial-combo.wav',
+        duration: 3.25,
+        desc: 'Complete 2.0s hold charge + critical strike impact + low-HP heartbeat + rank up stem in one WAV file.',
+        render(ctx) {
+          // 0.0 - 2.0s: Charge
+          SOUND_LIBRARY[0].render(ctx);
+          // At 2.02s: Critical strike + fanfare tail
+          const base = 2.02;
+          const sub = ctx.createOscillator();
+          const subGain = ctx.createGain();
+          sub.type = 'sine';
+          sub.frequency.setValueAtTime(175, base);
+          sub.frequency.exponentialRampToValueAtTime(34, base + 0.42);
+          subGain.gain.setValueAtTime(0.5, base);
+          subGain.gain.exponentialRampToValueAtTime(0.001, base + 0.45);
+          sub.connect(subGain);
+          subGain.connect(ctx.destination);
+          sub.start(base);
+          sub.stop(base + 0.46);
+
+          [587.33, 783.99, 1046.5, 1174.66].forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'square';
+            o.frequency.setValueAtTime(freq, base + 0.04 + i * 0.08);
+            g.gain.setValueAtTime(0.2, base + 0.04 + i * 0.08);
+            g.gain.exponentialRampToValueAtTime(0.001, base + 0.48 + i * 0.08);
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.start(base + 0.04 + i * 0.08);
+            o.stop(base + 0.52 + i * 0.08);
+          });
+        }
+      }
+    ];
+
+    let liveCtx = null;
+    function playSound(id) {
+      const item = SOUND_LIBRARY.find((s) => s.id === id);
+      if (!item) return;
+      if (!liveCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        liveCtx = new AC();
+      }
+      if (liveCtx.state === 'suspended') liveCtx.resume();
+      item.render(liveCtx);
+      showToast('Playing: ' + item.name);
+    }
+
+    function encodeWavFromAudioBuffer(audioBuffer) {
+      const numChannels = 1;
+      const sampleRate = audioBuffer.sampleRate;
+      const samples = audioBuffer.getChannelData(0);
+      const buffer = new ArrayBuffer(44 + samples.length * 2);
+      const view = new DataView(buffer);
+
+      function writeStr(offset, str) {
+        for (let i = 0; i < str.length; i++) {
+          view.setUint8(offset + i, str.charCodeAt(i));
+        }
+      }
+
+      writeStr(0, 'RIFF');
+      view.setUint32(4, 36 + samples.length * 2, true);
+      writeStr(8, 'WAVE');
+      writeStr(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * numChannels * 2, true);
+      view.setUint16(32, numChannels * 2, true);
+      view.setUint16(34, 16, true);
+      writeStr(36, 'data');
+      view.setUint32(40, samples.length * 2, true);
+
+      let offset = 44;
+      for (let i = 0; i < samples.length; i++, offset += 2) {
+        const s = Math.max(-1, Math.min(1, samples[i]));
+        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    async function downloadWav(id) {
+      const item = SOUND_LIBRARY.find((s) => s.id === id);
+      if (!item) return;
+      const sampleRate = 44100;
+      const length = Math.ceil(sampleRate * item.duration);
+      const offline = new OfflineAudioContext(1, length, sampleRate);
+      item.render(offline);
+      const rendered = await offline.startRendering();
+      const wavBlob = encodeWavFromAudioBuffer(rendered);
+      const url = URL.createObjectURL(wavBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = item.file;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      showToast('Downloaded ' + item.file);
+    }
+
+    async function downloadAllWavFiles() {
+      for (let i = 0; i < SOUND_LIBRARY.length; i++) {
+        await downloadWav(SOUND_LIBRARY[i].id);
+        await new Promise((r) => setTimeout(r, 220));
+      }
+      showToast('All 9 .WAV audio stems downloaded');
+    }
+
+    // Render soundboard cards
+    const grid = document.getElementById('soundboard-grid');
+    SOUND_LIBRARY.forEach((item) => {
+      const card = document.createElement('article');
+      card.className = 'sound-card';
+      card.innerHTML = `
+        <div>
+          <div class="sound-name">${item.name}</div>
+          <div class="sound-desc">${item.desc}</div>
+          <div style="margin-top:8px;"><code class="nums">${item.file} (${item.duration.toFixed(2)}s)</code></div>
+        </div>
+        <div class="sound-controls">
+          <button class="btn btn-dark" onclick="playSound('${item.id}')">Play SFX</button>
+          <button class="btn" onclick="downloadWav('${item.id}')">Download .WAV</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Live file previewer
+    const fileInput = document.getElementById('flow-file-input');
+    const previewStage = document.getElementById('flow-preview-stage');
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      previewStage.innerHTML = '';
+      if (file.type.startsWith('video/')) {
+        const v = document.createElement('video');
+        v.src = url;
+        v.controls = true;
+        v.autoplay = true;
+        v.loop = true;
+        previewStage.appendChild(v);
+      } else {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = file.name;
+        previewStage.appendChild(img);
+      }
+      showToast('Previewing ' + file.name);
+    });
+  </script>
+</body>
+</html>
+
