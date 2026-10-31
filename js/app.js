@@ -669,7 +669,7 @@ function createQuestElement(quest) {
   const timeBadge = quest.time || quest.execTime || 'Flex';
   const durBadge = quest.duration || '30m';
 
-  div.className = `relative bg-surface-container-low p-3.5 flex flex-col space-y-2 border border-outline-variant/30 hover:border-primary transition-all tactile-btn mission-hold-wrapper ${
+  div.className = `relative bg-surface-container-low p-4 sm:p-5 flex flex-col space-y-3.5 border border-outline-variant/30 hover:border-primary transition-all tactile-btn mission-hold-wrapper ${
     quest.isPriorityTarget ? 'border-l-4 border-l-secondary' : ''
   }`;
 
@@ -681,43 +681,43 @@ function createQuestElement(quest) {
   div.oncontextmenu = (e) => e.preventDefault();
 
   div.innerHTML = `
-    <div class="flex items-start justify-between min-w-0">
-      <div class="flex items-start gap-3 min-w-0">
-        <div class="checkbox-box w-7 h-7 bg-surface-container-lowest flex items-center justify-center mt-0.5 transition-all border-2 ${
-          quest.isPriorityTarget ? 'border-secondary' : 'border-outline-variant'
-        } shrink-0 cursor-pointer hover:border-primary active:scale-90" onclick="event.stopPropagation(); handleQuestCardClick('${quest.id}');" title="Strike to execute protocol / Hold card to charge">
-          <span class="material-symbols-outlined text-[17px] ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'}">${quest.icon || 'bolt'}</span>
+    <div class="flex items-start justify-between min-w-0 gap-3">
+      <div class="flex items-start gap-3.5 min-w-0">
+        <div class="checkbox-box w-8 h-8 bg-surface-container-lowest flex items-center justify-center mt-0.5 transition-all border ${
+          quest.isPriorityTarget ? 'border-secondary' : 'border-outline-variant/40'
+        } shrink-0 cursor-pointer hover:border-primary active:scale-95" onclick="event.stopPropagation(); handleQuestCardClick('${quest.id}');" title="Strike to execute protocol / Hold card to charge">
+          <span class="material-symbols-outlined text-[18px] ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'}">${quest.icon || 'bolt'}</span>
         </div>
         <div class="flex flex-col min-w-0">
-          <div class="flex flex-wrap items-center gap-1.5">
-            <span class="task-title font-headline-sm text-headline-sm text-on-surface font-bold truncate">${quest.title}</span>
-            ${quest.isPriorityTarget ? '<span class="bg-secondary text-on-secondary px-1.5 py-0.2 font-label-sm text-[11px] uppercase font-bold tracking-wider">Priority Boss Target</span>' : ''}
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="task-title font-headline-sm text-[15px] sm:text-base text-on-surface font-medium truncate">${quest.title}</span>
+            ${quest.isPriorityTarget ? '<span class="bg-secondary/15 text-secondary border border-secondary/30 px-1.5 py-0.2 font-mono text-[10px] uppercase font-normal tracking-wider">Priority</span>' : ''}
           </div>
-          <span class="font-body-sm text-body-sm text-on-surface-variant truncate">${quest.subtext}</span>
-          <div class="flex items-center gap-2 mt-1 font-mono text-[11px] text-outline font-semibold">
+          <span class="font-body-sm text-[13px] text-on-surface-variant font-light truncate leading-relaxed mt-0.5">${quest.subtext}</span>
+          <div class="flex items-center gap-2.5 mt-1.5 font-mono text-[11px] text-outline font-light">
             <span>⏰ ${timeBadge}</span>
             <span>·</span>
             <span>⏱ ${durBadge}</span>
             <span>·</span>
-            <span class="${quest.isPriorityTarget ? 'text-secondary font-bold' : ''}">${Math.round((tierInfo.critChance || 0.25) * 100)}% Crit Chance</span>
+            <span class="${quest.isPriorityTarget ? 'text-secondary font-normal' : ''}">${Math.round((tierInfo.critChance || 0.25) * 100)}% Crit Chance</span>
           </div>
         </div>
       </div>
-      <div class="flex flex-col items-end gap-1 shrink-0 pl-2">
+      <div class="flex flex-col items-end gap-1.5 shrink-0 pl-2">
         <div class="bg-surface-container-lowest px-2 py-0.5 border border-outline-variant/30 flex items-center gap-1">
-          <span class="font-label-sm text-label-sm ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'} font-bold">+${quest.xp} XP</span>
+          <span class="font-mono text-xs ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'} font-normal">+${quest.xp} XP</span>
         </div>
-        <button class="p-1 text-on-surface-variant hover:text-primary transition-colors" title="Inspect Full Protocol" onclick="event.stopPropagation(); openHabitDetails('${quest.id}');">
+        <button class="p-1 text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer" title="Inspect Full Protocol" onclick="event.stopPropagation(); openHabitDetails('${quest.id}');">
           <span class="material-symbols-outlined text-[18px]">chevron_right</span>
         </button>
       </div>
     </div>
-    <div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-[11px] font-mono text-outline">
-      <span class="flex items-center gap-1 text-primary font-bold">
+    <div class="flex items-center justify-between pt-2 border-t border-outline-variant/20 text-[11px] font-mono text-outline font-light">
+      <span class="flex items-center gap-1.5 text-primary font-normal">
         <span class="material-symbols-outlined text-[14px]">touch_app</span>
-        <span>TAP OR HOLD TO EXECUTE</span>
+        <span>Tap or hold to execute</span>
       </span>
-      <span class="uppercase tracking-wider font-semibold">${tierInfo.label.split(' ')[0]}</span>
+      <span class="uppercase tracking-wider text-[10px] font-light text-outline/70">${tierInfo.label.split(' ')[0]}</span>
     </div>
     <div class="mission-hold-bar" id="hold-bar-${quest.id}"></div>
   `;
@@ -727,27 +727,27 @@ function createQuestElement(quest) {
 function createCompletedQuestRow(quest) {
   const row = document.createElement('div');
   row.className =
-    'bg-surface-container-lowest px-3 py-2.5 border border-outline-variant/30 flex items-center justify-between opacity-90 hover:opacity-100 transition-opacity';
+    'bg-surface-container-lowest px-4 py-3 border border-outline-variant/30 flex items-center justify-between opacity-85 hover:opacity-100 transition-opacity';
   const earnedXp = quest.lastEarnedXp || quest.xp;
   row.innerHTML = `
-    <div class="flex items-center gap-2.5 min-w-0">
-      <div class="w-6 h-6 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center shrink-0">
-        <span class="material-symbols-outlined text-[15px] font-bold">check</span>
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-6 h-6 bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[15px]">check</span>
       </div>
       <div class="flex flex-col min-w-0">
         <div class="flex items-center gap-2">
-          <span class="font-label-md text-label-md text-on-surface line-through truncate font-bold opacity-80">${quest.title}</span>
-          <span class="px-1.5 py-0.2 bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 font-mono text-[10px] font-bold uppercase tracking-wider">✓ EXECUTED</span>
+          <span class="font-label-md text-sm text-on-surface line-through truncate font-medium opacity-75">${quest.title}</span>
+          <span class="px-1.5 py-0.2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-mono text-[10px] font-normal uppercase tracking-wider">✓ Executed</span>
           ${
             quest.lastWasCrit
-              ? '<span class="px-1 py-0.2 bg-secondary text-on-secondary font-label-sm text-[10px] uppercase font-bold">CRIT 1.5×</span>'
+              ? '<span class="px-1.5 py-0.2 bg-secondary/15 text-secondary border border-secondary/30 font-label-sm text-[10px] uppercase font-normal">Crit 1.5×</span>'
               : ''
           }
         </div>
-        <span class="font-mono text-[11px] text-outline">${quest.group.toUpperCase()} · Earned <span class="text-emerald-400 font-bold">+${earnedXp} XP</span></span>
+        <span class="font-mono text-[11px] text-outline font-light mt-0.5">${quest.group.toUpperCase()} · Earned <span class="text-emerald-500 font-normal">+${earnedXp} XP</span></span>
       </div>
     </div>
-    <button class="px-2.5 py-1 text-[11px] font-mono uppercase font-bold text-outline hover:text-secondary border border-outline-variant/30 hover:border-secondary tactile-btn shrink-0" onclick="handleQuestCardClick('${quest.id}')" title="Undo protocol strike">Undo</button>
+    <button class="px-2.5 py-1 text-[11px] font-mono uppercase font-normal text-outline hover:text-secondary border border-outline-variant/30 hover:border-secondary tactile-btn shrink-0" onclick="handleQuestCardClick('${quest.id}')" title="Undo protocol strike">Undo</button>
   `;
   return row;
 }

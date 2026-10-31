@@ -1,11 +1,11 @@
 
-/* Type Hierarchy Enforcement (Operate Mode: >=1.25x steps) */
-h1 { font-family: 'Rajdhani', sans-serif !important; font-size: 1.75rem !important; line-height: 1.3 !important; font-weight: 700; letter-spacing: 0.02em; }
-h2 { font-family: 'Rajdhani', sans-serif !important; font-size: 1.375rem !important; line-height: 1.3 !important; font-weight: 700; letter-spacing: 0.02em; }
-h3 { font-family: 'Rajdhani', sans-serif !important; font-size: 1.0625rem !important; line-height: 1.35 !important; font-weight: 600; }
-h4 { font-family: 'Rajdhani', sans-serif !important; font-size: 0.95rem !important; line-height: 1.35 !important; font-weight: 600; }
+/* Type Hierarchy Enforcement (Clean, Airy & Light Typography) */
+h1 { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; font-size: 1.55rem !important; line-height: 1.4 !important; font-weight: 500 !important; letter-spacing: -0.01em; }
+h2 { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; font-size: 1.25rem !important; line-height: 1.4 !important; font-weight: 500 !important; letter-spacing: -0.01em; }
+h3 { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; font-size: 1.025rem !important; line-height: 1.45 !important; font-weight: 500 !important; }
+h4 { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important; font-size: 0.925rem !important; line-height: 1.45 !important; font-weight: 450 !important; }
 
-/* HabitOps - Tactical Brutalist Theme & Animation Engine */
+/* HabitOps - Clean, Spacious Brutalist Theme & Animation Engine */
 @layer base {
   * {
     border-radius: 0px !important;
@@ -15,18 +15,40 @@ h4 { font-family: 'Rajdhani', sans-serif !important; font-size: 0.95rem !importa
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-color: #f1f5f9;
+    background-color: #f8fafc;
   }
   body {
     overscroll-behavior-y: none;
     -webkit-tap-highlight-color: transparent;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.5;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 350;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
   }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
   main > :first-child { margin-top: 0 !important; }
   main > :last-child { margin-bottom: 0 !important; }
+}
+
+/* Light & Featherweight Typography Overrides (No dense bold clutter) */
+.font-black, .font-extrabold {
+  font-weight: 550 !important;
+}
+.font-bold {
+  font-weight: 500 !important;
+}
+.font-semibold {
+  font-weight: 450 !important;
+}
+.font-medium {
+  font-weight: 400 !important;
+}
+.font-normal {
+  font-weight: 350 !important;
+}
+.font-light {
+  font-weight: 300 !important;
 }
 
 /* Neutralize Netlify Injected Drawer & Floating Badges */
@@ -44,21 +66,29 @@ iframe[id*="netlify"],
   opacity: 0 !important;
 }
 
-/* Rich Tactical Light Mode Contrast Boost */
+/* Clean Light Mode & Generous Breathing Room */
 body:not(.dark-ops) {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
 }
 body:not(.dark-ops) .bg-surface {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
 }
 body:not(.dark-ops) .bg-surface-container-low {
   background-color: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
 }
 body:not(.dark-ops) .bg-surface-container-lowest {
   background-color: #ffffff !important;
-  border-color: #cbd5e1 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Card & Section Spacing Enhancements */
+.mission-hold-wrapper {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.mission-hold-wrapper:hover {
+  transform: translateY(-1px);
 }
 
 ::-webkit-scrollbar { display: none; }
