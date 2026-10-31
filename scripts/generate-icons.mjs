@@ -3,7 +3,7 @@ import { readFileSync, copyFileSync, mkdirSync, writeFileSync, rmSync } from 'no
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const srcIconPath = 'C:/Users/AUGUSTINE/.gemini/antigravity/brain/30467cde-257e-44b7-8b18-67b72357614f/habitops_xp_app_icon_1793393268529.jpg';
+const srcIconPath = 'C:/Users/AUGUSTINE/.gemini/antigravity/brain/30467cde-257e-44b7-8b18-67b72357614f/habitops_icon_cyan_square_1793436969797.jpg';
 const base64Data = readFileSync(srcIconPath).toString('base64');
 const dataUri = `data:image/jpeg;base64,${base64Data}`;
 
@@ -23,7 +23,7 @@ for (const item of sizes) {
   <head>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { width: ${item.size}px; height: ${item.size}px; overflow: hidden; background: #070B12; }
+      html, body { width: ${item.size}px; height: ${item.size}px; overflow: hidden; background: #00e5ff; }
       img { width: 100%; height: 100%; object-fit: cover; display: block; }
     </style>
   </head>

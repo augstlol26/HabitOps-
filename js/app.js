@@ -1,3 +1,82 @@
+
+function renderProfileAttributes() {
+  const container = document.getElementById('profile-attributes-grid');
+  if (!container || !window.store || !window.store.state) return;
+
+  const attrs = window.store.state.attributes || {};
+  const defs = window.ATTRIBUTE_DEFINITIONS || {
+    int: { name: 'Intelligence', icon: '🧠', color: 'text-cyan-400', desc: 'Deep Work & Learning' },
+    str: { name: 'Strength', icon: '⚡', color: 'text-amber-400', desc: 'Workout & Fitness' },
+    dis: { name: 'Discipline', icon: '🛡️', color: 'text-purple-400', desc: 'Cold Showers & Stoicism' },
+    vit: { name: 'Vitality', icon: '💚', color: 'text-emerald-400', desc: 'Hydration & Sleep' },
+    soc: { name: 'Social', icon: '🤝', color: 'text-sky-400', desc: 'Relationships & Empathy' }
+  };
+
+  const borders = {
+    int: 'border-cyan-400/30 hover:border-cyan-400/60',
+    str: 'border-amber-400/30 hover:border-amber-400/60',
+    dis: 'border-purple-400/30 hover:border-purple-400/60',
+    vit: 'border-emerald-400/30 hover:border-emerald-400/60',
+    soc: 'border-sky-400/30 hover:border-sky-400/60'
+  };
+
+  const barFills = {
+    int: 'bg-cyan-400',
+    str: 'bg-amber-400',
+    dis: 'bg-purple-400',
+    vit: 'bg-emerald-400',
+    soc: 'bg-sky-400'
+  };
+
+  container.innerHTML = '';
+  Object.keys(defs).forEach(k => {
+    const d = defs[k];
+    const data = attrs[k] || { level: 1, xp: 0, maxXp: 100 };
+    const pct = Math.min(100, Math.round((data.xp / data.maxXp) * 100));
+
+    const item = document.createElement('div');
+    item.className = `p-2 bg-surface-container-high/40 border ${borders[k] || 'border-outline-variant/30'} flex flex-col justify-between gap-1 shadow-xs cursor-pointer hover:scale-[1.02] transition-all tactile-btn`;
+    item.onclick = () => openSkillTreeModal();
+    item.innerHTML = `
+      <div class="flex items-center justify-between font-mono">
+        <span class="text-[10px] font-bold ${d.color} flex items-center gap-1"><span>${d.icon}</span> ${k.toUpperCase()}</span>
+        <span class="text-[9px] text-outline uppercase font-semibold">LVL ${data.level}</span>
+      </div>
+      <div class="w-full h-1 bg-surface-container-highest overflow-hidden my-0.5">
+        <div class="h-full ${barFills[k] || 'bg-primary'} transition-all duration-500" style="width: ${pct}%;"></div>
+      </div>
+      <div class="flex items-center justify-between font-mono text-[8px] text-on-surface-variant">
+        <span class="truncate font-light">${d.desc || d.name}</span>
+        <span class="font-bold">${pct}%</span>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+
+window.updateAttrRadioStyle = function() {
+  const labels = document.querySelectorAll('#input-habit-attribute-selector .attr-radio-label');
+  labels.forEach(lbl => {
+    const radio = lbl.querySelector('input[type="radio"]');
+    const attr = lbl.dataset.attr;
+    if (radio && radio.checked) {
+      lbl.classList.add('selected-attr');
+      const colors = {
+        int: 'border-cyan-400/80 bg-cyan-950/40 shadow-[0_0_8px_rgba(0,240,255,0.3)]',
+        str: 'border-amber-400/80 bg-amber-950/40 shadow-[0_0_8px_rgba(251,191,36,0.3)]',
+        dis: 'border-purple-400/80 bg-purple-950/40 shadow-[0_0_8px_rgba(192,132,252,0.3)]',
+        vit: 'border-emerald-400/80 bg-emerald-950/40 shadow-[0_0_8px_rgba(52,211,153,0.3)]',
+        soc: 'border-sky-400/80 bg-sky-950/40 shadow-[0_0_8px_rgba(56,189,248,0.3)]'
+      };
+      lbl.className = 'flex flex-col items-center justify-center p-1.5 rounded border cursor-pointer text-center font-mono transition-all attr-radio-label ' + (colors[attr] || 'border-primary bg-primary/20');
+    } else {
+      lbl.classList.remove('selected-attr');
+      lbl.className = 'flex flex-col items-center justify-center p-1.5 rounded border border-outline-variant/40 bg-surface-container-low hover:border-outline cursor-pointer text-center font-mono transition-all attr-radio-label';
+    }
+  });
+};
+
 // HabitOps v2.0 - Main Application Orchestrator & Tactical View Controller
 document.addEventListener('DOMContentLoaded', () => {
   // Detect if running inside installed Android APK or standalone PWA
@@ -93,6 +172,7 @@ function navigateTo(viewId) {
     triggerWeeklyAnimations();
   } else if (viewId === 'trophy-vault') {
     renderProfileMultipliers();
+    renderProfileAttributes();
     renderTrophiesVault();
     renderGuildLeaderboard();
     triggerProfileAnimations();
@@ -224,10 +304,11 @@ function showToast(message, subtitle = '') {
   toast.classList.add('opacity-100');
 
   if (toastTimer) clearTimeout(toastTimer);
+  // Dismiss very quickly (1200ms) with snappy dismissal
   toastTimer = setTimeout(() => {
     toast.classList.remove('opacity-100');
     toast.classList.add('opacity-0', 'pointer-events-none');
-  }, 3400);
+  }, 1200);
 }
 
 let notifBannerTimer = null;
@@ -257,9 +338,10 @@ function triggerTacticalNotification(customText) {
   }
 
   if (notifBannerTimer) clearTimeout(notifBannerTimer);
+  // Dismiss notice quickly (2000ms)
   notifBannerTimer = setTimeout(() => {
     dismissTacticalNotification();
-  }, 6200);
+  }, 2000);
 }
 
 function dismissTacticalNotification() {
@@ -428,65 +510,253 @@ function initTodayView() {
   renderQuestList();
 }
 
+let currentDailyMissionFilter = 'all';
+let aegisDialogueIndex = 0;
+const AEGIS_QUOTES = [
+  "Sector Titan is vulnerable. Strike today's protocols to execute combat damage.",
+  "Discipline +15 recorded. Consistency builds unstoppable momentum, Operative.",
+  "Your streak acts as a tactical forcefield against boss retaliation.",
+  "Every completed protocol levels up your attributes. Keep advancing.",
+  "Focus detected. Complete the active stack to unlock the daily supply drop."
+];
+
+function pokeAegisCompanion() {
+  if (window.audioEngine) window.audioEngine.playWaterDrop();
+  if (window.triggerHaptic) window.triggerHaptic('tap');
+  aegisDialogueIndex = (aegisDialogueIndex + 1) % AEGIS_QUOTES.length;
+  const el = document.getElementById('aegis-dialogue-text');
+  if (el) {
+    el.textContent = `"${AEGIS_QUOTES[aegisDialogueIndex]}"`;
+  }
+}
+
+function filterDailyMissions(filterName) {
+  currentDailyMissionFilter = filterName;
+  if (window.audioEngine) window.audioEngine.playTap();
+  document.querySelectorAll('#mission-filter-bar button').forEach(btn => {
+    const f = btn.getAttribute('data-filter');
+    if (f === filterName) {
+      btn.className = 'px-2 py-0.5 bg-primary text-white font-bold uppercase tactile-btn shadow-xs';
+    } else {
+      btn.className = 'px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn';
+    }
+  });
+  renderQuestList();
+}
+
+function handleSnoozeQuest(questId) {
+  if (window.audioEngine) window.audioEngine.playSnoozeBeep();
+  if (window.triggerHaptic) window.triggerHaptic('snooze');
+  window.store.snoozeQuest(questId, 1);
+  const q = window.store.state.quests.find(x => x.id === questId);
+  showToast(`Protocol Snoozed (+1 hour)`, `"${q?.title || 'Habit'}" postponed. Tap Resume to bring back.`);
+  renderQuestList();
+}
+
+function handleUnsnoozeQuest(questId) {
+  if (window.audioEngine) window.audioEngine.playTap();
+  if (window.triggerHaptic) window.triggerHaptic('tap');
+  window.store.unsnoozeQuest(questId);
+  const q = window.store.state.quests.find(x => x.id === questId);
+  showToast(`Protocol Resumed`, `"${q?.title || 'Habit'}" re-armed in active stack.`);
+  renderQuestList();
+}
+
+function openSkillTreeModal() {
+  if (window.audioEngine) window.audioEngine.playTap();
+  closeDrawer();
+  const modal = document.getElementById('skill-tree-modal');
+  if (!modal) return;
+  renderSkillTreeModal();
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeSkillTreeModal() {
+  if (window.audioEngine) window.audioEngine.playTap();
+  const modal = document.getElementById('skill-tree-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+}
+
+function renderSkillTreeModal() {
+  const container = document.getElementById('skill-tree-branches-list');
+  if (!container) return;
+  const state = window.store.state;
+  const defs = window.ATTRIBUTE_DEFINITIONS || {};
+  const attrs = state.attributes || {};
+
+  container.innerHTML = '';
+  let totalLevel = 0;
+
+  Object.keys(defs).forEach(key => {
+    const def = defs[key];
+    const userAttr = attrs[key] || { level: 1, xp: 0, maxXp: 100, title: def.titles[0] };
+    totalLevel += (userAttr.level || 1);
+    const pct = Math.min(100, Math.round(((userAttr.xp || 0) / (userAttr.maxXp || 100)) * 100));
+
+    const trainingHabits = state.quests
+      .filter(q => (q.attribute || window.store.inferAttribute(q)) === key)
+      .map(q => q.title);
+    const habitsLabel = trainingHabits.length > 0 ? trainingHabits.join(', ') : 'No active habits deployed';
+
+    const card = document.createElement('div');
+    card.className = 'bg-surface-container-low border border-outline-variant/30 p-3 sm:p-3.5 flex flex-col gap-2 relative overflow-hidden';
+    card.style.borderLeft = `4px solid ${def.color}`;
+    card.innerHTML = `
+      <div class="flex items-start justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-8 h-8 rounded-xs flex items-center justify-center shrink-0 font-bold" style="background:${def.color}15; border:1px solid ${def.color}40; color:${def.color};">
+            <span class="material-symbols-outlined text-[18px]">${def.icon}</span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-headline-sm text-sm font-bold text-on-surface uppercase tracking-wide">${def.name}</span>
+              <span class="font-mono text-[9px] font-bold px-1.5 py-0.2 uppercase" style="background:${def.color}20; color:${def.color}; border:1px solid ${def.color}50;">
+                LVL ${userAttr.level} · ${userAttr.title}
+              </span>
+            </div>
+            <span class="font-body-sm text-[11px] text-on-surface-variant font-normal mt-0.5">${def.desc}</span>
+          </div>
+        </div>
+        <div class="font-mono text-[11px] font-bold text-right shrink-0" style="color:${def.color};">
+          ${userAttr.xp} / ${userAttr.maxXp} XP
+        </div>
+      </div>
+
+      <!-- Attribute XP Bar -->
+      <div class="w-full h-1.5 bg-surface-container-highest relative overflow-hidden border border-outline-variant/20">
+        <div class="h-full transition-all duration-500 ease-out xp-sheen" style="width: ${pct}%; background: ${def.color};"></div>
+      </div>
+
+      <!-- Active Perk & Habit Links -->
+      <div class="flex items-center justify-between text-[10px] font-mono pt-1 border-t border-outline-variant/15 text-outline">
+        <span class="flex items-center gap-1 font-semibold text-on-surface">
+          <span class="material-symbols-outlined text-[12px]" style="color:${def.color};">verified</span>
+          <span>Perk: ${def.perk}</span>
+        </span>
+        <span class="truncate max-w-[150px] text-outline/80 font-light" title="${habitsLabel}">
+          Trained by: ${trainingHabits.length} habits
+        </span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  const masteryEl = document.getElementById('skill-tree-mastery-level');
+  if (masteryEl) {
+    const tier = Math.floor(totalLevel / 5) + 1;
+    masteryEl.textContent = `Mastery Tier ${tier} (${totalLevel} Total Attribute Power)`;
+  }
+}
+
 function renderQuestList() {
   const state = window.store.state;
-  const morningContainer = document.getElementById('morning-quests-list');
-  const afternoonContainer = document.getElementById('afternoon-quests-list');
-  const eveningContainer = document.getElementById('evening-quests-list');
+  const now = Date.now();
+
+  // 1. SECTION 1: WHO AM I IN THE GAME?
+  const levelEl = document.getElementById('hero-level-chip');
+  if (levelEl) levelEl.textContent = `LVL ${state.user.level}`;
+
+  const xpBar = document.getElementById('hero-xp-bar-today');
+  const xpRatio = document.getElementById('hero-xp-ratio-text');
+  if (xpBar && xpRatio) {
+    const curXp = state.user.currentXp || 0;
+    const maxXp = state.user.maxXp || 120;
+    const pct = Math.min(100, Math.round((curXp / maxXp) * 100));
+    xpBar.style.width = `${pct}%`;
+    xpRatio.textContent = `${curXp} / ${maxXp} XP`;
+  }
+
+  const empEl = document.getElementById('hero-emp-shields-count');
+  if (empEl) empEl.textContent = `${state.user.empShields || 1} EMP`;
+
+  // Render 5 Attribute Skill Pills
+  const pillsContainer = document.getElementById('hero-attributes-pills');
+  if (pillsContainer) {
+    const defs = window.ATTRIBUTE_DEFINITIONS || {};
+    const attrs = state.attributes || {};
+    pillsContainer.innerHTML = Object.keys(defs).map(key => {
+      const def = defs[key];
+      const a = attrs[key] || { level: 1 };
+      return `<span class="px-1.5 py-0.2 font-mono text-[9px] font-bold uppercase shrink-0 transition-transform hover:scale-105" style="color:${def.color}; background:${def.color}15; border:1px solid ${def.color}40;" title="${def.name} Level ${a.level} (${a.title || 'Initiate'})">${def.short} L${a.level}</span>`;
+    }).join('');
+  }
+
+  // 2. SECTION 2: WHAT DO I NEED TO DO TODAY?
+  const missionsList = document.getElementById('daily-missions-list');
+  const activeBadge = document.getElementById('active-protocols-badge');
+  const snoozedTray = document.getElementById('snoozed-protocols-tray');
+  const snoozedList = document.getElementById('snoozed-protocols-list');
   const completedSection = document.getElementById('completed-today-section');
   const completedList = document.getElementById('completed-today-list');
   const completedBadge = document.getElementById('completed-tray-label');
-  const tomorrowSection = document.getElementById('tomorrow-preview-section');
-  const tomorrowList = document.getElementById('tomorrow-quests-preview-list');
 
-  if (!morningContainer || !afternoonContainer || !eveningContainer) return;
+  const allActive = state.quests.filter(q => !q.completed && (!q.snoozedUntil || q.snoozedUntil <= now));
+  const snoozed = state.quests.filter(q => !q.completed && q.snoozedUntil && q.snoozedUntil > now);
+  const completed = state.quests.filter(q => q.completed);
 
-  morningContainer.innerHTML = '';
-  afternoonContainer.innerHTML = '';
-  eveningContainer.innerHTML = '';
-  if (completedList) completedList.innerHTML = '';
+  let filteredActive = allActive;
+  if (currentDailyMissionFilter !== 'all') {
+    filteredActive = allActive.filter(q => q.group === currentDailyMissionFilter);
+  }
 
-  const activeQuests = state.quests.filter(q => !q.completed);
-  const completedQuests = state.quests.filter(q => q.completed);
+  if (activeBadge) {
+    activeBadge.textContent = `${allActive.length} Active`;
+  }
 
-  // Render active quests into their time pillars
-  ['morning', 'afternoon', 'evening'].forEach(group => {
-    const container =
-      group === 'morning'
-        ? morningContainer
-        : group === 'evening'
-        ? eveningContainer
-        : afternoonContainer;
-    const groupActive = activeQuests.filter(q => q.group === group);
-
-    if (groupActive.length === 0) {
-      const emptyBanner = document.createElement('div');
-      emptyBanner.className =
-        'bg-surface-container-low/60 border border-dashed border-outline-variant/40 px-3 py-2.5 flex items-center justify-between text-xs text-on-surface-variant';
-      emptyBanner.innerHTML = `
-        <span class="font-label-sm uppercase tracking-wider font-bold text-primary flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-[16px]">verified</span>
-          <span>${group.toUpperCase()} SECTOR CLEAR</span>
-        </span>
-        <span class="font-body-sm text-[11px]">All protocols executed</span>
-      `;
-      container.appendChild(emptyBanner);
+  // Render Active Missions
+  if (missionsList) {
+    missionsList.innerHTML = '';
+    if (filteredActive.length === 0) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'bg-surface-container-low/60 border border-dashed border-cyan-500/40 p-4 text-center flex flex-col items-center justify-center gap-1 shadow-xs';
+      if (allActive.length === 0) {
+        emptyDiv.innerHTML = `
+          <span class="material-symbols-outlined text-[24px] text-emerald-400">verified</span>
+          <span class="font-mono text-xs font-bold text-on-surface uppercase tracking-wider">ALL PROTOCOLS EXECUTED</span>
+          <span class="font-body-sm text-[11px] text-outline">Today's sector secured. Outstanding discipline, Operative.</span>
+        `;
+      } else {
+        emptyDiv.innerHTML = `
+          <span class="material-symbols-outlined text-[20px] text-primary">filter_alt_off</span>
+          <span class="font-mono text-xs font-semibold text-outline uppercase">NO PROTOCOLS IN ${currentDailyMissionFilter.toUpperCase()}</span>
+          <span class="font-body-sm text-[11px] text-outline/80">Switch to 'All' or add a custom habit.</span>
+        `;
+      }
+      missionsList.appendChild(emptyDiv);
     } else {
-      groupActive.forEach(quest => {
-        container.appendChild(createQuestElement(quest));
+      filteredActive.forEach(quest => {
+        missionsList.appendChild(createQuestElement(quest));
       });
     }
-  });
+  }
 
-  // Render Completed Today Tray
+  // Render Snoozed Protocols
+  if (snoozedTray && snoozedList) {
+    snoozedList.innerHTML = '';
+    if (snoozed.length > 0) {
+      snoozedTray.classList.remove('hidden');
+      snoozedTray.classList.add('flex');
+      snoozed.forEach(quest => {
+        snoozedList.appendChild(createSnoozedQuestElement(quest));
+      });
+    } else {
+      snoozedTray.classList.add('hidden');
+      snoozedTray.classList.remove('flex');
+    }
+  }
+
+  // Render Completed Protocols
   if (completedSection && completedList) {
-    if (completedQuests.length > 0) {
+    completedList.innerHTML = '';
+    if (completed.length > 0) {
       completedSection.classList.remove('hidden');
       completedSection.classList.add('flex');
-      if (completedBadge) {
-        completedBadge.textContent = `Cleared Today (${completedQuests.length}) — Tap to Inspect / Undo`;
-      }
-      completedQuests.forEach(quest => {
+      if (completedBadge) completedBadge.textContent = `Cleared Today (${completed.length}) — Tap to Inspect / Undo`;
+      completed.forEach(quest => {
         completedList.appendChild(createCompletedQuestRow(quest));
       });
     } else {
@@ -495,40 +765,43 @@ function renderQuestList() {
     }
   }
 
-  // Render Tomorrow's Set Preview automatically when ALL of today's quests are done!
-  if (tomorrowSection && tomorrowList) {
-    if (state.quests.length > 0 && activeQuests.length === 0) {
-      tomorrowSection.classList.remove('hidden');
-      tomorrowSection.classList.add('flex');
-      tomorrowList.innerHTML = '';
-      const tomorrowQuests = window.store.getTomorrowQuestsPreview();
-      tomorrowQuests.forEach(tq => {
-        const row = document.createElement('div');
-        row.className =
-          'bg-surface-container-low p-2.5 border border-outline-variant/30 flex items-center justify-between';
-        row.innerHTML = `
-          <div class="flex items-center gap-2.5 min-w-0">
-            <span class="material-symbols-outlined text-primary text-[18px]">${tq.icon || 'schedule'}</span>
-            <div class="flex flex-col min-w-0">
-              <div class="flex items-center gap-1.5">
-                <span class="font-label-md text-label-md font-bold text-on-surface truncate">${tq.title}</span>
-                ${
-                  tq.isCustomScheduled
-                    ? '<span class="px-1.5 py-0.2 bg-primary-container text-on-primary-container font-label-sm text-[11px] uppercase font-bold">Planned Ahead</span>'
-                    : ''
-                }
-              </div>
-              <span class="font-body-sm text-[11px] text-on-surface-variant truncate">${tq.execTime || '08:00'} · ${tq.duration || '30 mins'} · ${tq.group.toUpperCase()}</span>
-            </div>
-          </div>
-          <span class="font-label-sm text-label-sm font-mono font-bold text-primary shrink-0">+${tq.xp} XP</span>
-        `;
-        tomorrowList.appendChild(row);
-      });
-    } else {
-      tomorrowSection.classList.add('hidden');
-      tomorrowSection.classList.remove('flex');
-    }
+  // 3. SECTION 3: WHAT AM I WORKING TOWARDS?
+  const bossHpBar = document.getElementById('boss-hp-bar');
+  const bossHpText = document.getElementById('boss-hp-text');
+  const bossNameEl = document.getElementById('today-boss-name');
+  if (bossHpBar && bossHpText && state.boss) {
+    const curHp = state.boss.currentHp || 0;
+    const maxHp = state.boss.maxHp || 100;
+    const hpPct = Math.min(100, Math.round((curHp / maxHp) * 100));
+    bossHpBar.style.width = `${hpPct}%`;
+    bossHpText.textContent = `${curHp} / ${maxHp} HP`;
+    if (bossNameEl) bossNameEl.textContent = (state.boss.name || 'TITAN').toUpperCase();
+  }
+
+  // Daily Momentum
+  const momentumRing = document.getElementById('momentum-progress-ring');
+  const momentumPctText = document.getElementById('momentum-pct-text');
+  const momentumCountText = document.getElementById('momentum-count-text');
+  const momentumXpText = document.getElementById('momentum-xp-text');
+  const momentumMult = document.getElementById('momentum-mult-pill');
+
+  const totalCount = state.quests.length || 1;
+  const clearedCount = state.quests.filter(q => q.completed).length;
+  const pctDone = Math.round((clearedCount / totalCount) * 100);
+
+  if (momentumRing) {
+    const circumference = 106.8;
+    const offset = circumference - (pctDone / 100) * circumference;
+    momentumRing.style.strokeDashoffset = offset.toFixed(1);
+  }
+  if (momentumPctText) momentumPctText.textContent = `${pctDone}%`;
+  if (momentumCountText) momentumCountText.textContent = `${clearedCount} of ${totalCount} Protocols Cleared`;
+  if (momentumXpText) {
+    const todayYield = state.quests.filter(q => q.completed).reduce((sum, q) => sum + (q.lastEarnedXp || q.xp), 0);
+    momentumXpText.textContent = `+${todayYield} XP`;
+  }
+  if (momentumMult && state.user.xpMultiplier) {
+    momentumMult.textContent = `${state.user.xpMultiplier.toFixed(2)}× MULT`;
   }
 }
 
@@ -550,9 +823,7 @@ function startMissionHold(event, questId) {
 
   window.audioEngine.playWaterDrop();
   window.audioEngine.startChargeHum();
-  if ('vibrate' in navigator) {
-    try { navigator.vibrate(30); } catch (e) {}
-  }
+  if (window.triggerHaptic) window.triggerHaptic('hold-tick');
 
   missionHoldTimer = setTimeout(() => {
     completeMissionHold(questId);
@@ -588,7 +859,6 @@ function cancelMissionHold(event, questId, playFeedback = true) {
       handleQuestCardClick(qId);
       return;
     } else if (durationHeld >= 380 && durationHeld < 1950) {
-      // Held and released early: display tip at most ONCE
       const tipSeen = localStorage.getItem('habitops_hold_tip_seen');
       if (!tipSeen) {
         localStorage.setItem('habitops_hold_tip_seen', 'true');
@@ -643,7 +913,15 @@ function completeMissionHold(questId) {
     missionHoldTimer = null;
   }
   window.audioEngine.stopChargeHum();
-  window.audioEngine.playPop();
+  if (window.audioEngine.playHoldCompleteSuccess) {
+    window.audioEngine.playHoldCompleteSuccess();
+  } else {
+    window.audioEngine.playPop();
+  }
+
+  if (window.triggerHaptic) {
+    window.triggerHaptic('crit');
+  }
 
   const card = document.getElementById(`quest-card-${questId}`);
   if (card) {
@@ -651,10 +929,6 @@ function completeMissionHold(questId) {
     spawnStrikeSlashParticles(card);
   }
   triggerScreenJolt();
-
-  if ('vibrate' in navigator) {
-    try { navigator.vibrate([60, 40, 80]); } catch (e) {}
-  }
 
   activeHoldQuestId = null;
   handleQuestCardClick(questId);
@@ -667,13 +941,14 @@ function createQuestElement(quest) {
 
   const tierInfo = window.DIFFICULTY_TIERS?.[quest.difficulty] || { label: 'Standard', critChance: 0.25 };
   const timeBadge = quest.time || quest.execTime || 'Flex';
-  const durBadge = quest.duration || '30m';
+  const durBadge = quest.duration || '15m';
+  const attrKey = quest.attribute || (window.store ? window.store.inferAttribute(quest) : 'discipline');
+  const attrDef = window.ATTRIBUTE_DEFINITIONS?.[attrKey] || { name: 'Discipline', short: 'DIS', icon: 'shield', color: '#a855f7' };
 
-  div.className = `relative bg-surface-container-low p-4 sm:p-5 flex flex-col space-y-3.5 border border-outline-variant/30 hover:border-primary transition-all tactile-btn mission-hold-wrapper ${
-    quest.isPriorityTarget ? 'border-l-4 border-l-secondary' : ''
+  div.className = `relative bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 flex flex-col justify-center border border-outline-variant/30 hover:border-primary transition-all tactile-btn mission-hold-wrapper ${
+    quest.isPriorityTarget ? 'border-l-4 border-l-secondary priority-target' : ''
   }`;
 
-  // 2-Second Hold event binding (Desktop mouse + Mobile touch)
   div.onpointerdown = (e) => startMissionHold(e, quest.id);
   div.onpointerup = (e) => cancelMissionHold(e, quest.id);
   div.onpointerleave = (e) => cancelMissionHold(e, quest.id);
@@ -681,45 +956,73 @@ function createQuestElement(quest) {
   div.oncontextmenu = (e) => e.preventDefault();
 
   div.innerHTML = `
-    <div class="flex items-start justify-between min-w-0 gap-3">
-      <div class="flex items-start gap-3.5 min-w-0">
-        <div class="checkbox-box w-8 h-8 bg-surface-container-lowest flex items-center justify-center mt-0.5 transition-all border ${
-          quest.isPriorityTarget ? 'border-secondary' : 'border-outline-variant/40'
-        } shrink-0 cursor-pointer hover:border-primary active:scale-95" onclick="event.stopPropagation(); handleQuestCardClick('${quest.id}');" title="Strike to execute protocol / Hold card to charge">
-          <span class="material-symbols-outlined text-[18px] ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'}">${quest.icon || 'bolt'}</span>
-        </div>
-        <div class="flex flex-col min-w-0">
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="task-title font-headline-sm text-[15px] sm:text-base text-on-surface font-medium truncate">${quest.title}</span>
-            ${quest.isPriorityTarget ? '<span class="bg-secondary/15 text-secondary border border-secondary/30 px-1.5 py-0.2 font-mono text-[10px] uppercase font-normal tracking-wider">Priority</span>' : ''}
+    <div class="flex items-center justify-between min-w-0 gap-2.5">
+      <!-- Strike Action Icon / Button -->
+      <div class="flex items-center gap-2.5 min-w-0 flex-1">
+        <button class="checkbox-box w-9 h-9 bg-surface-container-lowest flex items-center justify-center transition-all border ${
+          quest.isPriorityTarget ? 'border-secondary shadow-[0_0_8px_rgba(255,42,85,0.3)]' : 'border-outline-variant/40 hover:border-primary'
+        } shrink-0 cursor-pointer active:scale-95" onclick="event.stopPropagation(); handleQuestCardClick('${quest.id}');" title="Quick strike / Hold 2s to charge">
+          <span class="material-symbols-outlined text-[19px] ${quest.isPriorityTarget ? 'text-secondary font-bold' : 'text-primary'}">${quest.icon || 'bolt'}</span>
+        </button>
+
+        <!-- Title & Metadata In One Compact Row -->
+        <div class="flex flex-col min-w-0 flex-1">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="task-title font-headline-sm text-sm text-on-surface font-bold truncate">${quest.title}</span>
+            <span class="px-1.5 py-0.2 rounded-xs font-mono text-[9px] font-bold uppercase shrink-0" style="color:${attrDef.color}; background:${attrDef.color}15; border:1px solid ${attrDef.color}40;" title="Trains ${attrDef.name}">
+              ${attrDef.short}
+            </span>
+            ${quest.isPriorityTarget ? '<span class="bg-secondary/15 text-secondary border border-secondary/40 px-1 py-0.2 font-mono text-[9px] uppercase font-bold tracking-wider shrink-0 shadow-[0_0_6px_rgba(255,42,85,0.25)]">PRIORITY</span>' : ''}
           </div>
-          <span class="font-body-sm text-[13px] text-on-surface-variant font-light truncate leading-relaxed mt-0.5">${quest.subtext}</span>
-          <div class="flex items-center gap-2.5 mt-1.5 font-mono text-[11px] text-outline font-light">
-            <span>⏰ ${timeBadge}</span>
+          <div class="flex items-center gap-1.5 font-mono text-[11px] text-outline font-light mt-0.5">
+            <span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px] opacity-70">schedule</span>${timeBadge}</span>
             <span>·</span>
-            <span>⏱ ${durBadge}</span>
+            <span>${durBadge}</span>
             <span>·</span>
-            <span class="${quest.isPriorityTarget ? 'text-secondary font-normal' : ''}">${Math.round((tierInfo.critChance || 0.25) * 100)}% Crit Chance</span>
+            <span class="${quest.isPriorityTarget ? 'text-secondary font-bold' : 'text-primary/90'}">${Math.round((tierInfo.critChance || 0.25) * 100)}% Crit</span>
           </div>
         </div>
       </div>
-      <div class="flex flex-col items-end gap-1.5 shrink-0 pl-2">
-        <div class="bg-surface-container-lowest px-2 py-0.5 border border-outline-variant/30 flex items-center gap-1">
-          <span class="font-mono text-xs ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'} font-normal">+${quest.xp} XP</span>
+
+      <!-- Right: XP Badge, Snooze Button, Chevron Details -->
+      <div class="flex items-center gap-1 shrink-0 pl-1">
+        <div class="${quest.isPriorityTarget ? 'bg-secondary/15 border border-secondary/50 shadow-[0_0_8px_rgba(255,42,85,0.3)]' : 'bg-primary/10 border border-primary/40 shadow-[0_0_6px_rgba(0,240,255,0.2)]'} px-2 py-0.5 flex items-center">
+          <span class="font-mono text-xs ${quest.isPriorityTarget ? 'text-secondary' : 'text-primary'} font-bold">+${quest.xp} XP</span>
         </div>
-        <button class="p-1 text-on-surface-variant/70 hover:text-primary transition-colors cursor-pointer" title="Inspect Full Protocol" onclick="event.stopPropagation(); openHabitDetails('${quest.id}');">
-          <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+        <button class="w-7 h-7 flex items-center justify-center text-outline hover:text-amber-400 hover:bg-amber-500/10 transition-colors" title="Snooze 1 Hour" onclick="event.stopPropagation(); handleSnoozeQuest('${quest.id}');">
+          <span class="material-symbols-outlined text-[16px]">snooze</span>
+        </button>
+        <button class="w-6 h-6 flex items-center justify-center text-outline/60 hover:text-primary transition-colors" title="Inspect Full Protocol" onclick="event.stopPropagation(); openHabitDetails('${quest.id}');">
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
         </button>
       </div>
     </div>
-    <div class="flex items-center justify-between pt-2 border-t border-outline-variant/20 text-[11px] font-mono text-outline font-light">
-      <span class="flex items-center gap-1.5 text-primary font-normal">
-        <span class="material-symbols-outlined text-[14px]">touch_app</span>
-        <span>Tap or hold to execute</span>
-      </span>
-      <span class="uppercase tracking-wider text-[10px] font-light text-outline/70">${tierInfo.label.split(' ')[0]}</span>
-    </div>
     <div class="mission-hold-bar" id="hold-bar-${quest.id}"></div>
+  `;
+  return div;
+}
+
+function createSnoozedQuestElement(quest) {
+  const div = document.createElement('div');
+  div.id = `quest-card-${quest.id}`;
+  const minutesLeft = Math.max(1, Math.ceil((quest.snoozedUntil - Date.now()) / (60 * 1000)));
+
+  div.className =
+    'bg-surface-container-lowest/80 border border-amber-500/30 p-2.5 flex items-center justify-between opacity-80 hover:opacity-100 transition-all';
+  div.innerHTML = `
+    <div class="flex items-center gap-2.5 min-w-0">
+      <span class="material-symbols-outlined text-amber-500 text-[18px]">alarm_off</span>
+      <div class="flex flex-col min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="font-headline-sm text-xs font-semibold text-on-surface line-through truncate">${quest.title}</span>
+          <span class="font-mono text-[9px] uppercase font-bold text-amber-500 bg-amber-500/10 px-1 py-0.2 border border-amber-500/30">SNOOZED · ${minutesLeft}m</span>
+        </div>
+        <span class="font-body-sm text-[10px] text-outline font-light">Postponed for focus · Tap Resume to re-arm</span>
+      </div>
+    </div>
+    <button class="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-500 border border-amber-500/40 font-mono text-[10px] font-bold uppercase tactile-btn" onclick="handleUnsnoozeQuest('${quest.id}');">
+      Resume
+    </button>
   `;
   return div;
 }
@@ -727,27 +1030,19 @@ function createQuestElement(quest) {
 function createCompletedQuestRow(quest) {
   const row = document.createElement('div');
   row.className =
-    'bg-surface-container-lowest px-4 py-3 border border-outline-variant/30 flex items-center justify-between opacity-85 hover:opacity-100 transition-opacity';
+    'bg-surface-container-lowest px-3.5 py-2 border border-outline-variant/30 flex items-center justify-between opacity-85 hover:opacity-100 transition-opacity';
   const earnedXp = quest.lastEarnedXp || quest.xp;
   row.innerHTML = `
-    <div class="flex items-center gap-3 min-w-0">
-      <div class="w-6 h-6 bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 flex items-center justify-center shrink-0">
-        <span class="material-symbols-outlined text-[15px]">check</span>
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-5 h-5 bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[13px]">check</span>
       </div>
-      <div class="flex flex-col min-w-0">
-        <div class="flex items-center gap-2">
-          <span class="font-label-md text-sm text-on-surface line-through truncate font-medium opacity-75">${quest.title}</span>
-          <span class="px-1.5 py-0.2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-mono text-[10px] font-normal uppercase tracking-wider">✓ Executed</span>
-          ${
-            quest.lastWasCrit
-              ? '<span class="px-1.5 py-0.2 bg-secondary/15 text-secondary border border-secondary/30 font-label-sm text-[10px] uppercase font-normal">Crit 1.5×</span>'
-              : ''
-          }
-        </div>
-        <span class="font-mono text-[11px] text-outline font-light mt-0.5">${quest.group.toUpperCase()} · Earned <span class="text-emerald-500 font-normal">+${earnedXp} XP</span></span>
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="font-headline-sm text-xs text-on-surface line-through truncate font-medium opacity-75">${quest.title}</span>
+        <span class="font-mono text-[10px] text-emerald-500 font-bold shrink-0">+${earnedXp} XP</span>
       </div>
     </div>
-    <button class="px-2.5 py-1 text-[11px] font-mono uppercase font-normal text-outline hover:text-secondary border border-outline-variant/30 hover:border-secondary tactile-btn shrink-0" onclick="handleQuestCardClick('${quest.id}')" title="Undo protocol strike">Undo</button>
+    <button class="px-2 py-0.5 text-[10px] font-mono uppercase font-semibold text-outline hover:text-secondary border border-outline-variant/30 hover:border-secondary tactile-btn shrink-0" onclick="handleQuestCardClick('${quest.id}')" title="Undo protocol strike">Undo</button>
   `;
   return row;
 }
@@ -769,15 +1064,16 @@ function handleQuestCardClick(questId) {
   if (!result) return;
 
   if (result.isCompleted) {
-    // Play satisfying escalating combo SFX or Critical Strike SFX!
     const comboCount = window.store.state.user.completedTodayCount || 1;
+    const attrText = result.attrResult ? ` · ${result.attrResult.short} +${result.attrResult.gainedXp}` : '';
+
     if (result.wasCrit || result.quest.isPriorityTarget) {
       window.audioEngine.playCriticalHit();
       window.audioEngine.playBossHit(result.bossSlainNow);
       triggerBossSlashAnimation(result.bossDamage);
       triggerScreenShake();
       if (card) {
-        spawnFloatingParticle(card, `+${result.earnedXp} XP (${result.totalMultiplier}×)`, true);
+        spawnFloatingParticle(card, `+${result.earnedXp} XP${attrText} (${result.totalMultiplier}×)`, true);
       }
       spawnFloatingBadges(
         null,
@@ -788,11 +1084,26 @@ function handleQuestCardClick(questId) {
       window.audioEngine.playComboBlip(comboCount);
       window.audioEngine.playQuestVanish();
       if (card) {
-        spawnFloatingParticle(card, `+${result.earnedXp} XP (${result.totalMultiplier}×)`, false);
+        spawnFloatingParticle(card, `+${result.earnedXp} XP${attrText}`, false);
       }
       if (window.store.state.boss.currentHp > 0) {
         triggerBossSlashAnimation(result.bossDamage);
       }
+    }
+
+    if (window.triggerHaptic) {
+      window.triggerHaptic(result.wasCrit ? 'crit' : 'success');
+    }
+
+    // Attribute Level Up Celebration!
+    if (result.attrResult && result.attrResult.leveledUp) {
+      setTimeout(() => {
+        if (window.audioEngine) window.audioEngine.playChime();
+        showToast(
+          `★ ${result.attrResult.name.toUpperCase()} LEVELED UP!`,
+          `Lvl ${result.attrResult.level} · New Title: ${result.attrResult.title}`
+        );
+      }, 500);
     }
 
     // Boss defeat celebration!
@@ -818,7 +1129,7 @@ function handleQuestCardClick(questId) {
       }, 380);
     }
 
-    // Animate card vanishing satisfyingly before re-rendering list
+    // Card vanishing anim
     if (card) {
       if (result.wasCrit) card.classList.add('crit-flash-anim');
       card.classList.add('quest-vanish-anim');
@@ -1552,62 +1863,74 @@ function renderHabitsLabGrid(filter = 'all') {
   const filtered = filter === 'all' ? quests : quests.filter(q => q.group === filter);
   container.innerHTML = '';
 
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col items-center justify-center text-center space-y-2">
+        <span class="material-symbols-outlined text-[32px] text-primary/50">science</span>
+        <span class="font-mono text-xs uppercase font-bold text-on-surface">No Protocols Commissioned in this Pillar</span>
+        <p class="font-body-sm text-[11px] text-on-surface-variant font-light max-w-xs">Commission a new tactical routine or deploy one from the Suggested Armory below.</p>
+        <button class="mt-2 h-7 px-3 bg-primary text-white font-mono text-[10px] uppercase font-bold tactile-btn" onclick="toggleAddHabitModal(true)">+ Commission Protocol</button>
+      </div>`;
+    return;
+  }
+
   filtered.forEach(quest => {
-    const tierInfo = window.DIFFICULTY_TIERS?.[quest.difficulty] || { label: 'Standard Protocol' };
+    const tierInfo = window.DIFFICULTY_TIERS?.[quest.difficulty] || { label: 'Standard Protocol', xp: 45 };
+    const attrKey = quest.attribute || (window.store.inferAttribute ? window.store.inferAttribute(quest) : 'int');
+    const attrDef = window.ATTRIBUTE_DEFINITIONS?.[attrKey] || { name: 'Intelligence', icon: '🧠', color: 'text-cyan-400' };
+
     const card = document.createElement('div');
     card.className =
-      'bg-surface-container-lowest p-space-md border border-outline-variant/30 flex flex-col justify-between shadow-xs relative transition-all hover:border-primary';
+      'bg-surface-container-low border border-outline-variant/30 p-3 flex flex-col justify-between shadow-xs relative transition-all hover:border-primary/60';
     
-    // Distinct high-contrast badge for completion state
     const statusBadge = quest.completed
-      ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 font-mono text-[10px] font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.25)]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>✓ EXECUTED TODAY</span>`
-      : `<span class="inline-flex items-center gap-1 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>ACTIVE IN STACK</span>`;
+      ? `<span class="inline-flex items-center gap-1 px-1.5 py-0.2 font-mono text-[9px] font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/40 shadow-[0_0_6px_rgba(16,185,129,0.25)]"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>✓ EXECUTED TODAY</span>`
+      : `<span class="inline-flex items-center gap-1 px-1.5 py-0.2 font-mono text-[9px] font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>ACTIVE PROTOCOL</span>`;
 
     card.innerHTML = `
       <div class="flex items-start justify-between gap-2">
-        <div class="flex items-center gap-space-sm min-w-0">
-          <div class="w-10 h-10 ${
-            quest.isPriorityTarget ? 'bg-secondary-fixed text-secondary' : 'bg-primary-fixed text-primary'
-          } flex items-center justify-center font-bold border border-outline-variant/30 shrink-0">
-            <span class="material-symbols-outlined text-[20px]">${quest.icon || 'bolt'}</span>
+        <div class="flex items-start gap-2.5 min-w-0">
+          <div class="w-8 h-8 bg-surface-container-high border border-outline-variant/40 flex items-center justify-center shrink-0 text-primary mt-0.5 shadow-xs">
+            <span class="material-symbols-outlined text-[18px]">${quest.icon || 'bolt'}</span>
           </div>
           <div class="flex flex-col min-w-0">
-            <div class="flex items-center gap-1.5">
-              <span class="font-mono text-[10px] uppercase font-bold text-outline truncate">${quest.group} · ⏰ ${quest.execTime || '08:00'} (${quest.duration || '30 mins'})</span>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-headline-sm text-sm font-bold text-on-surface truncate">${quest.title}</span>
+              <span class="font-mono text-[9px] font-bold px-1.5 py-0.2 rounded border border-outline-variant/40 bg-surface-container-high text-on-surface-variant flex items-center gap-0.5">
+                <span>${attrDef.icon}</span>
+                <span class="${attrDef.color}">${attrKey.toUpperCase()}</span>
+              </span>
+              <span class="font-mono text-[9px] font-bold text-primary px-1.5 py-0.2 bg-primary/10 border border-primary/30">+${quest.xp || tierInfo.xp} XP</span>
             </div>
-            <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">${quest.title}</h4>
+            <p class="font-body-sm text-[11px] text-on-surface-variant font-light truncate mt-0.5">${quest.subtext || 'Daily combat routine'}</p>
           </div>
         </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-          <span class="font-mono text-[11px] px-2 py-0.5 ${
-            quest.isPriorityTarget ? 'bg-secondary text-on-secondary font-black' : 'bg-surface-container-high text-primary font-bold'
-          } uppercase tracking-wider">
-            +${quest.xp} XP
-          </span>
-          <!-- Three-Dot Overflow Action Menu -->
-          <div class="relative protocol-menu-container">
-            <button class="w-7 h-7 flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container-high border border-outline-variant/30 transition-colors" onclick="toggleProtocolActionMenu('${quest.id}', event)" title="Protocol Actions">
-              <span class="material-symbols-outlined text-[18px]">more_vert</span>
-            </button>
-            <div id="protocol-menu-${quest.id}" class="protocol-context-menu hidden absolute right-0 top-8 w-44 bg-surface-container-lowest border border-outline-variant shadow-xl z-30 py-1 flex flex-col">
-              <button class="px-3 py-2 text-left text-xs font-semibold text-on-surface hover:bg-surface-container-high flex items-center gap-2 transition-colors" onclick="event.stopPropagation(); document.getElementById('protocol-menu-${quest.id}').classList.add('hidden'); openHabitDetails('${quest.id}');">
-                <span class="material-symbols-outlined text-[15px] text-primary">visibility</span>
-                <span>Inspect Protocol</span>
-              </button>
-              <button class="px-3 py-2 text-left text-xs font-semibold text-secondary hover:bg-secondary/10 flex items-center gap-2 border-t border-outline-variant/30 transition-colors" onclick="event.stopPropagation(); document.getElementById('protocol-menu-${quest.id}').classList.add('hidden'); confirmDeleteHabit('${quest.id}', '${quest.title.replace(/'/g, "\\'")}');">
-                <span class="material-symbols-outlined text-[15px] text-secondary">delete</span>
-                <span>Decommission</span>
-              </button>
-            </div>
-          </div>
+        <div class="shrink-0 flex items-center gap-1">
+          ${statusBadge}
         </div>
       </div>
-      <p class="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">${quest.subtext}</p>
-      <div class="flex items-center justify-between mt-3 pt-2.5 border-t border-surface-container text-xs">
-        <span class="font-mono text-[10px] text-outline uppercase font-semibold">${tierInfo.label}</span>
-        ${statusBadge}
-      </div>
-    `;
+
+      <div class="flex items-center justify-between pt-2 mt-2 border-t border-outline-variant/20 text-xs">
+        <div class="flex items-center gap-2 text-on-surface-variant font-mono text-[10px]">
+          <span class="capitalize text-primary font-semibold">${quest.group || 'Daily'}</span>
+          <span>•</span>
+          <span>${quest.duration || '15m'}</span>
+          <span>•</span>
+          <span class="text-secondary font-semibold">${tierInfo.label || 'Standard'}</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button class="p-1 text-on-surface-variant hover:text-primary tactile-btn" onclick="openHabitDetails('${quest.id}')" title="Inspect Telemetry">
+            <span class="material-symbols-outlined text-[16px]">visibility</span>
+          </button>
+          <button class="p-1 text-on-surface-variant hover:text-amber-400 tactile-btn" onclick="window.store.snoozeQuest && window.store.snoozeQuest('${quest.id}', 1); renderHabitsLabGrid('${filter}'); renderQuestList(); showToast('Protocol Snoozed for 1h');" title="Snooze 1h">
+            <span class="material-symbols-outlined text-[16px]">snooze</span>
+          </button>
+          <button class="p-1 text-on-surface-variant hover:text-red-400 tactile-btn" onclick="if(confirm('Archive this protocol from daily deployment?')) { window.store.removeQuest && window.store.removeQuest('${quest.id}'); renderHabitsLabGrid('${filter}'); renderQuestList(); showToast('Protocol Archived'); }" title="Archive Protocol">
+            <span class="material-symbols-outlined text-[16px]">delete_outline</span>
+          </button>
+        </div>
+      </div>`;
+
     container.appendChild(card);
   });
 }
@@ -1624,33 +1947,50 @@ function renderSuggestedRoutinesGrid() {
     const timeVal = item.time || item.execTime || '08:00';
     const alreadyAdded = activeTitles.has(item.title.toLowerCase());
     const tierInfo = window.DIFFICULTY_TIERS?.[item.difficulty] || { xp: 45, label: 'Standard' };
+    const attrKey = item.attribute || (window.store.inferAttribute ? window.store.inferAttribute(item) : 'int');
+    const attrDef = window.ATTRIBUTE_DEFINITIONS?.[attrKey] || { icon: '🧠', color: 'text-cyan-400' };
 
     const card = document.createElement('div');
     card.className =
-      'bg-surface-container-lowest p-3 border border-outline-variant/30 flex items-center justify-between gap-2 shadow-xs hover:border-primary transition-colors';
+      'bg-surface-container-low p-2.5 sm:p-3 border border-outline-variant/30 flex items-center justify-between gap-2 shadow-xs hover:border-primary/50 transition-colors';
     card.innerHTML = `
       <div class="flex items-start gap-2.5 min-w-0">
-        <div class="w-9 h-9 bg-surface-container-high text-primary flex items-center justify-center shrink-0 border border-outline-variant/30">
-          <span class="material-symbols-outlined text-[18px]">${item.icon || 'bolt'}</span>
+        <div class="w-8 h-8 bg-surface-container-high text-primary flex items-center justify-center shrink-0 border border-outline-variant/30 shadow-xs">
+          <span class="material-symbols-outlined text-[17px]">${item.icon || 'bolt'}</span>
         </div>
         <div class="flex flex-col min-w-0">
-          <span class="font-label-md text-label-md font-bold text-on-surface truncate">${item.title}</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant truncate">${item.subtext}</span>
-          <span class="font-mono text-[11px] text-primary font-bold mt-0.5 uppercase">${item.group} · ⏰ ${timeVal} · ⏱ ${item.duration} · +${tierInfo.xp} XP</span>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="font-headline-sm text-xs font-bold text-on-surface truncate">${item.title}</span>
+            <span class="font-mono text-[9px] font-bold text-on-surface-variant flex items-center gap-0.5">
+              <span>${attrDef.icon}</span>
+              <span class="${attrDef.color}">${attrKey.toUpperCase()}</span>
+            </span>
+          </div>
+          <span class="font-body-sm text-[10px] text-on-surface-variant font-light truncate mt-0.5">${item.subtext || ''}</span>
+          <div class="flex items-center gap-1.5 mt-1 font-mono text-[9px] text-outline font-semibold">
+            <span class="capitalize text-primary">${item.group}</span>
+            <span>•</span>
+            <span>${timeVal}</span>
+            <span>•</span>
+            <span class="text-emerald-400 font-bold">+${tierInfo.xp} XP</span>
+          </div>
         </div>
       </div>
-      <button ${alreadyAdded ? 'disabled' : ''} class="px-2.5 py-1.5 ${
-      alreadyAdded
-        ? 'bg-surface-container-high text-outline cursor-default'
-        : 'bg-primary text-on-primary hover:bg-primary-container hover:text-on-surface tactile-btn cursor-pointer'
-    } font-label-sm text-[11px] uppercase font-bold tracking-wider shrink-0" onclick="quickDeploySuggestedRoutine('${routineId}')">
-        ${alreadyAdded ? 'In Stack ✓' : '+ Deploy'}
-      </button>
-    `;
+      <div class="shrink-0">
+        ${alreadyAdded 
+          ? `<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant border border-outline-variant/30 font-mono text-[9px] uppercase font-bold flex items-center gap-1">
+              <span class="material-symbols-outlined text-[12px] text-emerald-400">check</span>
+              <span>Active</span>
+            </span>`
+          : `<button class="px-2.5 py-1 bg-primary/20 hover:bg-primary text-primary hover:text-white border border-primary/50 font-mono text-[9px] uppercase font-bold flex items-center gap-1 tactile-btn shadow-xs transition-colors" onclick="quickDeploySuggestedRoutine('${routineId}')">
+              <span class="material-symbols-outlined text-[12px]">add</span>
+              <span>Deploy</span>
+            </button>`
+        }
+      </div>`;
     grid.appendChild(card);
   });
 }
-
 function quickDeploySuggestedRoutine(catalogKey) {
   const preset = (window.ROUTINE_CATALOG || []).find(r => r.id === catalogKey || r.key === catalogKey);
   if (!preset) return;
@@ -1793,18 +2133,18 @@ function renderProfileMultipliers() {
   cards.forEach(c => {
     const el = document.createElement('div');
     el.className =
-      'bg-surface-container-lowest p-3 border border-outline-variant/25 flex items-start justify-between gap-2 shadow-xs';
+      'bg-surface-container-high/40 p-2.5 sm:p-3 border border-outline-variant/30 flex items-start justify-between gap-2 shadow-xs hover:border-primary/50 transition-colors';
     el.innerHTML = `
       <div class="flex items-start gap-2.5 min-w-0">
-        <div class="w-9 h-9 bg-primary-container/20 text-primary flex items-center justify-center shrink-0 border border-primary/30">
-          <span class="material-symbols-outlined text-[18px]">${c.icon}</span>
+        <div class="w-8 h-8 bg-surface-container-high text-primary flex items-center justify-center shrink-0 border border-outline-variant/30 shadow-xs">
+          <span class="material-symbols-outlined text-[17px]">${c.icon}</span>
         </div>
         <div class="flex flex-col min-w-0">
-          <span class="font-label-md text-label-md font-bold text-on-surface">${c.title}</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant leading-snug">${c.desc}</span>
+          <span class="font-headline-sm text-xs font-bold text-on-surface truncate">${c.title}</span>
+          <span class="font-body-sm text-[10px] text-on-surface-variant font-light leading-snug mt-0.5">${c.desc}</span>
         </div>
       </div>
-      <span class="px-2 py-0.5 bg-surface-container-high text-primary font-mono text-xs font-bold shrink-0">${c.val}</span>
+      <span class="px-2 py-0.5 bg-cyan-950/20 text-cyan-400 border border-cyan-400/40 font-mono text-xs font-bold shrink-0 shadow-[0_0_6px_rgba(0,240,255,0.2)]">${c.val}</span>
     `;
     grid.appendChild(el);
   });
@@ -2539,6 +2879,8 @@ function initModals() {
       const diffEl = document.getElementById('input-habit-difficulty');
       const dateEl = document.getElementById('input-habit-date');
       const subEl = document.getElementById('input-habit-subtext');
+      const attrChecked = document.querySelector('input[name="habit-attribute"]:checked');
+      const attribute = attrChecked ? attrChecked.value : undefined;
 
       const title = titleEl ? titleEl.value.trim() : '';
       if (!title) {
@@ -2562,7 +2904,8 @@ function initModals() {
           difficulty,
           execTime,
           duration,
-          subtext
+          subtext,
+          attribute
         });
         toggleAddHabitModal(false);
         renderWeeklySequenceStrip();
@@ -2575,7 +2918,8 @@ function initModals() {
           difficulty,
           execTime,
           duration,
-          subtext
+          subtext,
+          attribute
         });
         toggleAddHabitModal(false);
         renderHabitsLabGrid();
@@ -3475,3 +3819,10 @@ document.addEventListener('keydown', (e) => {
     closeDrawer();
   }
 });
+
+window.pokeAegisCompanion = pokeAegisCompanion;
+window.filterDailyMissions = filterDailyMissions;
+window.handleSnoozeQuest = handleSnoozeQuest;
+window.handleUnsnoozeQuest = handleUnsnoozeQuest;
+window.openSkillTreeModal = openSkillTreeModal;
+window.closeSkillTreeModal = closeSkillTreeModal;

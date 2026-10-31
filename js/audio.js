@@ -218,6 +218,67 @@ class TacticalAudioEngine {
     }
   }
 
+  // Super-Satisfying Hold Completion Synthesizer Fanfare (Laser Charge Blast + Ascending Arpeggio)
+  playHoldCompleteSuccess(isCrit = false) {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      // 1. Ascending triumphant cyber chords
+      const freqs = isCrit ? [523.25, 659.25, 783.99, 1046.50, 1318.51] : [440.00, 554.37, 659.25, 880.00];
+      freqs.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = isCrit ? 'sawtooth' : 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.setValueAtTime(0.24, now + idx * 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.04 + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now + idx * 0.04);
+        osc.stop(now + idx * 0.04 + 0.38);
+      });
+
+      // 2. Heavy sub impact thud
+      const sub = this.ctx.createOscillator();
+      const subGain = this.ctx.createGain();
+      sub.type = 'sine';
+      sub.frequency.setValueAtTime(160, now);
+      sub.frequency.exponentialRampToValueAtTime(32, now + 0.28);
+      subGain.gain.setValueAtTime(0.42, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      sub.connect(subGain);
+      subGain.connect(this.ctx.destination);
+      sub.start(now);
+      sub.stop(now + 0.32);
+    } catch (e) {
+      console.warn('Hold complete audio error:', e);
+    }
+  }
+
+  // Tactical Snooze Reminder Beep
+  playSnoozeBeep() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.setValueAtTime(380, now + 0.08);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.22);
+    } catch (e) {}
+  }
+
   // Heavy mechanical thud / locked feedback
   playMechanicalThud() {
     if (this.muted) return;
@@ -674,4 +735,17 @@ class TacticalAudioEngine {
 
 // Global instance
 window.audioEngine = new TacticalAudioEngine();
+
+// Global Tactile Haptic Vibration Engine
+window.triggerHaptic = function(type = 'success') {
+  if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+    try {
+      if (type === 'hold-tick') navigator.vibrate(15);
+      else if (type === 'success') navigator.vibrate([40, 30, 80]);
+      else if (type === 'crit') navigator.vibrate([60, 40, 100, 50, 140]);
+      else if (type === 'snooze') navigator.vibrate([25, 30, 25]);
+      else if (type === 'tap') navigator.vibrate(12);
+    } catch (e) {}
+  }
+};
 

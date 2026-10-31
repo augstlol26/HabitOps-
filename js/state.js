@@ -21,21 +21,76 @@ const DIFFICULTY_TIERS = {
   elite:    { id: "elite",    label: "Elite Endurance",   xp: 100, critChance: 0.42, baseDmg: 30, desc: "High-difficulty 60m+ deep block" }
 };
 
+// RPG Attribute Progression & Skill Tree Specifications
+const ATTRIBUTE_DEFINITIONS = {
+  intelligence: {
+    id: "intelligence",
+    name: "Intelligence",
+    short: "INT",
+    icon: "psychology",
+    color: "#00F0FF",
+    desc: "Cognitive endurance, reading, coding, learning & deep focus",
+    titles: ["Data Initiate", "Code Analyst", "Neural Tactician", "Cyber Strategist", "Omniscient Archon"],
+    perk: "+5% XP from mental & deep work protocols"
+  },
+  strength: {
+    id: "strength",
+    name: "Strength",
+    short: "STR",
+    icon: "fitness_center",
+    color: "#ff2a55",
+    desc: "Physical power, stamina, functional hypertrophy & gym discipline",
+    titles: ["Iron Novice", "Kinetic Striker", "Vanguard Brawler", "Titan Enforcer", "Apex Behemoth"],
+    perk: "+15% Base Boss Strike Damage"
+  },
+  discipline: {
+    id: "discipline",
+    name: "Discipline",
+    short: "DIS",
+    icon: "shield",
+    color: "#a855f7",
+    desc: "Consistency, stoic habits, cold showers & digital detox",
+    titles: ["Will Initiate", "Resolute Scout", "Iron Will Operative", "Phantom Commander", "Sovereign Stoic"],
+    perk: "+10% Streak Protection & Combo Multipliers"
+  },
+  vitality: {
+    id: "vitality",
+    name: "Vitality",
+    short: "VIT",
+    icon: "favorite",
+    color: "#10b981",
+    desc: "Hydration, restorative sleep, nutrition, recovery & mobility",
+    titles: ["Bio-Recon", "Cellular Sentinel", "Metabolic Prime", "Immortal Biomech", "Eternal Matrix"],
+    perk: "+20% Daily Recovery & Boss Defense"
+  },
+  social: {
+    id: "social",
+    name: "Social",
+    short: "SOC",
+    icon: "groups",
+    color: "#f59e0b",
+    desc: "Communication, empathy, networking, kindness & guild synergy",
+    titles: ["Field Envoy", "Allied Liaison", "Squad Captain", "Guild Commander", "Syndicate Sovereign"],
+    perk: "+15% Guild XP Boost & Supply Drop Quality"
+  }
+};
+
 // Rich Suggested Routines Catalog
 const ROUTINE_CATALOG = [
-  { id: "hydrate",     category: "morning",     title: "Electrolyte Hydration",   subtext: "500ml water upon waking",          group: "morning",   time: "07:00", duration: "5m",  difficulty: "recon",    icon: "water_drop" },
-  { id: "sunlight",    category: "morning",     title: "Morning Sunlight Walk",   subtext: "Circadian optic reset outdoors",   group: "morning",   time: "07:20", duration: "15m", difficulty: "standard", icon: "wb_sunny" },
-  { id: "cold_shower", category: "cold",        title: "Cold Exposure Protocol",  subtext: "Unflinching vagal nerve reset",    group: "morning",   time: "07:40", duration: "5m",  difficulty: "standard", icon: "ac_unit" },
-  { id: "breathing",   category: "mindfulness", title: "Tactical Box Breathing",  subtext: "4-4-4-4 autonomic calibration",    group: "morning",   time: "07:50", duration: "10m", difficulty: "recon",    icon: "self_improvement" },
-  { id: "journal_am",  category: "journaling",  title: "Morning Mission Briefing",subtext: "Top 3 priorities locked in",       group: "morning",   time: "08:10", duration: "10m", difficulty: "recon",    icon: "edit_note" },
-  { id: "deepwork",    category: "deepwork",    title: "Deep Work Sprint",        subtext: "Zero-distraction cognitive block", group: "afternoon", time: "10:00", duration: "60m", difficulty: "elite",    icon: "terminal" },
-  { id: "skill_drill", category: "creative",    title: "Skill & Craft Mastery",   subtext: "Deliberate practice / coding",     group: "afternoon", time: "14:00", duration: "45m", difficulty: "heavy",    icon: "code" },
-  { id: "mobility",    category: "mobility",    title: "Posture & Mobility Flow", subtext: "Thoracic & hip decompression",     group: "afternoon", time: "15:30", duration: "15m", difficulty: "standard", icon: "accessibility_new" },
-  { id: "clean_fuel",  category: "nutrition",   title: "Clean Fuel / Zero Sugar", subtext: "Whole-food metabolic discipline",  group: "afternoon", time: "13:00", duration: "15m", difficulty: "standard", icon: "restaurant" },
-  { id: "workout",     category: "physical",    title: "Deep Workout / Gym",      subtext: "Hypertrophy & functional output",  group: "afternoon", time: "17:30", duration: "45m", difficulty: "heavy",    icon: "fitness_center", isPriorityTarget: true },
-  { id: "read",        category: "reading",     title: "Read 15 Pages",           subtext: "Non-fiction / mental expansion",   group: "evening",   time: "20:30", duration: "25m", difficulty: "standard", icon: "menu_book" },
-  { id: "detox",       category: "detox",       title: "No Doomscrolling",        subtext: "Zero algorithmic feeds after 8PM", group: "evening",   time: "20:00", duration: "60m", difficulty: "heavy",    icon: "phonelink_off" },
-  { id: "sunset",      category: "evening",     title: "Digital Sunset",          subtext: "Screens off · Blue light lock",    group: "evening",   time: "22:00", duration: "30m", difficulty: "standard", icon: "nightlight" }
+  { id: "hydrate",     category: "morning",     title: "Electrolyte Hydration",   subtext: "500ml water upon waking",          group: "morning",   time: "07:00", duration: "5m",  difficulty: "recon",    icon: "water_drop",        attribute: "vitality" },
+  { id: "sunlight",    category: "morning",     title: "Morning Sunlight Walk",   subtext: "Circadian optic reset outdoors",   group: "morning",   time: "07:20", duration: "15m", difficulty: "standard", icon: "wb_sunny",          attribute: "vitality" },
+  { id: "cold_shower", category: "cold",        title: "Cold Exposure Protocol",  subtext: "Unflinching vagal nerve reset",    group: "morning",   time: "07:40", duration: "5m",  difficulty: "standard", icon: "ac_unit",           attribute: "discipline" },
+  { id: "breathing",   category: "mindfulness", title: "Tactical Box Breathing",  subtext: "4-4-4-4 autonomic calibration",    group: "morning",   time: "07:50", duration: "10m", difficulty: "recon",    icon: "self_improvement",  attribute: "vitality" },
+  { id: "journal_am",  category: "journaling",  title: "Morning Mission Briefing",subtext: "Top 3 priorities locked in",       group: "morning",   time: "08:10", duration: "10m", difficulty: "recon",    icon: "edit_note",         attribute: "intelligence" },
+  { id: "deepwork",    category: "deepwork",    title: "Deep Work Sprint",        subtext: "Zero-distraction cognitive block", group: "afternoon", time: "10:00", duration: "60m", difficulty: "elite",    icon: "terminal",          attribute: "intelligence" },
+  { id: "skill_drill", category: "creative",    title: "Skill & Craft Mastery",   subtext: "Deliberate practice / coding",     group: "afternoon", time: "14:00", duration: "45m", difficulty: "heavy",    icon: "code",              attribute: "intelligence" },
+  { id: "call_ally",   category: "social",      title: "Reach Out to Ally",       subtext: "Call friend, family or mentor",    group: "afternoon", time: "16:00", duration: "15m", difficulty: "standard", icon: "call",              attribute: "social" },
+  { id: "mobility",    category: "mobility",    title: "Posture & Mobility Flow", subtext: "Thoracic & hip decompression",     group: "afternoon", time: "15:30", duration: "15m", difficulty: "standard", icon: "accessibility_new", attribute: "vitality" },
+  { id: "clean_fuel",  category: "nutrition",   title: "Clean Fuel / Zero Sugar", subtext: "Whole-food metabolic discipline",  group: "afternoon", time: "13:00", duration: "15m", difficulty: "standard", icon: "restaurant",         attribute: "vitality" },
+  { id: "workout",     category: "physical",    title: "Deep Workout / Gym",      subtext: "Hypertrophy & functional output",  group: "afternoon", time: "17:30", duration: "45m", difficulty: "heavy",    icon: "fitness_center",    attribute: "strength", isPriorityTarget: true },
+  { id: "read",        category: "reading",     title: "Read 15 Pages",           subtext: "Non-fiction / mental expansion",   group: "evening",   time: "20:30", duration: "25m", difficulty: "standard", icon: "menu_book",         attribute: "intelligence" },
+  { id: "detox",       category: "detox",       title: "No Doomscrolling",        subtext: "Zero algorithmic feeds after 8PM", group: "evening",   time: "20:00", duration: "60m", difficulty: "heavy",    icon: "phonelink_off",     attribute: "discipline" },
+  { id: "sunset",      category: "evening",     title: "Digital Sunset",          subtext: "Screens off · Blue light lock",    group: "evening",   time: "22:00", duration: "30m", difficulty: "standard", icon: "nightlight",        attribute: "discipline" }
 ];
 
 // Boss Roster for progressive unlocks
@@ -129,6 +184,13 @@ const DEFAULT_STATE = {
     notificationsEnabled: true,
     dailyClearClaimedDate: ""
   },
+  attributes: {
+    intelligence: { level: 1, xp: 0, maxXp: 100, title: "Data Initiate" },
+    strength:     { level: 1, xp: 0, maxXp: 100, title: "Iron Novice" },
+    discipline:   { level: 1, xp: 0, maxXp: 100, title: "Will Initiate" },
+    vitality:     { level: 1, xp: 0, maxXp: 100, title: "Bio-Recon" },
+    social:       { level: 1, xp: 0, maxXp: 100, title: "Field Envoy" }
+  },
   boss: {
     name: "The Procrastination Titan",
     desc: "Thrives in the gap between intention and execution.",
@@ -148,10 +210,12 @@ const DEFAULT_STATE = {
       duration: "5m",
       difficulty: "recon",
       group: "morning",
+      attribute: "vitality",
       xp: 25,
       completed: false,
       isPriorityTarget: false,
-      icon: "water_drop"
+      icon: "water_drop",
+      snoozedUntil: 0
     },
     {
       id: "breathing",
@@ -161,10 +225,12 @@ const DEFAULT_STATE = {
       duration: "10m",
       difficulty: "recon",
       group: "morning",
+      attribute: "vitality",
       xp: 25,
       completed: false,
       isPriorityTarget: false,
-      icon: "self_improvement"
+      icon: "self_improvement",
+      snoozedUntil: 0
     },
     {
       id: "workout",
@@ -174,10 +240,12 @@ const DEFAULT_STATE = {
       duration: "45m",
       difficulty: "heavy",
       group: "afternoon",
+      attribute: "strength",
       xp: 70,
       completed: false,
       isPriorityTarget: true,
-      icon: "fitness_center"
+      icon: "fitness_center",
+      snoozedUntil: 0
     },
     {
       id: "deepwork",
@@ -187,10 +255,12 @@ const DEFAULT_STATE = {
       duration: "60m",
       difficulty: "elite",
       group: "afternoon",
+      attribute: "intelligence",
       xp: 100,
       completed: false,
       isPriorityTarget: false,
-      icon: "terminal"
+      icon: "terminal",
+      snoozedUntil: 0
     },
     {
       id: "read",
@@ -200,10 +270,12 @@ const DEFAULT_STATE = {
       duration: "25m",
       difficulty: "standard",
       group: "evening",
+      attribute: "intelligence",
       xp: 45,
       completed: false,
       isPriorityTarget: false,
-      icon: "menu_book"
+      icon: "menu_book",
+      snoozedUntil: 0
     },
     {
       id: "sunset",
@@ -213,10 +285,12 @@ const DEFAULT_STATE = {
       duration: "30m",
       difficulty: "standard",
       group: "evening",
+      attribute: "discipline",
       xp: 45,
       completed: false,
       isPriorityTarget: false,
-      icon: "nightlight"
+      icon: "nightlight",
+      snoozedUntil: 0
     }
   ],
   plannedCalendar: {},
@@ -356,6 +430,7 @@ class Store {
     this.RANK_LADDER = RANK_LADDER;
     this.DIFFICULTY_TIERS = DIFFICULTY_TIERS;
     this.ROUTINE_CATALOG = ROUTINE_CATALOG;
+    this.ATTRIBUTE_DEFINITIONS = ATTRIBUTE_DEFINITIONS;
     this.LEVEL_CAP = Infinity; // Unlimited level progression with title milestones up to Level 100
     this.subscribers = [];
     this.state = this.load();
@@ -390,10 +465,26 @@ class Store {
 
   mergeWithDefaults(parsed) {
     const base = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    const mergedAttributes = {
+      intelligence: { ...base.attributes.intelligence, ...(parsed.attributes?.intelligence || {}) },
+      strength:     { ...base.attributes.strength,     ...(parsed.attributes?.strength || {}) },
+      discipline:   { ...base.attributes.discipline,   ...(parsed.attributes?.discipline || {}) },
+      vitality:     { ...base.attributes.vitality,     ...(parsed.attributes?.vitality || {}) },
+      social:       { ...base.attributes.social,       ...(parsed.attributes?.social || {}) }
+    };
+
+    const rawQuests = Array.isArray(parsed.quests) && parsed.quests.length > 0 ? parsed.quests : base.quests;
+    const sanitizedQuests = rawQuests.map(q => ({
+      ...q,
+      attribute: q.attribute || this.inferAttribute(q),
+      snoozedUntil: q.snoozedUntil || 0
+    }));
+
     return {
       ...base,
       ...parsed,
       user: { ...base.user, ...(parsed.user || {}) },
+      attributes: mergedAttributes,
       boss: { ...base.boss, ...(parsed.boss || {}) },
       onboardingData: { ...base.onboardingData, ...(parsed.onboardingData || {}) },
       workoutProtocol: { ...base.workoutProtocol, ...(parsed.workoutProtocol || {}) },
@@ -401,10 +492,75 @@ class Store {
       plannedCalendar: parsed.plannedCalendar || {},
       completionHistory: parsed.completionHistory || {},
       feedbackLog: parsed.feedbackLog || [],
-      quests: Array.isArray(parsed.quests) && parsed.quests.length > 0 ? parsed.quests : base.quests,
+      quests: sanitizedQuests,
       trophies: Array.isArray(parsed.trophies) && parsed.trophies.length > 0 ? parsed.trophies : base.trophies,
       guild: Array.isArray(parsed.guild) && parsed.guild.length > 0 ? parsed.guild : base.guild
     };
+  }
+
+  inferAttribute(quest) {
+    if (quest.attribute && ATTRIBUTE_DEFINITIONS[quest.attribute]) return quest.attribute;
+    const text = `${quest.title || ''} ${quest.subtext || ''} ${quest.icon || ''} ${quest.group || ''}`.toLowerCase();
+    if (text.match(/gym|workout|push|muscle|lift|run|train|fitness|strength|exercise/)) return 'strength';
+    if (text.match(/read|code|study|deep|work|learn|journal|terminal|intel|book|craft/)) return 'intelligence';
+    if (text.match(/water|hydrate|sleep|sunset|nutrition|food|eat|breath|walk|vital|mobility/)) return 'vitality';
+    if (text.match(/cold|shower|detox|doomscroll|screen|discipline|meditat|stoic/)) return 'discipline';
+    if (text.match(/call|friend|family|ally|social|team|talk|people|kind|network/)) return 'social';
+    return 'discipline';
+  }
+
+  addAttributeXp(attrKey, xpAmount) {
+    if (!this.state.attributes) {
+      this.state.attributes = JSON.parse(JSON.stringify(DEFAULT_STATE.attributes));
+    }
+    const key = attrKey && this.state.attributes[attrKey] ? attrKey : 'discipline';
+    const attr = this.state.attributes[key];
+    attr.xp = (attr.xp || 0) + Math.max(1, Math.round(xpAmount));
+    let leveledUp = false;
+    let oldLevel = attr.level || 1;
+
+    while (attr.xp >= attr.maxXp) {
+      attr.xp -= attr.maxXp;
+      attr.level = (attr.level || 1) + 1;
+      attr.maxXp = Math.round(100 + (attr.level - 1) * 45);
+      leveledUp = true;
+      const def = ATTRIBUTE_DEFINITIONS[key];
+      if (def && def.titles) {
+        const titleIdx = Math.min(def.titles.length - 1, Math.floor((attr.level - 1) / 2));
+        attr.title = def.titles[titleIdx] || attr.title;
+      }
+    }
+
+    return {
+      attrKey: key,
+      name: ATTRIBUTE_DEFINITIONS[key]?.name || key,
+      short: ATTRIBUTE_DEFINITIONS[key]?.short || 'EXP',
+      icon: ATTRIBUTE_DEFINITIONS[key]?.icon || 'star',
+      color: ATTRIBUTE_DEFINITIONS[key]?.color || '#00F0FF',
+      gainedXp: xpAmount,
+      currentXp: attr.xp,
+      maxXp: attr.maxXp,
+      level: attr.level,
+      title: attr.title,
+      leveledUp,
+      oldLevel
+    };
+  }
+
+  snoozeQuest(questId, hours = 1) {
+    const quest = this.state.quests.find(q => q.id === questId);
+    if (!quest) return null;
+    quest.snoozedUntil = Date.now() + (hours * 3600 * 1000);
+    this.save();
+    return quest;
+  }
+
+  unsnoozeQuest(questId) {
+    const quest = this.state.quests.find(q => q.id === questId);
+    if (!quest) return null;
+    quest.snoozedUntil = 0;
+    this.save();
+    return quest;
   }
 
   save() {
@@ -748,6 +904,14 @@ class Store {
       levelResult = this.addXp(earnedXp);
       bossResult = this.damageBoss(bossDamage);
 
+      // Award Attribute Points into Skill Tree
+      const attrKey = quest.attribute || this.inferAttribute(quest);
+      quest.attribute = attrKey;
+      const attrYield = Math.max(12, Math.round(earnedXp * 0.45));
+      const attrResult = this.addAttributeXp(attrKey, attrYield);
+      quest.lastAttrResult = attrResult;
+      quest.snoozedUntil = 0; // Clear any snooze on completion
+
       // Sync workout protocol if it's workout quest
       if (questId === 'workout' || quest.icon === 'fitness_center') {
         this.state.workoutProtocol.todayLogged = true;
@@ -768,6 +932,13 @@ class Store {
       this.state.user.questsCleared = Math.max(0, this.state.user.questsCleared - 1);
       this.state.user.dailyCombo = Math.max(0, (this.state.user.dailyCombo || 1) - 1);
       this.state.boss.currentHp = Math.min(this.state.boss.maxHp, this.state.boss.currentHp + revertDmg);
+
+      // Revert attribute XP
+      const attrKey = quest.attribute || this.inferAttribute(quest);
+      if (this.state.attributes && this.state.attributes[attrKey]) {
+        const revertAttrXp = Math.max(12, Math.round((quest.lastEarnedXp || tierInfo.xp) * 0.45));
+        this.state.attributes[attrKey].xp = Math.max(0, this.state.attributes[attrKey].xp - revertAttrXp);
+      }
 
       if (questId === 'workout' || quest.icon === 'fitness_center') {
         this.state.workoutProtocol.todayLogged = false;
@@ -799,7 +970,8 @@ class Store {
       totalMultiplier: willBeCompleted && mult ? mult.totalMultiplier : 1.0,
       allCompleted,
       levelResult,
-      bossResult
+      bossResult,
+      attrResult: willBeCompleted ? quest.lastAttrResult : null
     };
   }
 
@@ -857,10 +1029,12 @@ class Store {
       duration: durStr,
       difficulty: tier.id,
       group: habitData.group || "afternoon",
+      attribute: habitData.attribute || this.inferAttribute({ title: habitData.title, subtext: formattedSubtext, icon: habitData.icon }),
       xp: tier.xp,
       completed: false,
       isPriorityTarget: false,
-      icon: habitData.icon || "bolt"
+      icon: habitData.icon || "bolt",
+      snoozedUntil: 0
     };
 
     if (habitData.scheduledDate && habitData.scheduledDate !== getTodayDateString()) {
@@ -1126,6 +1300,7 @@ class Store {
 window.RANK_LADDER = RANK_LADDER;
 window.DIFFICULTY_TIERS = DIFFICULTY_TIERS;
 window.ROUTINE_CATALOG = ROUTINE_CATALOG;
+window.ATTRIBUTE_DEFINITIONS = ATTRIBUTE_DEFINITIONS;
 window.BOSS_ROSTER = BOSS_ROSTER;
 window.getMaxXpForLevel = getMaxXpForLevel;
 window.getRankForLevel = getRankForLevel;
