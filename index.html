@@ -180,7 +180,16 @@
           <div class="w-8 h-8 bg-primary-container flex items-center justify-center">
             <span class="material-symbols-outlined text-white text-[20px]">bolt</span>
           </div>
-          <span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold">HabitOps</span>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="font-headline-sm text-base tracking-tight bg-gradient-to-r from-primary via-[#0284c7] to-[#00b4d8] dark:from-[#00F0FF] dark:via-[#38bdf8] dark:to-[#60a5fa] bg-clip-text text-transparent font-bold">HabitOps</span>
+              <span class="inline-flex items-center px-1 py-0.2 bg-primary/10 text-primary border border-primary/20 font-mono text-[9px] font-normal uppercase tracking-wider">HQ</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5 text-[11px] font-mono leading-tight">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+              <span class="text-on-surface-variant font-light">Command Center</span>
+            </div>
+          </div>
         </div>
         <button aria-label="Close menu" class="modal-close-btn tactile-btn" onclick="closeDrawer()">
           <span class="material-symbols-outlined text-[22px]">close</span>
@@ -269,9 +278,17 @@
         <button aria-label="Open Drawer" class="w-10 h-10 bg-inverse-surface hover:bg-primary transition-colors flex items-center justify-center cursor-pointer active:scale-95 transition-transform" id="drawer-toggle-btn">
           <span class="material-symbols-outlined text-primary-fixed text-[20px]">menu</span>
         </button>
-        <div class="flex flex-col">
-          <h1 class="font-headline-sm text-lg tracking-tight text-on-surface leading-none font-medium">HabitOps</h1>
-          <span class="text-xs text-primary font-normal tracking-wide mt-0.5">Tactical Command</span>
+        <div class="flex flex-col justify-center">
+          <div class="flex items-center gap-1.5">
+            <h1 class="font-headline-sm text-lg sm:text-[19px] tracking-tight leading-none font-bold bg-gradient-to-r from-primary via-[#0284c7] to-[#00b4d8] dark:from-[#00F0FF] dark:via-[#38bdf8] dark:to-[#60a5fa] bg-clip-text text-transparent">
+              HabitOps
+            </h1>
+            <span class="inline-flex items-center px-1.5 py-0.2 bg-primary/10 text-primary border border-primary/20 font-mono text-[9px] font-normal uppercase tracking-wider">HQ</span>
+          </div>
+          <div class="flex items-center gap-1.5 mt-1 text-[11px] font-mono leading-tight">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+            <span class="text-on-surface-variant font-light tracking-wide">Tactical Command</span>
+          </div>
         </div>
       </div>
 
@@ -328,7 +345,7 @@
         <img src="assets/icon-192.png" alt="HabitOps Icon" class="w-10 h-10 rounded-lg shadow-xs border border-outline-variant/30 shrink-0 object-cover" />
         <div class="flex flex-col min-w-0">
           <div class="flex items-center gap-1.5">
-            <span class="font-headline-sm text-xs font-medium text-on-surface uppercase tracking-wide">HabitOps Mobile</span>
+            <span class="font-headline-sm text-xs font-semibold bg-gradient-to-r from-primary via-[#0284c7] to-[#00b4d8] dark:from-[#00F0FF] dark:via-[#38bdf8] dark:to-[#60a5fa] bg-clip-text text-transparent uppercase tracking-wide">HabitOps Mobile</span>
             <span class="px-1.5 py-0.2 bg-primary/10 text-primary text-[9px] font-mono font-normal uppercase border border-primary/20">PRO</span>
           </div>
           <span class="font-body-sm text-[12px] text-on-surface-variant font-light truncate mt-0.5">Full-screen offline with zero browser bars</span>
