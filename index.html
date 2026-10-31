@@ -413,9 +413,13 @@
               <span class="material-symbols-outlined text-[17px] animate-flame drop-shadow-[0_0_8px_rgba(255,42,85,0.7)]">local_fire_department</span>
               <span data-bind-streak>0d</span>
             </div>
-            <div class="flex items-center gap-1 text-primary font-mono text-[11px] font-semibold mt-0.5" title="Tactical EMP Streak Shields (Protects streak from resetting)">
-              <span class="material-symbols-outlined text-[13px]">shield</span>
-              <span id="hero-emp-shields-count">1 EMP</span>
+            <div class="flex items-center gap-1.5 mt-0.5 cursor-pointer hover:opacity-100 transition-opacity" id="hero-emp-shields-wrapper" onclick="pokeAegisCompanion('shields')" title="Tactical EMP Shields — Tap to inspect defensive matrix">
+              <div class="flex items-center gap-0.5" id="hero-emp-crystals">
+                <span class="shield-crystal active"></span>
+                <span class="shield-crystal empty"></span>
+                <span class="shield-crystal empty"></span>
+              </div>
+              <span class="text-primary font-mono text-[10px] font-bold" id="hero-emp-shields-count">1 SHIELD</span>
             </div>
           </div>
         </div>
@@ -462,10 +466,10 @@
 
           <!-- Quick Segment Filter -->
           <div class="flex items-center gap-1 text-[10px] font-mono" id="mission-filter-bar">
-            <button class="px-2 py-0.5 bg-primary text-white font-bold uppercase tactile-btn shadow-xs" data-filter="all" onclick="filterDailyMissions('all')">All</button>
-            <button class="px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn" data-filter="morning" onclick="filterDailyMissions('morning')">AM</button>
-            <button class="px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn" data-filter="afternoon" onclick="filterDailyMissions('afternoon')">PM</button>
-            <button class="px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn" data-filter="evening" onclick="filterDailyMissions('evening')">Night</button>
+            <button class="px-2.5 py-0.5 bg-primary text-white font-bold uppercase tactile-btn shadow-xs cyber-cut-tab" data-filter="all" onclick="filterDailyMissions('all')">All</button>
+            <button class="px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn flex items-center gap-0.5" data-filter="morning" onclick="filterDailyMissions('morning')"><span>☀️</span><span>AM</span></button>
+            <button class="px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn flex items-center gap-0.5" data-filter="afternoon" onclick="filterDailyMissions('afternoon')"><span>⛅</span><span>PM</span></button>
+            <button class="px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn flex items-center gap-0.5" data-filter="evening" onclick="filterDailyMissions('evening')"><span>🌙</span><span>Night</span></button>
           </div>
         </div>
 
@@ -514,7 +518,7 @@
         </div>
 
         <!-- Daily Boss Threat Card -->
-        <div class="bg-surface-container-low p-3.5 sm:p-4 flex flex-col space-y-2.5 relative overflow-hidden transition-all duration-300 border border-outline-variant/30 shadow-xs cursor-pointer hover:border-secondary tactile-btn idle-boss-pulse" id="boss-card" onclick="openBossDossierModal()" title="Tap to inspect Boss Health & Damage Dossier">
+        <div id="boss-card" class="bg-surface-container-low p-3.5 sm:p-4 flex flex-col space-y-2.5 relative overflow-hidden transition-all duration-300 border border-outline-variant/30 shadow-xs cursor-pointer hover:border-secondary tactile-btn idle-boss-pulse cyber-cut-corner" onclick="openBossDossierModal()" title="Tap to inspect Boss Health & Damage Dossier">
           <div id="boss-slash-layer"></div>
           <div class="flex items-center justify-between relative z-10 gap-2.5">
             <div class="flex items-center gap-2.5 min-w-0 flex-1">
@@ -540,7 +544,7 @@
         </div>
 
         <!-- Daily Momentum & Yield Summary -->
-        <div class="bg-surface-container-low border border-outline-variant/30 p-3 flex items-center justify-between gap-3 shadow-xs" id="daily-momentum-widget">
+        <div id="daily-momentum-widget" class="bg-surface-container-low border border-outline-variant/30 p-3 flex items-center justify-between gap-3 shadow-xs cyber-cut-sm cursor-pointer hover:border-primary/50 transition-colors" onclick="toggleMomentumDetails()">
           <div class="flex items-center gap-2.5 min-w-0">
             <div class="relative w-9 h-9 shrink-0 flex items-center justify-center">
               <svg class="w-full h-full -rotate-90" viewBox="0 0 44 44">
@@ -561,18 +565,21 @@
         </div>
 
         <!-- Supply Chest Bounty -->
-        <div class="bg-surface-container-low border border-primary/30 p-3 flex items-center justify-between relative overflow-hidden shadow-xs hover:border-primary transition-colors" id="trophy-banner">
+        <div class="bg-surface-container-low border border-primary/40 p-3 flex items-center justify-between relative overflow-hidden shadow-xs hover:border-primary transition-all cyber-cut-sm" id="trophy-banner">
           <div class="flex items-center gap-2.5 min-w-0">
-            <div class="w-8 h-8 bg-inverse-surface border border-primary text-primary-fixed flex items-center justify-center relative shadow-[0_0_10px_rgba(0,240,255,0.3)] shrink-0">
-              <span class="material-symbols-outlined text-[18px] text-[#00F0FF]" id="trophy-icon">military_tech</span>
+            <div class="w-9 h-9 bg-gradient-to-br from-[#cffafe] via-[#67e8f9] to-[#00e5ff] border border-cyan-400 text-slate-950 flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(0,240,255,0.45)]">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">featured_seasonal_and_gifts</span>
             </div>
             <div class="flex flex-col min-w-0">
-              <span class="font-mono text-xs uppercase text-primary font-bold tracking-wide truncate">Daily Supply Chest</span>
-              <span class="font-body-sm text-[11px] text-on-surface-variant font-light truncate" id="trophy-desc">Complete 1st Strike to Claim +100 Bonus XP</span>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-mono text-xs uppercase text-primary font-extrabold tracking-wider truncate">Daily Supply Chest</span>
+                <span class="px-1.5 py-0.2 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-mono text-[9px] font-bold">+100 XP</span>
+              </div>
+              <span class="font-body-sm text-[11px] text-on-surface-variant font-light truncate" id="trophy-desc">Complete 3 protocols today to unlock</span>
             </div>
           </div>
-          <button aria-label="Unlock Trophy Fanfare" class="h-7 px-3 bg-gradient-to-r from-primary to-[#00F0FF] hover:from-[#00839a] hover:to-cyan-400 text-white font-mono text-[11px] uppercase font-bold flex items-center gap-1 active:scale-95 transition-all shadow-[0_0_10px_rgba(0,240,255,0.35)] tactile-btn shrink-0" id="trophy-claim-btn" onclick="handleClaimTrophy()">
-            <span class="material-symbols-outlined text-[13px]">lock_open</span>
+          <button aria-label="Claim Daily Supply Chest" class="btn-tactical-deploy px-3.5 py-1.5 text-[11px] flex items-center gap-1.5 shrink-0" id="trophy-claim-btn" onclick="handleClaimTrophy()">
+            <span class="material-symbols-outlined text-[14px]">lock_open</span>
             <span id="trophy-btn-label">Claim</span>
           </button>
         </div>

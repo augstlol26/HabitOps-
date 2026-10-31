@@ -96,10 +96,12 @@ const ROUTINE_CATALOG = [
 // Boss Roster for progressive unlocks
 const BOSS_ROSTER = [
   { name: "The Procrastination Titan", desc: "Thrives in the gap between intention and execution.", maxHp: 100, bonusXp: 200 },
-  { name: "The Feed Phantom",          desc: "Spawned from infinite scroll. Drains focus reserves.", maxHp: 120, bonusXp: 250 },
-  { name: "The Inertia Behemoth",      desc: "Grows heavier every hour you remain static.", maxHp: 140, bonusXp: 300 },
-  { name: "The Scatter Mind",          desc: "Fragments attention across a dozen unfinished tabs.", maxHp: 160, bonusXp: 350 },
-  { name: "The Void Entity",           desc: "Whispers that today's effort doesn't matter.", maxHp: 200, bonusXp: 450 }
+  { name: "The Feed Phantom",          desc: "Spawned from infinite scroll. Drains focus reserves.", maxHp: 125, bonusXp: 250 },
+  { name: "The Inertia Behemoth",      desc: "Grows heavier every hour you remain static.", maxHp: 150, bonusXp: 300 },
+  { name: "The Scatter Mind",          desc: "Fragments attention across a dozen unfinished tabs.", maxHp: 175, bonusXp: 350 },
+  { name: "The Entropy Archon",        desc: "Whispers that today's effort doesn't matter.", maxHp: 200, bonusXp: 450 },
+  { name: "The Void Chrono-Wraith",    desc: "Steals hours without leaving a trace of memory.", maxHp: 240, bonusXp: 550 },
+  { name: "The Apex Dopamine Dragon",  desc: "Feeds on cheap thrills and delayed accountability.", maxHp: 300, bonusXp: 700 }
 ];
 
 function getTodayDateString() {
@@ -977,6 +979,11 @@ class Store {
 
   damageBoss(damageAmount) {
     const prev = this.state.boss.currentHp;
+    if (this.state.boss.isSlain || prev <= 0) {
+      // Overdrive Incursion: Boss already neutralized, auto-scale bonus XP
+      this.addXp(Math.round(damageAmount * 0.75));
+      return { damage: damageAmount, currentHp: 0, maxHp: this.state.boss.maxHp, wasSlain: false, isOverdrive: true };
+    }
     this.state.boss.currentHp = Math.max(0, this.state.boss.currentHp - damageAmount);
     const wasSlain = prev > 0 && this.state.boss.currentHp === 0;
     if (wasSlain) {
@@ -986,6 +993,7 @@ class Store {
     }
     this.save();
     return {
+      damage: damageAmount,
       currentHp: this.state.boss.currentHp,
       maxHp: this.state.boss.maxHp,
       wasSlain
@@ -996,11 +1004,19 @@ class Store {
   spawnNextBoss() {
     const nextTier = (this.state.boss.tier || 1) + 1;
     const template = BOSS_ROSTER[(nextTier - 1) % BOSS_ROSTER.length];
-    const scaledHp = Math.round(template.maxHp * (1 + (nextTier - 1) * 0.15));
-    const scaledBounty = Math.round(template.bonusXp * (1 + (nextTier - 1) * 0.2));
+    
+    // Scale HP and Bounty based on tier + consistency streak
+    const streakBonus = Math.min(1.0, (this.state.user.streak || 0) * 0.04);
+    const scaledHp = Math.round(template.maxHp * (1 + (nextTier - 1) * 0.18 + streakBonus));
+    const scaledBounty = Math.round(template.bonusXp * (1 + (nextTier - 1) * 0.22 + streakBonus * 1.2));
+
+    // Dynamic prestigious titles for advanced tiers
+    let tierTitle = `${template.name} Mk.${nextTier}`;
+    if (nextTier >= 10) tierTitle = `Apex Overlord: ${template.name} Mk.${nextTier}`;
+    else if (nextTier >= 5) tierTitle = `Ascended ${template.name} Mk.${nextTier}`;
 
     this.state.boss = {
-      name: `${template.name} Mk.${nextTier}`,
+      name: tierTitle,
       desc: template.desc,
       tier: nextTier,
       maxHp: scaledHp,

@@ -1324,3 +1324,77 @@ nav[data-nav-container] a.text-primary {
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
 }
+
+/* Tactical Cyber Shaped Components & Chamfer Utilities */
+.cyber-cut-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.cyber-cut-corner {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.cyber-cut-tab {
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 100%, 0 100%);
+}
+
+.tactical-node {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tactical-node:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.shield-crystal {
+  width: 10px;
+  height: 14px;
+  clip-path: polygon(50% 0%, 100% 30%, 100% 70%, 50% 100%, 0% 70%, 0% 30%);
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.shield-crystal.active {
+  background: linear-gradient(180deg, #00F0FF 0%, #00839a 100%);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+}
+
+.shield-crystal.empty {
+  background: rgba(100, 116, 139, 0.25);
+  border: 1px solid rgba(100, 116, 139, 0.4);
+}
+
+/* Deploy / Primary Action Button 3D Tactical Styling */
+.btn-tactical-deploy {
+  background: linear-gradient(135deg, #00F0FF 0%, #00a8c2 50%, #00687a 100%);
+  color: #042f3e !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid #67e8f9;
+  box-shadow: 3px 3px 0px #042f3e;
+  transition: all 0.15s ease-out;
+}
+
+.btn-tactical-deploy:hover {
+  background: linear-gradient(135deg, #67e8f9 0%, #00F0FF 50%, #00839a 100%);
+  box-shadow: 1px 1px 0px #042f3e;
+  transform: translate(2px, 2px);
+}
+
+.btn-tactical-deploy:active {
+  box-shadow: 0px 0px 0px #042f3e;
+  transform: translate(3px, 3px);
+}
+
+.btn-tactical-deploy-claimed {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #059669 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}

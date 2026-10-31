@@ -1,4 +1,30 @@
 
+// Universal Tactical Attribute Icon Badge (NO raw text labels like "favorite" or "strength")
+function getAttributeBadgeHtml(attrKey, size = 'sm') {
+  const norm = (attrKey || 'discipline').toLowerCase();
+  let key = norm;
+  if (norm === 'int') key = 'intelligence';
+  if (norm === 'str') key = 'strength';
+  if (norm === 'dis') key = 'discipline';
+  if (norm === 'vit') key = 'vitality';
+  if (norm === 'soc') key = 'social';
+
+  const def = (window.ATTRIBUTE_DEFINITIONS && window.ATTRIBUTE_DEFINITIONS[key]) || {
+    name: 'Discipline',
+    icon: 'shield',
+    color: '#a855f7'
+  };
+
+  const dim = size === 'xs' ? 'w-4 h-4' : (size === 'md' ? 'w-6 h-6' : (size === 'lg' ? 'w-8 h-8' : 'w-5 h-5'));
+  const iconSize = size === 'xs' ? 'text-[11px]' : (size === 'md' ? 'text-[14px]' : (size === 'lg' ? 'text-[18px]' : 'text-[13px]'));
+
+  return `<span class="${dim} rounded-xs flex items-center justify-center border shrink-0 transition-transform hover:scale-110 shadow-xs" style="color:${def.color}; background:${def.color}18; border-color:${def.color}45;" title="Attribute: ${def.name}">
+    <span class="material-symbols-outlined ${iconSize}" style="font-variation-settings:'FILL' 1">${def.icon}</span>
+  </span>`;
+}
+window.getAttributeBadgeHtml = getAttributeBadgeHtml;
+
+
 function renderProfileAttributes() {
   const container = document.getElementById('profile-attributes-grid');
   if (!container || !window.store || !window.store.state) return;
@@ -520,11 +546,22 @@ const AEGIS_QUOTES = [
   "Focus detected. Complete the active stack to unlock the daily supply drop."
 ];
 
-function pokeAegisCompanion() {
+function pokeAegisCompanion(topic) {
   if (window.audioEngine) window.audioEngine.playWaterDrop();
   if (window.triggerHaptic) window.triggerHaptic('tap');
-  aegisDialogueIndex = (aegisDialogueIndex + 1) % AEGIS_QUOTES.length;
   const el = document.getElementById('aegis-dialogue-text');
+  
+  if (topic === 'shields') {
+    const count = window.store?.state?.user?.empShields || 1;
+    const msg = count > 0 
+      ? `"A.E.G.I.S.: ${count} EMP Shield${count > 1 ? 's' : ''} charged. Absorbs missed days so streak & boss health stay intact."`
+      : '"A.E.G.I.S.: No EMP shields remaining! Maintain execution to recharge defensive matrix."';
+    if (el) el.textContent = msg;
+    showToast('Defensive Matrix Status', `${count} EMP Shield${count > 1 ? 's' : ''} Active — Streak is protected.`);
+    return;
+  }
+
+  aegisDialogueIndex = (aegisDialogueIndex + 1) % AEGIS_QUOTES.length;
   if (el) {
     el.textContent = `"${AEGIS_QUOTES[aegisDialogueIndex]}"`;
   }
@@ -536,9 +573,9 @@ function filterDailyMissions(filterName) {
   document.querySelectorAll('#mission-filter-bar button').forEach(btn => {
     const f = btn.getAttribute('data-filter');
     if (f === filterName) {
-      btn.className = 'px-2 py-0.5 bg-primary text-white font-bold uppercase tactile-btn shadow-xs';
+      btn.className = 'px-2.5 py-0.5 bg-primary text-white font-bold uppercase tactile-btn shadow-xs cyber-cut-tab flex items-center gap-0.5';
     } else {
-      btn.className = 'px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn';
+      btn.className = 'px-2 py-0.5 bg-surface-container-high text-outline hover:text-on-surface font-semibold uppercase tactile-btn flex items-center gap-0.5';
     }
   });
   renderQuestList();
@@ -766,16 +803,29 @@ function renderQuestList() {
   }
 
   // 3. SECTION 3: WHAT AM I WORKING TOWARDS?
+  const bossCard = document.getElementById('boss-card');
   const bossHpBar = document.getElementById('boss-hp-bar');
   const bossHpText = document.getElementById('boss-hp-text');
   const bossNameEl = document.getElementById('today-boss-name');
-  if (bossHpBar && bossHpText && state.boss) {
-    const curHp = state.boss.currentHp || 0;
+  const bossSubtext = document.getElementById('boss-subtext');
+
+  if (state.boss) {
+    const isSlain = state.boss.isSlain || (state.boss.currentHp || 0) <= 0;
+    const curHp = Math.max(0, state.boss.currentHp || 0);
     const maxHp = state.boss.maxHp || 100;
     const hpPct = Math.min(100, Math.round((curHp / maxHp) * 100));
-    bossHpBar.style.width = `${hpPct}%`;
-    bossHpText.textContent = `${curHp} / ${maxHp} HP`;
-    if (bossNameEl) bossNameEl.textContent = (state.boss.name || 'TITAN').toUpperCase();
+
+    if (isSlain) {
+      if (bossHpBar) bossHpBar.style.width = '0%';
+      if (bossHpText) bossHpText.textContent = '0 / ' + maxHp + ' HP (SLAIN)';
+      if (bossNameEl) bossNameEl.textContent = (state.boss.name || 'TITAN').toUpperCase() + ' [DEFEATED]';
+      if (bossSubtext) bossSubtext.textContent = '✦ Sector neutralized! Tap to deploy Ascended Mk.' + ((state.boss.tier || 1) + 1) + ' Adversary ⚔️';
+    } else {
+      if (bossHpBar) bossHpBar.style.width = hpPct + '%';
+      if (bossHpText) bossHpText.textContent = curHp + ' / ' + maxHp + ' HP';
+      if (bossNameEl) bossNameEl.textContent = (state.boss.name || 'TITAN').toUpperCase();
+      if (bossSubtext) bossSubtext.textContent = 'Each protocol strike deals lethal damage ⚔️';
+    }
   }
 
   // Daily Momentum
@@ -945,7 +995,7 @@ function createQuestElement(quest) {
   const attrKey = quest.attribute || (window.store ? window.store.inferAttribute(quest) : 'discipline');
   const attrDef = window.ATTRIBUTE_DEFINITIONS?.[attrKey] || { name: 'Discipline', short: 'DIS', icon: 'shield', color: '#a855f7' };
 
-  div.className = `relative bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 flex flex-col justify-center border border-outline-variant/30 hover:border-primary transition-all tactile-btn mission-hold-wrapper ${
+  div.className = `relative bg-surface-container-low px-3.5 py-2.5 sm:px-4 sm:py-3 flex flex-col justify-center border border-outline-variant/30 hover:border-primary transition-all tactile-btn mission-hold-wrapper cyber-cut-corner ${
     quest.isPriorityTarget ? 'border-l-4 border-l-secondary priority-target' : ''
   }`;
 
@@ -969,9 +1019,7 @@ function createQuestElement(quest) {
         <div class="flex flex-col min-w-0 flex-1">
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="task-title font-headline-sm text-sm text-on-surface font-bold truncate">${quest.title}</span>
-            <span class="px-1.5 py-0.2 rounded-xs font-mono text-[9px] font-bold uppercase shrink-0" style="color:${attrDef.color}; background:${attrDef.color}15; border:1px solid ${attrDef.color}40;" title="Trains ${attrDef.name}">
-              ${attrDef.short}
-            </span>
+            ${getAttributeBadgeHtml(attrKey, 'sm')}
             ${quest.isPriorityTarget ? '<span class="bg-secondary/15 text-secondary border border-secondary/40 px-1 py-0.2 font-mono text-[9px] uppercase font-bold tracking-wider shrink-0 shadow-[0_0_6px_rgba(255,42,85,0.25)]">PRIORITY</span>' : ''}
           </div>
           <div class="flex items-center gap-1.5 font-mono text-[11px] text-outline font-light mt-0.5">
@@ -1896,10 +1944,7 @@ function renderHabitsLabGrid(filter = 'all') {
           <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-1.5 flex-wrap">
               <span class="font-headline-sm text-sm font-bold text-on-surface truncate">${quest.title}</span>
-              <span class="font-mono text-[9px] font-bold px-1.5 py-0.2 rounded border border-outline-variant/40 bg-surface-container-high text-on-surface-variant flex items-center gap-0.5">
-                <span>${attrDef.icon}</span>
-                <span class="${attrDef.color}">${attrKey.toUpperCase()}</span>
-              </span>
+              ${getAttributeBadgeHtml(attrKey, 'md')}
               <span class="font-mono text-[9px] font-bold text-primary px-1.5 py-0.2 bg-primary/10 border border-primary/30">+${quest.xp || tierInfo.xp} XP</span>
             </div>
             <p class="font-body-sm text-[11px] text-on-surface-variant font-light truncate mt-0.5">${quest.subtext || 'Daily combat routine'}</p>
@@ -1961,10 +2006,7 @@ function renderSuggestedRoutinesGrid() {
         <div class="flex flex-col min-w-0">
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="font-headline-sm text-xs font-bold text-on-surface truncate">${item.title}</span>
-            <span class="font-mono text-[9px] font-bold text-on-surface-variant flex items-center gap-0.5">
-              <span>${attrDef.icon}</span>
-              <span class="${attrDef.color}">${attrKey.toUpperCase()}</span>
-            </span>
+            ${getAttributeBadgeHtml(attrKey, 'sm')}
           </div>
           <span class="font-body-sm text-[10px] text-on-surface-variant font-light truncate mt-0.5">${item.subtext || ''}</span>
           <div class="flex items-center gap-1.5 mt-1 font-mono text-[9px] text-outline font-semibold">
@@ -3379,20 +3421,30 @@ function syncAllViews(state) {
   const bossesEl = document.getElementById('stat-bosses');
   if (bossesEl) bossesEl.textContent = `${state.user.bossesSlain}`;
 
-  // 8. Daily Supply Chest Status
+    // 8. Daily Supply Chest Status
   const trophyBtn = document.getElementById('trophy-claim-btn');
   const trophyLabel = document.getElementById('trophy-btn-label');
   const trophyDesc = document.getElementById('trophy-desc');
   if (state.trophyClaimed) {
     if (trophyBtn) {
-      trophyBtn.className =
-        'h-8 px-3 bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-wider flex items-center gap-1 shadow-sm';
+      trophyBtn.className = 'btn-tactical-deploy-claimed px-3 py-1.5 text-[10px] flex items-center gap-1 shrink-0';
     }
     if (trophyLabel) trophyLabel.textContent = 'Claimed ✓';
-    if (trophyDesc) trophyDesc.textContent = 'Supply Chest Unlocked (+100 XP)';
+    if (trophyDesc) trophyDesc.textContent = 'Supply Chest Unlocked (+100 XP Credited)';
   } else {
-    if (trophyLabel) trophyLabel.textContent = completedCount >= 3 ? 'Claim +100 XP' : `${completedCount}/3 Done`;
-    if (trophyDesc) trophyDesc.textContent = 'Complete 3 protocols today to unlock (+100 XP)';
+    if (completedCount >= 3) {
+      if (trophyBtn) {
+        trophyBtn.className = 'btn-tactical-deploy px-3.5 py-1.5 text-[11px] flex items-center gap-1.5 shrink-0 cursor-pointer animate-pulse';
+      }
+      if (trophyLabel) trophyLabel.textContent = 'Claim +100 XP';
+      if (trophyDesc) trophyDesc.textContent = '3 Protocols Executed • Ready for Pickup!';
+    } else {
+      if (trophyBtn) {
+        trophyBtn.className = 'px-3 py-1.5 bg-surface-container-high/70 text-outline border border-outline-variant/40 font-mono text-[10px] uppercase font-bold flex items-center gap-1 shrink-0 cursor-pointer hover:border-primary/50 transition-all';
+      }
+      if (trophyLabel) trophyLabel.textContent = `${completedCount}/3 Ready`;
+      if (trophyDesc) trophyDesc.textContent = `Complete ${3 - completedCount} more protocol${3 - completedCount === 1 ? '' : 's'} to unlock`;
+    }
   }
 
   updateRatingsUI();
@@ -3826,3 +3878,19 @@ window.handleSnoozeQuest = handleSnoozeQuest;
 window.handleUnsnoozeQuest = handleUnsnoozeQuest;
 window.openSkillTreeModal = openSkillTreeModal;
 window.closeSkillTreeModal = closeSkillTreeModal;
+
+
+function toggleMomentumDetails() {
+  if (window.audioEngine && typeof window.audioEngine.playTap === 'function') {
+    window.audioEngine.playTap();
+  }
+  const state = window.store.state;
+  const cleared = state.quests.filter(q => q.completed).length;
+  const total = state.quests.length || 1;
+  const mult = window.store.getMultiplierBreakdown ? window.store.getMultiplierBreakdown() : { totalMultiplier: 1.2 };
+  showToast(
+    `Combat Momentum: ${cleared}/${total} Executed`,
+    `Multiplier: ${mult.totalMultiplier.toFixed(2)}x · Streak: ${state.user.streak}d · Combo: ${state.user.dailyCombo || 0}`
+  );
+}
+window.toggleMomentumDetails = toggleMomentumDetails;
