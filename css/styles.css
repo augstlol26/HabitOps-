@@ -583,22 +583,35 @@ body.dark-ops #habits-lab-grid > div:hover {
    ═══════════════════════════════════════════ */
 
 /* Selected state for struggle/target tiles */
-.ob-struggle-tile.ob-selected,
-.ob-target-tile.ob-selected {
-  border-color: #00687a !important;
-  background-color: #acedff !important;
-  box-shadow: 3px 3px 0px #00687a;
-}
-.ob-struggle-tile.ob-selected .material-symbols-outlined,
-.ob-target-tile.ob-selected .material-symbols-outlined {
-  color: #00424f !important;
+.ob-struggle-tile/* Modern Light Cyber Selected Tiles (Onboarding) */
+.ob-selected,
+.ob-target-tile.ob-selected,
+.ob-struggle-tile.ob-selected {
+  border-color: #00F0FF !important;
+  background: linear-gradient(135deg, rgba(207, 250, 254, 0.75) 0%, rgba(103, 232, 249, 0.25) 100%) !important;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.3), 2px 2px 0px #00839a !important;
+  transform: translate(-1px, -1px);
 }
 
-/* Selected intensity tile */
+.ob-struggle-tile.ob-selected .font-headline-sm,
+.ob-target-tile.ob-selected .font-headline-sm,
+.ob-struggle-tile.ob-selected .font-label-lg,
+.ob-target-tile.ob-selected .font-label-lg {
+  color: #042f3e !important;
+  font-weight: 700 !important;
+}
+
+.ob-struggle-tile.ob-selected .material-symbols-outlined,
+.ob-target-tile.ob-selected .material-symbols-outlined {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* Selected Intensity Tile */
 .ob-intensity-tile.ob-selected {
-  border-color: #00687a !important;
-  background-color: #acedff !important;
-  box-shadow: 4px 4px 0px #00687a;
+  border-color: #00F0FF !important;
+  background: linear-gradient(135deg, rgba(207, 250, 254, 0.8) 0%, rgba(103, 232, 249, 0.3) 100%) !important;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.35), 2px 2px 0px #00839a !important;
+  transform: translate(-1px, -1px);
 }
 
 /* Onboarding deploy button tactile lift */
@@ -805,8 +818,7 @@ nav button.active-nav .active-indicator {
 
 /* High-Contrast Tactical Dark Ops Theme (Command Slate #0F172A / #1E293B) */
 body.dark-ops,
-body.dark-ops main,
-body.dark-ops #view-onboarding {
+body.dark-ops main {
   background-color: #070b12 !important;
   color: #f1f5f9 !important;
 }
@@ -1397,4 +1409,103 @@ nav[data-nav-container] a.text-primary {
   font-family: 'JetBrains Mono', monospace !important;
   font-weight: 700 !important;
   box-shadow: none !important;
+}
+
+
+/* ======================================================== */
+/* ONBOARDING LIGHT THEME ENFORCEMENT (ALWAYS PURE LIGHT)    */
+/* ======================================================== */
+#view-onboarding,
+body.dark-ops #view-onboarding,
+body #view-onboarding {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+#view-onboarding .ob-step {
+  background-color: transparent !important;
+  color: #0f172a !important;
+}
+
+#view-onboarding .bg-surface-container-low,
+#view-onboarding .bg-surface-container-lowest,
+#view-onboarding .bg-surface-container {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+#view-onboarding .bg-surface-container-high,
+#view-onboarding .bg-surface-container-high\/40 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+#view-onboarding .text-on-surface,
+#view-onboarding h1,
+#view-onboarding h2,
+#view-onboarding h3 {
+  color: #0f172a !important;
+}
+
+#view-onboarding .text-on-surface-variant {
+  color: #475569 !important;
+}
+
+#view-onboarding .text-outline {
+  color: #64748b !important;
+}
+
+#view-onboarding input {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+#view-onboarding input:focus {
+  border-color: #00F0FF !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3) !important;
+}
+
+#view-onboarding .ob-struggle-tile,
+#view-onboarding .ob-target-tile,
+#view-onboarding .ob-intensity-tile {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+#view-onboarding .ob-struggle-tile:hover,
+#view-onboarding .ob-target-tile:hover,
+#view-onboarding .ob-intensity-tile:hover {
+  border-color: #00839a !important;
+  background-color: #f0fdfa !important;
+}
+
+#view-onboarding .ob-selected,
+#view-onboarding .ob-struggle-tile.ob-selected,
+#view-onboarding .ob-target-tile.ob-selected,
+#view-onboarding .ob-intensity-tile.ob-selected {
+  background: linear-gradient(135deg, #e0faff 0%, #cffafe 100%) !important;
+  border-color: #00F0FF !important;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.3), 2px 2px 0px #00839a !important;
+  color: #042f3e !important;
+}
+
+#view-onboarding .ob-selected .font-headline-sm,
+#view-onboarding .ob-selected .font-label-lg,
+#view-onboarding .ob-selected .font-bold {
+  color: #042f3e !important;
+}
+
+#view-onboarding #ob-boss-card {
+  background-color: #ffffff !important;
+  border-color: rgba(255, 42, 85, 0.45) !important;
+  box-shadow: 0 4px 20px rgba(255, 42, 85, 0.08) !important;
+  color: #0f172a !important;
+}
+
+#view-onboarding #ob-boss-card h3 {
+  color: #0f172a !important;
 }

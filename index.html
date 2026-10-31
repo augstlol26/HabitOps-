@@ -240,6 +240,10 @@
           <span class="material-symbols-outlined text-[18px] text-cyan-400">account_tree</span>
           <span class="font-bold uppercase tracking-wider text-[11px]">Operative Skill Tree</span>
         </a>
+        <a class="flex items-center gap-2.5 h-10 px-3 bg-surface-container-high/20 hover:bg-surface-container-high text-on-surface transition-colors border-l-2 border-l-transparent hover:border-l-secondary" href="#" onclick="replayOnboardingFlow(); return false;">
+          <span class="material-symbols-outlined text-[18px] text-secondary">explore</span>
+          <span class="font-bold uppercase tracking-wider text-[11px]">Replay Onboarding Tour</span>
+        </a>
         <a class="flex items-center gap-2.5 h-10 px-3 bg-surface-container-high/20 hover:bg-surface-container-high text-on-surface transition-colors border-l-2 border-l-transparent hover:border-l-emerald-400" data-path="weekly-review" href="#" onclick="closeDrawer(); navigateTo('weekly-review'); return false;">
           <span class="material-symbols-outlined text-[18px] text-emerald-400">analytics</span>
           <span class="font-bold uppercase tracking-wider text-[11px]">Weekly Debrief</span>
@@ -2273,61 +2277,68 @@
   <!-- ============================================================ -->
   <!-- ONBOARDING OVERLAY (shown on first launch, hides after setup) -->
   <!-- ============================================================ -->
-  <div id="view-onboarding" class="fixed inset-0 z-[9999] bg-surface flex flex-col overflow-y-auto" style="display:none!important">
+  <div id="view-onboarding" class="fixed inset-0 z-[9999] bg-[#f8fafc] text-[#0f172a] flex flex-col overflow-y-auto selection:bg-cyan-500 selection:text-white" style="display:none!important; background-color:#f8fafc!important; color:#0f172a!important;">
 
-    <!-- Step progress bar -->
-    <div class="fixed top-0 inset-x-0 h-1 bg-surface-container-highest z-10">
-      <div id="ob-progress-bar" class="h-full bg-primary-container transition-all duration-500 ease-out" style="width:0%"></div>
+    <!-- Ambient Cyber Glows -->
+    <div class="fixed -top-16 -right-16 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="fixed -bottom-16 -left-16 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <!-- Step Progress Bar with Cyber Shimmer -->
+    <div class="fixed top-0 inset-x-0 h-1.5 bg-surface-container-highest/80 z-20">
+      <div id="ob-progress-bar" class="h-full bg-gradient-to-r from-primary via-[#00839a] to-[#00F0FF] shadow-[0_0_10px_rgba(0,240,255,0.7)] transition-all duration-500 ease-out" style="width:0%"></div>
     </div>
 
-    <!-- Step panels container -->
-    <div id="ob-steps-container" class="flex-1 flex flex-col">
+    <!-- Step Panels Container -->
+    <div id="ob-steps-container" class="flex-1 flex flex-col relative z-10">
 
       <!-- ─────── STEP 1: WELCOME BRIEFING & EXCITING NOTE ─────── -->
       <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe" data-step="1">
-        <div class="flex-1 flex flex-col justify-center gap-space-md max-w-lg mx-auto w-full">
-          <!-- Status & Logo lockup -->
+        <div class="flex-1 flex flex-col justify-center gap-3.5 max-w-lg mx-auto w-full">
+          <!-- Status & Logo Lockup -->
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-space-sm">
-              <div class="w-11 h-11 bg-primary-container flex items-center justify-center shadow-[3px_3px_0px_#131b2e] border border-on-surface">
-                <span class="material-symbols-outlined text-on-primary-container text-[26px]" style="font-variation-settings:'FILL' 1">bolt</span>
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 bg-gradient-to-br from-[#cffafe] via-[#67e8f9] to-[#00e5ff] border-2 border-white flex items-center justify-center shadow-[0_0_14px_rgba(0,240,255,0.5)]">
+                <span class="material-symbols-outlined text-slate-950 text-[24px]" style="font-variation-settings:'FILL' 1">bolt</span>
               </div>
               <div class="flex flex-col">
-                <span class="font-headline-sm text-headline-sm uppercase tracking-tight text-on-surface font-bold leading-none">HabitOps</span>
-                <span class="font-label-sm text-label-sm uppercase text-primary font-bold  mt-0.5">Tactical Habit OS</span>
+                <span class="font-headline-sm text-base uppercase tracking-tight text-on-surface font-extrabold leading-none">HabitOps</span>
+                <span class="font-mono text-[10px] uppercase text-primary font-bold tracking-wider mt-0.5">Tactical Habit OS</span>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 bg-surface-container-low px-2.5 py-1 border border-primary-container/50">
-              <span class="w-2 h-2 bg-primary-container animate-pulse"></span>
-              <span class="font-label-sm text-label-sm uppercase text-primary font-bold">System Online</span>
+            <div class="flex items-center gap-1.5 bg-surface-container-low/80 px-2.5 py-1 border border-primary/30 shadow-xs">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#10b981]"></span>
+              <span class="font-mono text-[10px] uppercase text-on-surface font-bold">System Online</span>
             </div>
           </div>
 
           <!-- Hero Welcome Headline -->
           <div class="mt-1">
-            <p class="font-label-sm text-label-sm uppercase tracking-[0.16em] text-secondary font-bold mb-1">Welcome, Future Striker</p>
-            <h1 class="font-display-mobile text-display-mobile text-on-surface leading-tight">
+            <p class="font-mono text-xs uppercase tracking-[0.16em] text-secondary font-bold mb-1 flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+              <span>Welcome, Future Striker</span>
+            </p>
+            <h1 class="font-headline-lg text-2xl sm:text-3xl text-on-surface leading-tight font-extrabold tracking-tight">
               Your habits are no longer chores.<br/>
-              <span class="text-primary">They are weapons.</span>
+              <span class="bg-gradient-to-r from-primary via-[#0284c7] to-[#00F0FF] bg-clip-text text-transparent">They are weapons.</span>
             </h1>
           </div>
 
           <!-- Exciting Tactical Mission Briefing Card -->
-          <div class="bg-surface-container-lowest border-2 border-on-surface p-4 shadow-[5px_5px_0px_#131b2e] flex flex-col gap-3 relative">
-            <div class="flex items-center justify-between border-b border-surface-container pb-2">
+          <div class="bg-surface-container-low border border-outline-variant/30 p-4 sm:p-5 shadow-[0_4px_24px_rgba(0,0,0,0.03)] flex flex-col gap-3 relative overflow-hidden cyber-cut-corner">
+            <div class="flex items-center justify-between border-b border-outline-variant/20 pb-2">
               <div class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-secondary text-[18px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
-                <span class="font-label-sm text-label-sm uppercase  text-on-surface font-bold">Mission Briefing</span>
+                <span class="material-symbols-outlined text-secondary text-[17px]" style="font-variation-settings:'FILL' 1">swords</span>
+                <span class="font-mono text-[11px] uppercase text-on-surface font-bold tracking-wider">Mission Briefing // Sector Alpha</span>
               </div>
-              <span class="font-label-sm text-[11px] bg-primary-container text-on-primary-container px-2 py-0.5 font-bold uppercase">COMBAT HABIT OS</span>
+              <span class="font-mono text-[9px] bg-primary/15 text-primary border border-primary/40 px-2 py-0.5 font-bold uppercase tracking-wider">COMBAT HABIT OS</span>
             </div>
 
-            <div class="space-y-2.5 font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              <p class="text-on-surface font-bold">
+            <div class="space-y-2.5 font-body-md text-xs sm:text-sm text-on-surface-variant leading-relaxed font-light">
+              <p class="text-on-surface font-semibold">
                 Forget passive checklists and guilt-trip apps. You just stepped into a live tactical discipline arena.
               </p>
               <p>
-                Every time you show up — whether it's heavy training, deep cognitive focus, or hitting a digital sunset — you deal <strong class="text-secondary">direct combat damage</strong> to your personal Procrastination Boss.
+                Every time you show up — whether it's heavy training, deep cognitive focus, or hitting a digital sunset — you deal <strong class="text-secondary font-bold">direct combat damage</strong> to your personal Procrastination Titan.
               </p>
               <p class="text-primary font-semibold">
                 Earn real-time XP multipliers, unlock prestigious titles as you climb ranks, and turn daily habits into an unstoppable power curve.
@@ -2335,382 +2346,387 @@
             </div>
 
             <!-- 3 Mini Excitement Pillars -->
-            <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-surface-container text-center">
-              <div class="bg-surface-container-low p-2 border border-outline-variant/30">
+            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-outline-variant/20 text-center">
+              <div class="bg-surface-container-high/40 p-2 border border-outline-variant/25 cyber-cut-sm">
                 <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings:'FILL' 1">swords</span>
-                <div class="font-label-sm text-[11px] font-bold uppercase text-on-surface mt-0.5">Slay Bosses</div>
+                <div class="font-mono text-[10px] font-bold uppercase text-on-surface mt-0.5">Slay Bosses</div>
               </div>
-              <div class="bg-surface-container-low p-2 border border-outline-variant/30">
+              <div class="bg-surface-container-high/40 p-2 border border-outline-variant/25 cyber-cut-sm">
                 <span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings:'FILL' 1">military_tech</span>
-                <div class="font-label-sm text-[11px] font-bold uppercase text-on-surface mt-0.5">Rank Titles</div>
+                <div class="font-mono text-[10px] font-bold uppercase text-on-surface mt-0.5">Rank Titles</div>
               </div>
-              <div class="bg-surface-container-low p-2 border border-outline-variant/30">
-                <span class="material-symbols-outlined text-tertiary-container text-[20px]" style="font-variation-settings:'FILL' 1">emoji_events</span>
-                <div class="font-label-sm text-[11px] font-bold uppercase text-on-surface mt-0.5">Trophy Vault</div>
+              <div class="bg-surface-container-high/40 p-2 border border-outline-variant/25 cyber-cut-sm">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]" style="font-variation-settings:'FILL' 1">emoji_events</span>
+                <div class="font-mono text-[10px] font-bold uppercase text-on-surface mt-0.5">Trophy Vault</div>
               </div>
             </div>
           </div>
         </div>
 
-        <button onclick="obNext(1)" class="ob-next-btn w-full max-w-lg mx-auto h-14 bg-primary text-white text-on-primary font-label-lg text-label-lg uppercase  font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px] mt-5 mb-safe">
+        <button onclick="obNext(1)" class="ob-next-btn btn-tactical-deploy w-full max-w-lg mx-auto h-13 text-xs uppercase flex items-center justify-center gap-2 mt-5 mb-safe">
           <span>I'm Ready — Start Setup</span>
-          <span class="material-symbols-outlined text-[22px]">bolt</span>
+          <span class="material-symbols-outlined text-[18px]">bolt</span>
         </button>
       </div>
 
       <!-- ─────── STEP 2: CALLSIGN ─────── -->
-      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="2">
-        <div class="flex-1 flex flex-col justify-center gap-space-lg">
+      <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe hidden" data-step="2">
+        <div class="flex-1 flex flex-col justify-center gap-space-md max-w-lg mx-auto w-full">
           <div>
-            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Step 1 of 5 · Protocol Initiation</p>
-            <h1 class="font-display-mobile text-display-mobile text-on-surface leading-tight mb-3">Claim your<br/>operative<br/>callsign.</h1>
-            <p class="font-body-lg text-body-lg text-on-surface-variant">How should the tactical engine address you in mission briefings and victory ledgers?</p>
+            <p class="font-mono text-xs uppercase tracking-[0.15em] text-primary font-bold mb-2 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_6px_#00F0FF]"></span>
+              <span>Step 1 of 5 · Protocol Initiation</span>
+            </p>
+            <h1 class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface leading-tight mb-2">Claim your<br/>operative callsign.</h1>
+            <p class="font-body-md text-xs sm:text-sm text-on-surface-variant font-light">How should the tactical engine address you in mission briefings and victory ledgers?</p>
           </div>
 
-          <!-- Callsign input -->
-          <div class="flex flex-col gap-space-xs mt-2">
-            <label class="font-label-md text-label-md uppercase  text-on-surface-variant font-bold" for="ob-callsign">Your Callsign (Name)</label>
+          <!-- Callsign input & live preview card -->
+          <div class="flex flex-col gap-2.5 mt-2 bg-surface-container-low border border-outline-variant/30 p-4 cyber-cut-corner shadow-xs">
+            <label class="font-mono text-[11px] uppercase text-on-surface font-bold flex items-center justify-between" for="ob-callsign">
+              <span>Operative Callsign (Name)</span>
+              <span class="text-outline font-normal text-[10px]">Max 24 chars</span>
+            </label>
             <div class="relative">
-              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">person</span>
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-[20px]">badge</span>
               <input
                 id="ob-callsign"
                 type="text"
                 maxlength="24"
                 placeholder="e.g. Alex Vance"
                 autocomplete="name"
-                class="w-full h-14 pl-10 pr-4 bg-surface-container border-2 border-outline-variant font-body-lg text-body-lg text-on-surface placeholder-outline focus:outline-none focus:border-primary transition-colors"
+                oninput="updateCallsignLivePreview(this.value)"
+                class="w-full h-12 pl-10 pr-4 bg-surface-container-lowest border border-outline-variant/40 hover:border-primary focus:border-cyan-400 focus:shadow-[0_0_12px_rgba(0,240,255,0.25)] font-mono text-sm text-on-surface placeholder-outline focus:outline-none transition-all rounded-xs"
               />
             </div>
-            <p class="font-body-sm text-body-sm text-on-surface-variant">This is how you'll appear in your mission reports and squad leaderboard.</p>
+            <!-- Live Insignia Preview -->
+            <div class="flex items-center gap-2 p-2 bg-surface-container-high/40 border border-outline-variant/20 mt-1">
+              <span class="material-symbols-outlined text-primary text-[17px]">military_tech</span>
+              <div class="flex items-center gap-1.5 font-mono text-[10px] text-on-surface truncate">
+                <span class="text-outline">CALLSIGN:</span>
+                <span class="font-bold text-primary truncate" id="ob-callsign-preview">RECRUIT</span>
+                <span class="text-outline">·</span>
+                <span class="text-emerald-500 font-semibold">LVL 1 INITIATE</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="flex gap-2 mt-6 mb-safe">
-          <button onclick="obBack(2)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        <div class="flex gap-2.5 mt-5 mb-safe max-w-lg mx-auto w-full">
+          <button onclick="obBack(2)" class="h-13 px-4 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-on-surface font-mono text-xs uppercase font-bold flex items-center gap-1.5 shadow-xs tactile-btn" aria-label="Go Back">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
           </button>
-          <button onclick="obNext(2)" class="ob-next-btn flex-1 h-14 bg-primary text-white text-on-primary font-label-lg text-label-lg uppercase  font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
-            Continue
-            <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          <button onclick="obNext(2)" class="ob-next-btn btn-tactical-deploy flex-1 h-13 text-xs uppercase flex items-center justify-center gap-2">
+            <span>Continue</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>
       </div>
 
-      <!-- ─────── STEP 3: STRUGGLES (WITH "OTHER" CUSTOM OPTION) ─────── -->
-      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="3">
-        <div class="flex-1 flex flex-col gap-space-lg">
+      <!-- ─────── STEP 3: STRUGGLES (THREAT ASSESSMENT) ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe hidden" data-step="3">
+        <div class="flex-1 flex flex-col gap-3 max-w-lg mx-auto w-full">
           <div>
-            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Threat Assessment</p>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">What's working<br/>against you?</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant">Select all that apply — or specify your own custom threat below.</p>
+            <p class="font-mono text-xs uppercase tracking-[0.15em] text-secondary font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">radar</span>
+              <span>Step 2 of 5 · Threat Assessment</span>
+            </p>
+            <h2 class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface mb-1">What's working<br/>against you?</h2>
+            <p class="font-body-md text-xs sm:text-sm text-on-surface-variant font-light">Select all threats that apply — your adversary will adapt to your selections.</p>
           </div>
 
-          <div id="ob-struggles-grid" class="grid grid-cols-2 gap-2">
+          <div id="ob-struggles-grid" class="grid grid-cols-2 gap-2 mt-1">
             <button onclick="obToggleStruggle(this)" data-value="doomscrolling"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">smartphone</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Doomscrolling</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Losing hours to the feed</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">smartphone</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Doomscrolling</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Losing hours to the feed</span>
             </button>
             <button onclick="obToggleStruggle(this)" data-value="procrastination"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">hourglass_empty</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Procrastination</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Delaying the important</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">hourglass_empty</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Procrastination</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Delaying the important</span>
             </button>
             <button onclick="obToggleStruggle(this)" data-value="poor_sleep"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">bedtime</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Poor Sleep</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Late nights, groggy days</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">bedtime</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Poor Sleep</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Restless nights, groggy AM</span>
             </button>
             <button onclick="obToggleStruggle(this)" data-value="inconsistency"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">sync_problem</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Inconsistency</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Starting but not sticking</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">trending_down</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Inconsistency</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Starting strong, fading fast</span>
             </button>
             <button onclick="obToggleStruggle(this)" data-value="low_motivation"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">battery_1_bar</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Low Motivation</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Nothing feels worth it</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">battery_alert</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Low Energy</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Willpower easily depleted</span>
             </button>
             <button onclick="obToggleStruggle(this)" data-value="focus"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">psychology</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Lack of Focus</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Scattered, distracted mind</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">filter_center_focus</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Scattered Focus</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Mind jumping everywhere</span>
             </button>
             <button onclick="obToggleStruggle(this)" data-value="stress"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">mood_bad</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Chronic Stress</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Always overwhelmed</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-secondary text-[22px]" style="font-variation-settings:'FILL' 1">psychology_alt</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Overwhelm</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Too many tasks freeze you</span>
             </button>
-            <button onclick="obToggleStruggle(this)" data-value="sedentary"
-              class="ob-struggle-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-secondary text-[24px]" style="font-variation-settings:'FILL' 1">chair</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Sedentary Life</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Too much sitting</span>
-            </button>
-            <!-- Other / Unlisted Custom Problem Tile -->
             <button onclick="obToggleStruggle(this)" data-value="other"
-              class="ob-struggle-tile col-span-2 flex items-center justify-between gap-2 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <div class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-primary text-[24px]" style="font-variation-settings:'FILL' 1">edit_square</span>
-                <div>
-                  <span class="font-label-lg text-label-lg font-bold text-on-surface block">Other / Unlisted Threat</span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">Enter a custom habit struggle or adversary</span>
-                </div>
-              </div>
-              <span class="font-label-sm text-label-sm uppercase px-2 py-0.5 bg-surface-container-highest text-on-surface font-bold">Custom</span>
+              class="ob-struggle-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <span class="material-symbols-outlined text-primary text-[22px]" style="font-variation-settings:'FILL' 1">edit_note</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Custom Threat</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Name your own adversary</span>
             </button>
           </div>
 
-          <!-- Hidden Custom Threat Input (Reveals when "Other" is toggled) -->
-          <div id="ob-custom-struggle-box" class="hidden flex-col gap-1.5 bg-surface-container-low p-space-md border-2 border-primary">
-            <label class="font-label-sm text-label-sm uppercase  text-primary font-bold" for="ob-custom-struggle">Describe Your Custom Threat / Problem</label>
-            <input id="ob-custom-struggle" type="text" maxlength="40" placeholder="e.g. Late-Night Sugar Cravings, Impulse Spending, Skipping Cardio..." class="w-full h-11 px-3 bg-surface-container-lowest border border-outline-variant font-body-md text-sm text-on-surface focus:outline-none focus:border-primary"/>
-            <span class="font-body-sm text-[11px] text-on-surface-variant">HabitOps will forge a personalized Adversary Boss from this threat.</span>
+          <!-- Custom Threat Input Box -->
+          <div id="ob-custom-struggle-box" class="hidden flex-col gap-1.5 p-3 bg-surface-container-low border border-primary/40 cyber-cut-sm shadow-xs">
+            <label class="font-mono text-[10px] uppercase font-bold text-primary flex items-center gap-1" for="ob-custom-struggle">
+              <span class="material-symbols-outlined text-[14px]">psychology</span>
+              <span>Describe Your Custom Obstacle</span>
+            </label>
+            <input
+              id="ob-custom-struggle"
+              type="text"
+              maxlength="40"
+              placeholder="e.g. Late-night gaming binges"
+              class="w-full h-11 px-3 bg-surface-container-lowest border border-outline-variant/40 hover:border-primary focus:border-cyan-400 font-mono text-xs text-on-surface placeholder-outline focus:outline-none transition-all rounded-xs"
+            />
           </div>
         </div>
 
-        <div class="flex gap-2 mt-6 mb-safe">
-          <button onclick="obBack(3)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        <div class="flex gap-2.5 mt-5 mb-safe max-w-lg mx-auto w-full">
+          <button onclick="obBack(3)" class="h-13 px-4 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-on-surface font-mono text-xs uppercase font-bold flex items-center gap-1.5 shadow-xs tactile-btn" aria-label="Go Back">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
           </button>
-          <button onclick="obNext(3)" class="flex-1 h-14 bg-primary text-white text-on-primary font-label-lg text-label-lg uppercase  font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
-            Next <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          <button onclick="obNext(3)" class="ob-next-btn btn-tactical-deploy flex-1 h-13 text-xs uppercase flex items-center justify-center gap-2">
+            <span>Lock Targets</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>
       </div>
 
-      <!-- ─────── STEP 4: TARGET PROTOCOLS (EXPANDED 10 ROUTINES) ─────── -->
-      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="4">
-        <div class="flex-1 flex flex-col gap-space-lg">
+      <!-- ─────── STEP 4: PROTOCOLS (BATTLE STACK) ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe hidden" data-step="4">
+        <div class="flex-1 flex flex-col gap-3 max-w-lg mx-auto w-full">
           <div>
-            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Mission Protocols</p>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Build your<br/>battle stack.</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant">Select the routines you want pre-loaded into your daily command deck.</p>
+            <p class="font-mono text-xs uppercase tracking-[0.15em] text-primary font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">view_agenda</span>
+              <span>Step 3 of 5 · Mission Protocols</span>
+            </p>
+            <h2 class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface mb-1">Build your<br/>battle stack.</h2>
+            <p class="font-body-md text-xs sm:text-sm text-on-surface-variant font-light">Select the routines you want pre-loaded into your daily command deck.</p>
           </div>
 
-          <div id="ob-targets-grid" class="grid grid-cols-2 gap-2">
+          <div id="ob-targets-grid" class="grid grid-cols-2 gap-2 mt-1">
             <button onclick="obToggleTarget(this)" data-value="morning"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#9a3412;font-variation-settings:'FILL' 1">wb_sunny</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Morning Hydration &amp; Light</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Win the first hour (07:00)</span>
+              class="ob-target-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <div class="flex items-center justify-between w-full">
+                <span class="material-symbols-outlined text-amber-500 text-[22px]" style="font-variation-settings:'FILL' 1">wb_sunny</span>
+                <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-emerald-500/15 text-emerald-500 font-bold border border-emerald-500/30">VIT</span>
+              </div>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Morning Light &amp; Hydration</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Win the first hour (07:00)</span>
             </button>
             <button onclick="obToggleTarget(this)" data-value="deepwork"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#00687a;font-variation-settings:'FILL' 1">terminal</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Deep Work Sprint</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Zero-distraction output</span>
+              class="ob-target-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <div class="flex items-center justify-between w-full">
+                <span class="material-symbols-outlined text-cyan-500 text-[22px]" style="font-variation-settings:'FILL' 1">psychology</span>
+                <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-cyan-500/15 text-cyan-500 font-bold border border-cyan-500/30">INT</span>
+              </div>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Deep Work Sprint</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">45m distraction-free focus</span>
             </button>
-            <button onclick="obToggleTarget(this)" data-value="physical"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#b90538;font-variation-settings:'FILL' 1">fitness_center</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Strength &amp; Hypertrophy</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Move, lift, sweat</span>
+            <button onclick="obToggleTarget(this)" data-value="workout"
+              class="ob-target-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <div class="flex items-center justify-between w-full">
+                <span class="material-symbols-outlined text-rose-500 text-[22px]" style="font-variation-settings:'FILL' 1">fitness_center</span>
+                <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-rose-500/15 text-rose-500 font-bold border border-rose-500/30">STR</span>
+              </div>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Kinetic Workout</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Lift, sprint, or mobilize</span>
             </button>
-            <button onclick="obToggleTarget(this)" data-value="evening"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#475569;font-variation-settings:'FILL' 1">nights_stay</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Digital Sunset Blackout</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Zero screens before bed</span>
+            <button onclick="obToggleTarget(this)" data-value="coldshower"
+              class="ob-target-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <div class="flex items-center justify-between w-full">
+                <span class="material-symbols-outlined text-purple-500 text-[22px]" style="font-variation-settings:'FILL' 1">ac_unit</span>
+                <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-purple-500/15 text-purple-500 font-bold border border-purple-500/30">DIS</span>
+              </div>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Stoic Cold Shower</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Train nervous system will</span>
             </button>
             <button onclick="obToggleTarget(this)" data-value="reading"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#00424f;font-variation-settings:'FILL' 1">menu_book</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Tactical Reading</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">30 min non-fiction study</span>
-            </button>
-            <button onclick="obToggleTarget(this)" data-value="mindfulness"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#8c5000;font-variation-settings:'FILL' 1">self_improvement</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Mindfulness &amp; Breath</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Calm autonomic reset</span>
-            </button>
-            <button onclick="obToggleTarget(this)" data-value="cold_exposure"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#0369a1;font-variation-settings:'FILL' 1">ac_unit</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Cold Exposure</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">3-min dopamine resilience</span>
-            </button>
-            <button onclick="obToggleTarget(this)" data-value="nutrition"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#047857;font-variation-settings:'FILL' 1">restaurant</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Clean Fuel &amp; Protein</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Whole foods, zero junk</span>
-            </button>
-            <button onclick="obToggleTarget(this)" data-value="mobility"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#7c3aed;font-variation-settings:'FILL' 1">accessibility_new</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Posture &amp; Mobility</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">15-min joint decompression</span>
-            </button>
-            <button onclick="obToggleTarget(this)" data-value="skill_mastery"
-              class="ob-target-tile flex flex-col items-start gap-1 p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left">
-              <span class="material-symbols-outlined text-[28px]" style="color:#92400e;font-variation-settings:'FILL' 1">code_blocks</span>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Skill / Language Lab</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">45-min deliberate practice</span>
-            </button>
-
-            <!-- Custom Routine Option Tile -->
-            <button onclick="obToggleTarget(this)" data-value="custom" id="ob-custom-routine-tile"
-              class="ob-target-tile col-span-2 flex flex-col items-start gap-1 p-space-md border-2 border-dashed border-primary bg-surface-container hover:bg-surface-container-high transition-all text-left">
+              class="ob-target-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
               <div class="flex items-center justify-between w-full">
-                <span class="material-symbols-outlined text-[28px] text-primary" style="font-variation-settings:'FILL' 1">edit_square</span>
-                <span class="font-label-sm text-[11px] bg-primary text-white text-on-primary px-2 py-0.5 font-bold uppercase">Custom Routine</span>
+                <span class="material-symbols-outlined text-cyan-500 text-[22px]" style="font-variation-settings:'FILL' 1">menu_book</span>
+                <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-cyan-500/15 text-cyan-500 font-bold border border-cyan-500/30">INT</span>
               </div>
-              <span class="font-label-lg text-label-lg font-bold text-on-surface">Add Custom Protocol</span>
-              <span class="font-body-sm text-body-sm text-on-surface-variant">Define your own personalized habit routine and timing</span>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Tactical Intel Reading</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">20m non-fiction reading</span>
             </button>
-          </div>
-
-          <!-- Expandable Custom Routine Config Form -->
-          <div id="ob-custom-routine-form" class="hidden bg-surface-container-lowest border-2 border-primary p-3 flex flex-col gap-2.5 shadow-[3px_3px_0px_#00687a]">
-            <span class="font-label-sm text-[11px] uppercase  text-primary font-bold">Custom Protocol Specifications</span>
-            <div>
-              <label class="block font-label-sm text-[11px] uppercase text-on-surface-variant font-bold mb-0.5">Protocol Title</label>
-              <input type="text" id="ob-custom-title" placeholder="e.g. 50 Pushups / Guitar Practice / Cold Plunge" class="w-full bg-surface-container-low border border-outline-variant p-2 text-xs font-semibold focus:border-primary focus:outline-none"/>
-            </div>
-            <div class="grid grid-cols-3 gap-2">
-              <div>
-                <label class="block font-label-sm text-[11px] uppercase text-on-surface-variant font-bold mb-0.5">Scheduled Time</label>
-                <input type="time" id="ob-custom-time" value="08:00" class="w-full bg-surface-container-low border border-outline-variant p-1.5 text-xs font-mono font-bold focus:border-primary focus:outline-none"/>
+            <button onclick="obToggleTarget(this)" data-value="noscreens"
+              class="ob-target-tile flex flex-col items-start gap-1 p-3 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs">
+              <div class="flex items-center justify-between w-full">
+                <span class="material-symbols-outlined text-emerald-500 text-[22px]" style="font-variation-settings:'FILL' 1">bedtime</span>
+                <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-emerald-500/15 text-emerald-500 font-bold border border-emerald-500/30">VIT</span>
               </div>
-              <div>
-                <label class="block font-label-sm text-[11px] uppercase text-on-surface-variant font-bold mb-0.5">Duration</label>
-                <input type="text" id="ob-custom-duration" value="20m" class="w-full bg-surface-container-low border border-outline-variant p-1.5 text-xs font-mono font-bold focus:border-primary focus:outline-none"/>
-              </div>
-              <div>
-                <label class="block font-label-sm text-[11px] uppercase text-on-surface-variant font-bold mb-0.5">Time Sector</label>
-                <select id="ob-custom-group" class="w-full bg-surface-container-low border border-outline-variant p-1.5 text-xs font-bold focus:border-primary focus:outline-none">
-                  <option value="morning">Morning</option>
-                  <option value="afternoon">Afternoon</option>
-                  <option value="evening">Evening</option>
-                </select>
-              </div>
-            </div>
+              <span class="font-headline-sm text-xs font-bold text-on-surface">Digital Sunset</span>
+              <span class="font-body-sm text-[10px] text-on-surface-variant font-light">Screens off 45m before bed</span>
+            </button>
           </div>
         </div>
 
-        <div class="flex gap-2 mt-6 mb-safe">
-          <button onclick="obBack(4)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        <div class="flex gap-2.5 mt-5 mb-safe max-w-lg mx-auto w-full">
+          <button onclick="obBack(4)" class="h-13 px-4 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-on-surface font-mono text-xs uppercase font-bold flex items-center gap-1.5 shadow-xs tactile-btn" aria-label="Go Back">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
           </button>
-          <button onclick="obNext(4)" class="flex-1 h-14 bg-primary text-white text-on-primary font-label-lg text-label-lg uppercase  font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none">
-            Next <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          <button onclick="obNext(4)" class="ob-next-btn btn-tactical-deploy flex-1 h-13 text-xs uppercase flex items-center justify-center gap-2">
+            <span>Confirm Stack</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>
       </div>
 
       <!-- ─────── STEP 5: INTENSITY RANK ─────── -->
-      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="5">
-        <div class="flex-1 flex flex-col gap-space-lg">
+      <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe hidden" data-step="5">
+        <div class="flex-1 flex flex-col gap-3.5 max-w-lg mx-auto w-full">
           <div>
-            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Difficulty Protocol</p>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Set your<br/>intensity rank.</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant">This controls quest difficulty and XP multipliers. You can change it later.</p>
+            <p class="font-mono text-xs uppercase tracking-[0.15em] text-primary font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">speed</span>
+              <span>Step 4 of 5 · Difficulty Protocol</span>
+            </p>
+            <h2 class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface mb-1">Set your<br/>intensity rank.</h2>
+            <p class="font-body-md text-xs sm:text-sm text-on-surface-variant font-light">This controls baseline difficulty and XP multipliers. You can re-tune anytime in Settings.</p>
           </div>
 
-          <div id="ob-intensity-list" class="flex flex-col gap-3">
+          <div id="ob-intensity-list" class="flex flex-col gap-2.5 mt-1">
             <button onclick="obSelectIntensity(this,'recruit')"
-              class="ob-intensity-tile flex items-center gap-space-md p-space-md border-2 border-outline-variant bg-surface-container hover:border-primary transition-all text-left"
+              class="ob-intensity-tile flex items-center gap-3 p-3.5 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs"
               data-value="recruit">
-              <div class="w-12 h-12 p-2 flex items-center justify-center bg-surface-container-high border border-outline-variant flex-shrink-0">
-                <span class="material-symbols-outlined text-[28px]" style="color:#475569;font-variation-settings:'FILL' 1">shield</span>
+              <div class="w-10 h-10 p-2 flex items-center justify-center bg-surface-container-high border border-outline-variant/30 flex-shrink-0">
+                <span class="material-symbols-outlined text-[24px] text-slate-500" style="font-variation-settings:'FILL' 1">shield</span>
               </div>
-              <div class="flex-1">
-                <div class="font-label-lg text-label-lg font-bold text-on-surface uppercase">Recruit</div>
-                <div class="font-body-sm text-body-sm text-on-surface-variant">Gentle start · 0.85× XP · Manageable daily targets</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <div class="font-headline-sm text-sm font-bold text-on-surface uppercase">Recruit</div>
+                  <span class="font-mono text-[10px] text-primary font-bold bg-primary/10 border border-primary/30 px-1.5 py-0.2">0.85× MULT</span>
+                </div>
+                <div class="font-body-sm text-[11px] text-on-surface-variant font-light mt-0.5">Gentle start · Manageable baseline load</div>
               </div>
             </button>
 
             <button onclick="obSelectIntensity(this,'operative')"
-              class="ob-intensity-tile flex items-center gap-space-md p-space-md border-2 border-primary bg-surface-container-low hover:border-primary transition-all text-left"
-              data-value="operative" style="border-color:#00687a">
-              <div class="w-12 h-12 p-2 flex items-center justify-center bg-primary-container border border-primary flex-shrink-0">
-                <span class="material-symbols-outlined text-[28px] text-white" style="font-variation-settings:'FILL' 1">military_tech</span>
+              class="ob-intensity-tile flex items-center gap-3 p-3.5 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs ob-selected"
+              data-value="operative">
+              <div class="w-10 h-10 p-2 flex items-center justify-center bg-primary/15 border border-primary/40 flex-shrink-0">
+                <span class="material-symbols-outlined text-[24px] text-primary" style="font-variation-settings:'FILL' 1">bolt</span>
               </div>
-              <div class="flex-1">
-                <div class="font-label-lg text-label-lg font-bold text-primary uppercase">Operative <span class="font-label-sm text-label-sm bg-primary text-white text-on-primary px-1 py-0.5 ml-1">RECOMMENDED</span></div>
-                <div class="font-body-sm text-body-sm text-on-surface-variant">Balanced challenge · 1.0× XP · Standard mission load</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <div class="font-headline-sm text-sm font-bold text-primary uppercase flex items-center gap-1.5">
+                    <span>Operative</span>
+                    <span class="font-mono text-[9px] uppercase px-1 py-0.2 bg-primary/20 text-primary border border-primary/40 font-bold">Standard</span>
+                  </div>
+                  <span class="font-mono text-[10px] text-emerald-500 font-bold bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.2">1.00× MULT</span>
+                </div>
+                <div class="font-body-sm text-[11px] text-on-surface-variant font-light mt-0.5">Standard challenge · Balanced tactical progression</div>
               </div>
             </button>
 
             <button onclick="obSelectIntensity(this,'striker')"
-              class="ob-intensity-tile flex items-center gap-space-md p-space-md border-2 border-outline-variant bg-surface-container hover:border-secondary transition-all text-left"
+              class="ob-intensity-tile flex items-center gap-3 p-3.5 border border-outline-variant/30 bg-surface-container-low hover:border-primary/60 transition-all text-left cyber-cut-sm shadow-xs"
               data-value="striker">
-              <div class="w-12 h-12 p-2 flex items-center justify-center bg-secondary-container border border-secondary-container flex-shrink-0">
-                <span class="material-symbols-outlined text-[28px] text-on-secondary-container" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+              <div class="w-10 h-10 p-2 flex items-center justify-center bg-secondary/15 border border-secondary/40 flex-shrink-0">
+                <span class="material-symbols-outlined text-[24px] text-secondary" style="font-variation-settings:'FILL' 1">local_fire_department</span>
               </div>
-              <div class="flex-1">
-                <div class="font-label-lg text-label-lg font-bold text-secondary uppercase">Striker</div>
-                <div class="font-body-sm text-body-sm text-on-surface-variant">No mercy · 1.25× XP · High output, high reward</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <div class="font-headline-sm text-sm font-bold text-secondary uppercase">Striker</div>
+                  <span class="font-mono text-[10px] text-amber-500 font-bold bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.2">1.25× MULT</span>
+                </div>
+                <div class="font-body-sm text-[11px] text-on-surface-variant font-light mt-0.5">Relentless discipline · High output, high bounty yield</div>
               </div>
             </button>
           </div>
         </div>
 
-        <div class="flex gap-2 mt-6 mb-safe">
-          <button onclick="obBack(5)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        <div class="flex gap-2.5 mt-5 mb-safe max-w-lg mx-auto w-full">
+          <button onclick="obBack(5)" class="h-13 px-4 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-on-surface font-mono text-xs uppercase font-bold flex items-center gap-1.5 shadow-xs tactile-btn" aria-label="Go Back">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
           </button>
-          <button onclick="obNext(5)" class="flex-1 h-14 bg-primary text-white text-on-primary font-label-lg text-label-lg uppercase  font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none">
-            Next <span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+          <button onclick="obNext(5)" class="ob-next-btn btn-tactical-deploy flex-1 h-13 text-xs uppercase flex items-center justify-center gap-2">
+            <span>Engage Adversary</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>
       </div>
 
-      <!-- ─────── STEP 6: BOSS REVEAL ─────── -->
-      <div class="ob-step flex flex-col min-h-screen px-margin py-10 pt-safe hidden" data-step="6">
-        <div class="flex-1 flex flex-col justify-center gap-space-lg">
+      <!-- ─────── STEP 6: BOSS REVEAL (LIGHT CYBER DOSSIER) ─────── -->
+      <div class="ob-step flex flex-col min-h-screen px-margin py-8 pt-safe hidden" data-step="6">
+        <div class="flex-1 flex flex-col justify-center gap-3.5 max-w-lg mx-auto w-full">
           <div>
-            <p class="font-label-sm text-label-sm uppercase tracking-[0.15em] text-secondary font-bold mb-2">Adversary Identified</p>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-3">Your boss has<br/>been named.</h2>
+            <p class="font-mono text-xs uppercase tracking-[0.15em] text-secondary font-bold mb-1 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">crisis_alert</span>
+              <span>Step 5 of 5 · Adversary Identified</span>
+            </p>
+            <h2 class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-on-surface mb-1">Your boss has<br/>been named.</h2>
+            <p class="font-body-md text-xs sm:text-sm text-on-surface-variant font-light">Generated from your threat assessment profile.</p>
           </div>
 
-          <!-- Boss card -->
-          <div id="ob-boss-card" class="bg-inverse-surface p-space-lg flex flex-col gap-space-md border-l-4 border-secondary shadow-[4px_4px_0px_#b90538]">
-            <div class="flex items-start justify-between gap-4">
-              <div>
-                <p class="font-label-sm text-label-sm uppercase  text-outline font-bold mb-1">Final Boss · Season I</p>
-                <h3 id="ob-boss-name" class="font-headline-md text-headline-md text-inverse-on-surface font-bold">The Distraction Demon</h3>
-                <p id="ob-boss-desc" class="font-body-sm text-body-sm text-outline mt-1">Born from your patterns. Defeated by your discipline.</p>
+          <!-- Light Cyber Boss Dossier Card -->
+          <div id="ob-boss-card" class="bg-surface-container-low border border-secondary/40 p-4 sm:p-5 flex flex-col gap-3 relative overflow-hidden cyber-cut-corner shadow-[0_4px_24px_rgba(255,42,85,0.08)]">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                  <span class="px-1.5 py-0.2 bg-secondary/15 text-secondary border border-secondary/40 font-mono text-[9px] font-bold uppercase tracking-wider">TARGET // SECTOR 1</span>
+                  <span class="font-mono text-[10px] text-outline uppercase font-semibold">Tier 1 Adversary</span>
+                </div>
+                <h3 id="ob-boss-name" class="font-headline-md text-lg sm:text-xl text-on-surface font-extrabold uppercase break-words whitespace-normal leading-tight">The Distraction Demon</h3>
+                <p id="ob-boss-desc" class="font-body-sm text-xs text-on-surface-variant font-light mt-1">Born from your patterns. Defeated by your discipline.</p>
               </div>
-              <div class="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-secondary border-2 border-secondary-container">
-                <span class="material-symbols-outlined text-on-secondary text-[32px]" style="font-variation-settings:'FILL' 1">skull</span>
+              <div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-secondary-container border border-secondary/40 shadow-[0_0_12px_rgba(255,42,85,0.35)]">
+                <span class="material-symbols-outlined text-on-secondary text-[26px]" style="font-variation-settings:'FILL' 1">skull</span>
               </div>
             </div>
-            <!-- HP bar -->
-            <div class="flex flex-col gap-1">
-              <div class="flex justify-between">
-                <span class="font-label-sm text-label-sm uppercase  text-outline font-bold">HP</span>
-                <span class="font-label-sm text-label-sm text-secondary font-bold">500 / 500</span>
+
+            <!-- Health Telemetry -->
+            <div class="flex flex-col gap-1 mt-1 pt-2 border-t border-outline-variant/20">
+              <div class="flex justify-between items-center font-mono text-[10px]">
+                <span class="text-outline uppercase font-semibold">Boss Life Support</span>
+                <span class="text-secondary font-bold">500 / 500 HP</span>
               </div>
-              <div class="h-3 bg-surface-container-highest w-full overflow-hidden">
-                <div class="h-full bg-secondary" style="width:100%"></div>
+              <div class="h-2.5 bg-surface-container-highest w-full overflow-hidden border border-outline-variant/25">
+                <div class="h-full bg-gradient-to-r from-rose-500 to-rose-600 shadow-[0_0_8px_rgba(255,42,85,0.4)]" style="width:100%"></div>
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col gap-space-xs bg-surface-container-low p-space-md border border-outline-variant">
-            <p class="font-label-md text-label-md uppercase  text-on-surface-variant font-bold">Your mission summary</p>
-            <p id="ob-summary-text" class="font-body-md text-body-md text-on-surface">Complete your daily quests to chip away at this boss. Slay it before the week ends to earn legendary XP.</p>
+          <!-- Mission Summary Callout -->
+          <div class="flex flex-col gap-1 bg-surface-container-high/40 p-3 border border-outline-variant/30 cyber-cut-sm">
+            <div class="flex items-center gap-1.5 text-primary font-mono text-[10px] uppercase font-bold">
+              <span class="material-symbols-outlined text-[14px]">checklist</span>
+              <span>Your Mission Summary</span>
+            </div>
+            <p id="ob-summary-text" class="font-body-md text-xs text-on-surface-variant font-light leading-relaxed">
+              Complete your daily quests to strike down this boss. Each completed routine drains its HP and yields bonus XP upon total neutralization.
+            </p>
           </div>
         </div>
 
-        <div class="flex gap-2 mt-6 mb-safe">
-          <button onclick="obBack(6)" class="h-14 px-space-lg border-2 border-outline text-on-surface font-label-lg text-label-lg uppercase font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
-            <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+        <div class="flex gap-2.5 mt-5 mb-safe max-w-lg mx-auto w-full">
+          <button onclick="obBack(6)" class="h-13 px-4 bg-surface-container-lowest border border-outline-variant/30 hover:border-primary text-on-surface font-mono text-xs uppercase font-bold flex items-center gap-1.5 shadow-xs tactile-btn" aria-label="Go Back">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
           </button>
-          <button onclick="obDeploy()" id="ob-deploy-btn"
-            class="flex-1 h-14 bg-secondary text-on-secondary font-label-lg text-label-lg uppercase  font-bold flex items-center justify-center gap-space-sm shadow-[4px_4px_0px_#131b2e] hover:shadow-[2px_2px_0px_#131b2e] hover:translate-x-[2px] hover:translate-y-[2px] transition-all active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
-            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1">rocket_launch</span>
-            Deploy Protocol
+          <button onclick="obDeploy()" id="ob-deploy-btn" class="btn-tactical-deploy flex-1 h-13 text-xs uppercase flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">rocket_launch</span>
+            <span>Deploy Protocol</span>
           </button>
         </div>
       </div>

@@ -111,6 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Apply saved HUD Color Theme & Night Ops mode immediately
   applySavedThemeAndMode();
 
+  // URL override to test onboarding locally (?onboarding=true or #onboarding)
+  const urlCheck = new URLSearchParams(window.location.search);
+  if (urlCheck.get('onboarding') === 'true' || window.location.hash === '#onboarding') {
+    initOnboarding();
+    return;
+  }
+
   // Onboarding gate
   if (!window.store.state.onboardingCompleted) {
     initOnboarding();
@@ -3894,3 +3901,13 @@ function toggleMomentumDetails() {
   );
 }
 window.toggleMomentumDetails = toggleMomentumDetails;
+
+
+function updateCallsignLivePreview(val) {
+  const preview = document.getElementById('ob-callsign-preview');
+  if (preview) {
+    const trimmed = (val || '').trim();
+    preview.textContent = trimmed ? trimmed.toUpperCase() : 'RECRUIT';
+  }
+}
+window.updateCallsignLivePreview = updateCallsignLivePreview;
